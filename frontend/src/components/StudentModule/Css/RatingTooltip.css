@@ -1,0 +1,117 @@
+.rating-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .rating-tooltip .tooltip-text {
+    visibility: hidden;
+    background-color: #0b0909;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%; /* Adjust for placement */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    width: 300px; /* Updated width for better layout */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rating-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .rating-component {
+    font-family: Arial, sans-serif;
+    width: 400px;
+    margin: 20px auto;
+  }
+  
+  .rating-overall {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .rating-bar-graph {
+    margin: 10px 0;
+}
+
+.rating-bar-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.rating-bar-label {
+    width: 70px;
+    text-align: right;
+    margin-right: 10px;
+    font-size: 14px; /* Slightly larger for better visibility */
+    color: #fff;
+}
+
+.rating-bar {
+    flex: 1;
+    height: 12px; /* Adjusted height */
+    background-color: #e0e0e0; /* Light grey background for unfilled portion */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    overflow: hidden;
+    position: relative;
+    margin-right: 10px;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    background-color: #ff9900; /* Orange for the filled portion */
+    width: 0%; /* Default width, dynamically adjusted */
+    border-radius: 10px; /* Same rounding for consistency */
+    transition: width 0.3s ease-in-out;
+}
+
+.rating-bar-percentage {
+    width: 50px;
+    text-align: left;
+    font-size: 14px; /* Adjusted font size */
+    color: #fff;
+}
+.rating-feedback {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+  text-align: left;
+}
+.rating-submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.rating-submit-btn:hover {
+  background-color: #0056b3;
+}
+.rating-form {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.rating-input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.rating-input {
+  width: 50px;
+  text-align: center;
+  margin: 0 10px;
+}

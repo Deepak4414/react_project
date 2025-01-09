@@ -1,0 +1,99 @@
+.two-column-page {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    height: 100vh; /* Full height */
+}
+
+/* Left Column */
+.left-column {
+    width: 20%;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-column h3 {
+    font-size: 1.8em;
+    color: #444;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.left-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.left-column li {
+    margin-bottom: 15px;
+}
+
+.left-column button {
+    display: block;
+    width: 100%;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.left-column button:hover,
+.left-column button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+.subtopics-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.subtopics-list button {
+    display: block;
+    width: 90%;
+    background-color: #f1f1f1;
+    color: #555;
+    border: 1px solid #ccc;
+    text-align: left;
+    padding: 10px 15px;
+    margin: 10px auto;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.subtopics-list button:hover,
+.subtopics-list button.active {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Right Column */
+.right-column {
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack children vertically */
+    width: 80%; /* Full width */
+    height: 100vh; /* Full viewport height */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+.chapter-content {
+     /* flex: 1; Allow ChapterContent to grow and fill the space */
+    overflow: auto; /* Add scroll if content overflows */
+    width :fit-content
+}

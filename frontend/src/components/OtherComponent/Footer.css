@@ -1,0 +1,26 @@
+/* Ensure html and body span the full height of the viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  /* The wrapper element that contains everything */
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Full height */
+  }
+  
+  /* Main content area should grow to fill available space */
+  .main-content {
+    flex: 1;
+  }
+  
+  /* Footer stays at the bottom but with some margin */
+  footer {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem 0;
+    margin-top: auto; /* Ensures it stays at the bottom */
+  }
+  

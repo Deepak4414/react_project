@@ -1,0 +1,99 @@
+/* Table.css */
+
+.chapter-content {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.content-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fafafa;
+}
+
+.content-item h5 {
+  margin: 0;
+  font-size: 1.1em;
+  color: #007bff;
+}
+
+.content-item p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.content-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.content-item a:hover {
+  text-decoration: underline;
+}
+
+p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    display: block;
+    text-align: right;
+  }
+
+  th {
+    position: relative;
+  }
+
+  th::after {
+    content: ":";
+    position: absolute;
+    right: 10px;
+  }
+
+  td {
+    text-align: left;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    padding-left: 10px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
