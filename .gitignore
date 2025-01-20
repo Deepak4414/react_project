@@ -14,8 +14,8 @@ logs/
 jspm_packages/
 
 # React
-build/
-dist/
+# build/
+# dist/
 
 # OS Files
 .DS_Store
