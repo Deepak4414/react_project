@@ -11,5 +11,8 @@
     "mysql2": "^3.11.5",
     "node": "^23.4.0",
     "openai": "^3.1.0"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
   }
 }
