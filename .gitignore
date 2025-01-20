@@ -22,7 +22,7 @@ dist/
 Thumbs.db
 
 # Environment Files
-.env
+#.env
 .env.local
 .env.*.local
 
