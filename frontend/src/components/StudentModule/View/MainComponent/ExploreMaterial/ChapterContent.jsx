@@ -28,7 +28,7 @@ const VideoModal = ({ videoUrl, onClose }) => {
   );
 };
 
-const ChapterContent = ({ subTopicData, username, id }) => {
+const ChapterContent = ({ subTopicData, username, id, topicId }) => {
   const [videoUrl, setVideoUrl] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const { title, levels } = subTopicData;
@@ -61,25 +61,23 @@ const ChapterContent = ({ subTopicData, username, id }) => {
           style={{
             fontSize: '16px',
             fontWeight: 'bold',
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
           }}
         >
-          {truncateText(item.title || "No Title Available", 100)}{" "}
           {isYouTubeLink(item.link) ? (
-            <>
+            <span>
+              {truncateText(item.title || "No Title Available", 10000)}{" "}
               <img
                 src="/image/youtube_logo.png"
                 alt="YouTube"
                 className="youtube-logo"
                 onClick={() => handleYouTubeClick(item.link)}
-                style={{ marginLeft: "10px", cursor: "pointer" }} // Added margin for spacing
+                style={{ cursor: "pointer" }}
               />
-            </>
+            </span>
           ) : (
-            item.link && (
-              <div className="d-flex align-items-center" style={{ marginLeft: "10px" }}> {/* Added margin for spacing */}
+            <span>
+              {truncateText(item.title || "No Title Available", 10000)}{" "}
+             
                 <img
                   src="/image/link_logo.png"
                   alt="Link"
@@ -94,12 +92,12 @@ const ChapterContent = ({ subTopicData, username, id }) => {
                 >
                   Link
                 </a>
-              </div>
-            )
+              
+            </span>
           )}
         </h3>
         <p className="card-text" style={{ fontSize: '14px' }}>
-          {truncateText(item.description || "No Description Available", 1000)}
+          {truncateText(item.description || "No Description Available", 10000)}
         </p>
         <p>
           Rating:{" "}
@@ -109,12 +107,10 @@ const ChapterContent = ({ subTopicData, username, id }) => {
             rating={item.rating || 0}
           />
         </p>
-
         <Rating item={item.id} username={username.username} />
       </div>
     </div>
   );
-
   return (
     <div className="containers">
       <div className="chapter">
@@ -124,7 +120,7 @@ const ChapterContent = ({ subTopicData, username, id }) => {
               <tr >
                 <th colSpan={3} style={{ textAlign: 'center' }}> E Content from Internet</th>
                 <th colSpan={1} style={{ textAlign: 'center' }}>Content from local server</th>
-                <th></th>
+                <th rowSpan={2} style={{ textAlign: 'center' }}>Live Video from local C.Dot BGC</th>
               </tr>
 
               <tr>
@@ -132,7 +128,7 @@ const ChapterContent = ({ subTopicData, username, id }) => {
                 <th>Intermediate Level</th>
                 <th>Advanced Level</th>
                 <th>NPTEL Content and VFSTR Content</th>
-                <th>Live Video from local C.Dot BGC</th>
+
               </tr>
             </thead>
             <tbody>
@@ -163,9 +159,8 @@ const ChapterContent = ({ subTopicData, username, id }) => {
 
                 </td>
                 <td>
-                  <p>192.168.68.10:9080</p>
 
-                  {/* <LiveVideoContent/> */}
+                  <LiveVideoContent subtopic={id} topicId={topicId} />
                 </td>
               </tr>
             </tbody>

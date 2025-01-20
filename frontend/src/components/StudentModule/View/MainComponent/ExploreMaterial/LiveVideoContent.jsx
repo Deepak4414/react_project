@@ -1,51 +1,72 @@
-import React from "react";
-import Rating from './Function/Rating';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const LiveVideoContent = () => {
-  const liveVideoContent = [
-    { id: 1, title: "Live Video Session 1", description: "Introduction to React", link: "https://live.com/video1", rating: 4 },
-    { id: 2, title: "Live Video Session 2", description: "Advanced JavaScript Concepts", link: "https://live.com/video2", rating: 5 },
-    { id: 3, title: "Live Video Session 3", description: "Node.js Basics", link: "https://live.com/video3", rating: 3 },
-  ];
+const LiveVideoContent = ({ subtopic, topicId }) => {
+  const [liveData, setLiveData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const truncateText = (text, maxLength) => {
-    if (!text || text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/live-data`, {
+          params: { topicId, subtopic },
+        });
+
+        setLiveData(response.data); // Update liveData with the response data
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [topicId, subtopic]);
+
+  // Function to format date to DD/MM/YYYY
+  const formatDate = (isoDate) => {
+    const dateObj = new Date(isoDate);
+    const day = String(dateObj.getDate()).padStart(2, "0"); // Ensure 2 digits
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const year = dateObj.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  const renderCardContent = (item) => (
-    <div key={item.id} className="card mb-3">
-      <div className="card-body">
-        <h3
-          className="card-title"
-          style={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {truncateText(item.title || "No Title Available", 50)}
-        </h3>
-        <p className="card-text">
-          {truncateText(item.description || "No Description Available", 1000)}
-        </p>
-        <p>Rating: {"⭐".repeat(item.rating) || "N/A"}</p>
-        {
-          <img
-            src="/image/live_video.png"
-            alt="YouTube"
-            className="youtube-logo"
-            onClick={() => (item.link)}
-          />
-         }
-        <Rating item={item.id} />
-      </div>
-    </div>
-  );
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.response?.data?.message || error.message}</div>;
+  }
+
+  if (!liveData) {
+    return <div>No live video details available.</div>;
+  }
 
   return (
     <div>
-      {liveVideoContent.map(renderCardContent)}
+      <a href="http://192.168.68.10:9080">
+        <img src="/image/live-logo.png" alt="Live Logo" style={{ width: "100px", height: "80px" }} />
+      </a>
+      <p>
+        {console.log(liveData.level)}
+        It is Available on <strong>{liveData.channel}</strong> channel at{" "}
+        <strong>{liveData.time}</strong> on <strong>{formatDate(liveData.date)}</strong>.
+        <br />
+        <br />
+        <strong>Level:</strong>{" "}
+      <span style={{ textDecoration: liveData.level === "basic" ? "none" : "line-through" }}>
+        Basic
+      </span>{" "}
+      <span style={{ textDecoration: liveData.level === "intermediate" ? "none" : "line-through" }}>
+        Intermediate
+      </span>{" "}
+      <span style={{ textDecoration: liveData.level === "advanced" ? "none" : "line-through" }}>
+        Advance
+      </span>
+    </p>
     </div>
   );
 };

@@ -8,34 +8,57 @@ import Link from "./Link";
 const AddTopic = () => {
     const location = useLocation();
     const { course, branch, semester, subject } = location.state || {};
+    const [chapters, setChapters] = useState([]);
+    const [topics, setTopics] = useState([]);
     const [subTopic, setSubTopic] = useState("");
     const [levels, setLevels] = useState({
         basic: [],
         medium: [],
         advanced: [],
     });
-    const [topics, setTopics] = useState([]);
+    const [selectedChapter, setSelectedChapter] = useState("");
+    const [newChapter, setNewChapter] = useState("");
     const [selectedTopic, setSelectedTopic] = useState("");
+    const [isAddingNewChapter, setIsAddingNewChapter] = useState(false);
     const [newTopic, setNewTopic] = useState("");
     const [isAddingNewTopic, setIsAddingNewTopic] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [nptelData, setNptelData] = useState([]); // Store NPTEL video data
+    const [nptelData, setNptelData] = useState([]);
     const [folderName, setFolderName] = useState("");
     const navigate = useNavigate();
 
-    const handleFolderNameChange = (folderName) => {
-        setFolderName(folderName);
-    };
-    
+    // Fetch chapters for the subject
     useEffect(() => {
-        const fetchTopics = async () => {
+        const fetchChapters = async () => {
             setLoading(true);
             try {
                 if (subject) {
                     const response = await axios.get(
-                        `http://localhost:5000/api/topics?subjectId=${subject}`
+                        `http://localhost:5000/api/chapter/${subject}`
                     );
-                    setTopics(response.data);
+                    console.log(response.data.chapter);
+                    setChapters(response.data.chapter);
+                }
+            } catch (error) {
+                console.error("Error fetching chapters:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchChapters();
+    }, [subject]);
+
+    // Fetch topics for the selected chapter
+    useEffect(() => {
+        const fetchTopics = async () => {
+            setLoading(true);
+            try {
+                if (selectedChapter) {
+                    
+                    const response = await axios.get(
+                        `http://localhost:5000/api/topics/${selectedChapter}`
+                    );
+                    setTopics(response.data.topics);
                 }
             } catch (error) {
                 console.error("Error fetching topics:", error);
@@ -44,14 +67,23 @@ const AddTopic = () => {
             }
         };
         fetchTopics();
-    }, [subject]);
+    }, [selectedChapter]);
+
     const handleVideoDataChange = (updatedData) => {
         setNptelData(updatedData);
+    };
+
+    const handleFolderNameChange = (folderName) => {
+        setFolderName(folderName);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!selectedChapter) {
+            alert("Please select a chapter.");
+            return;
+        }
         if (!selectedTopic && !newTopic) {
             alert("Please select a topic or enter a new topic.");
             return;
@@ -60,10 +92,13 @@ const AddTopic = () => {
             alert("Please enter a subtopic.");
             return;
         }
+
         const requestData = {
-            subTopic,
-            selectedTopic: isAddingNewTopic ? newTopic : selectedTopic,
+            chapterId: isAddingNewChapter ? newChapter : selectedChapter,
+            isAddingNewChapter,
+            topic: isAddingNewTopic ? newTopic : selectedTopic,
             isAddingNewTopic,
+            subTopic,
             courseId: course,
             branchId: branch,
             semesterId: semester,
@@ -71,9 +106,8 @@ const AddTopic = () => {
             levels,
             nptelVideos: nptelData,
             videoFolder: folderName,
-
         };
-        
+
         try {
             const response = await axios.post(
                 "http://localhost:5000/api/topics/add-topic",
@@ -91,9 +125,51 @@ const AddTopic = () => {
         <div className="container mt-4">
             <h2 className="mb-4">Add Topic</h2>
             {loading ? (
-                <p>Loading topics...</p>
+                <p>Loading data...</p>
             ) : (
                 <form onSubmit={handleSubmit}>
+                    {/* Chapter Dropdown */}
+                    <div className="mb-3">
+                        <label htmlFor="chapter" className="form-label">
+                            Select Chapter
+                        </label>
+                        <select
+                            id="chapter"
+                            className="form-select"
+                            value={selectedChapter}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                setSelectedChapter(value);  
+                                setIsAddingNewChapter(value === "add_new_chapter");
+                            }}
+                        >
+                            <option value="">-- Select a Chapter --</option>
+                            {chapters.map((chapter) => (
+                                <option key={chapter.id} value={chapter.id}>
+                                    {chapter.chapter}
+                                </option>
+                            ))}
+                            <option value="add_new_chapter">Add New Chapter</option>
+                        </select>
+                    </div>
+                    
+                    {/* New chapter Input */}
+                    {isAddingNewChapter && (
+                        <div className="mb-3">
+                            <label htmlFor="newChapter" className="form-label">
+                                New Chapter Name
+                            </label>
+                            <input
+                                type="text"
+                                id="newChapter"
+                                className="form-control"
+                                value={newChapter}
+                                onChange={(e) => setNewChapter(e.target.value)}
+                            />
+                        </div>
+                    )}
+
+                    {/* Topic Dropdown */}
                     <div className="mb-3">
                         <label htmlFor="topic" className="form-label">
                             Select Topic
@@ -110,7 +186,7 @@ const AddTopic = () => {
                         >
                             <option value="">-- Select a Topic --</option>
                             {topics.map((topic) => (
-                                <option key={topic.id} value={topic.topic}>
+                                <option key={topic.id} value={topic.id}>
                                     {topic.topic}
                                 </option>
                             ))}
@@ -118,6 +194,7 @@ const AddTopic = () => {
                         </select>
                     </div>
 
+                    {/* New Topic Input */}
                     {isAddingNewTopic && (
                         <div className="mb-3">
                             <label htmlFor="newTopic" className="form-label">
@@ -133,6 +210,7 @@ const AddTopic = () => {
                         </div>
                     )}
 
+                    {/* Subtopic Input */}
                     <div className="mb-3">
                         <label htmlFor="subTopic" className="form-label">
                             Subtopic Name
@@ -146,6 +224,7 @@ const AddTopic = () => {
                         />
                     </div>
 
+                    {/* Levels */}
                     {["basic", "medium", "advanced"].map((level) => (
                         <div key={level} className="mb-4">
                             <h4 className="text-capitalize">{level} Level</h4>
@@ -155,7 +234,7 @@ const AddTopic = () => {
                                     level={level}
                                     index={index}
                                     data={item}
-                                    handleInputChange={(level,index,field, value) =>
+                                    handleInputChange={(level, index, field, value) =>
                                         setLevels((prev) => ({
                                             ...prev,
                                             [level]: prev[level].map((link, i) =>
@@ -189,6 +268,7 @@ const AddTopic = () => {
                         </div>
                     ))}
 
+                    {/* NPTEL Content */}
                     <NptelContent
                         subject={subject}
                         onVideoDataChange={handleVideoDataChange}

@@ -31,10 +31,10 @@ const Home = ({ username }) => {
     // Render loading, error, or user details
     return (
         <div className="home-container">
-            <header className="header">
+            {/* <header className="header">
                 <h1>Welcome to the Student Information Portal</h1>
                 <p>Empowering Students for Success</p>
-            </header>
+            </header> */}
             <main className="student-profiles">
                 {loading ? (
                     <p>Loading user details...</p>

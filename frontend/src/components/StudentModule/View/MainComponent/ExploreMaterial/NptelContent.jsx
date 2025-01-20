@@ -21,7 +21,6 @@ const NptelContent = ({ subtopic }) => {
         setVideoNames(response.data[1]);
         setTitle(response.data[2]);
         setDescription(response.data[3]);
-        console.log(response.data[3]);
         setError("");
       } catch (err) {
         setVideos([]);

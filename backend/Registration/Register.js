@@ -1,21 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const db = require('../storeTopic/db');
+require("dotenv").config(); // For environment variables
 
-
-router.post('/register', (req, res) => {
+// JWT Secret Key
+const JWT_SECRET = process.env.JWT_SECRET || "deepak";
+// User Registration
+router.post("/register", async (req, res) => {
     const { name, email, username, password, role } = req.body;
-
-    const query = 'INSERT INTO users (name, email, username, password, role) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [name, email, username, password,role], (err, result) => {
+  
+    try {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Insert the user into the database
+      const query =
+        "INSERT INTO users (name, email, username, password, role) VALUES (?, ?, ?, ?, ?)";
+      db.query(query, [name, email, username, hashedPassword, role], (err) => {
         if (err) {
-            console.error('Error inserting user into the database:', err);
-            res.status(500).json({ message: 'Error registering user' });
-            return;
+          console.error("Error inserting user into the database:", err);
+          return res.status(500).json({ message: "Error registering user" });
         }
-        res.json({ message: 'User registered successfully!' });
-    });
-});
+        res.json({ message: "User registered successfully!" });
+      });
+    } catch (error) {
+      console.error("Error during registration:", error);
+      res.status(500).json({ message: "Error registering user" });
+    }
+  });
 router.post('/login', (req, res) => {
     const { username, password,role } = req.body;
 

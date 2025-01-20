@@ -8,14 +8,26 @@ const UserRouter = require('./Routes/User');
 const db = require('./storeTopic/db');
 const ratinglink =require('./Routes/Rating');
 const nptelVideoRouter = require('./Routes/NptelVideo'); // Import the NptelVideo router
+const liveChannelRouter = require('./Routes/LiveChannelTime'); // Import the LiveChannelTime router
+require("dotenv").config();
+const axios = require("axios");
+
 // Initialize Express app
 const app = express();
-const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
+
+
+
+
+
+
+
+// =================================================
+app.use('/api/',liveChannelRouter);
 //=================================================
 app.use('/api/',nptelVideoRouter);
 // =================================================
@@ -114,10 +126,23 @@ app.get("/api/subjects/:semesterId", (req, res) => {
 
 
 
-app.get('/api/topics/:subjectId', (req, res) => {
-  const { subjectId } = req.params;  
+app.get('/api/chapter/:subjectId', (req, res) => {
+  const { subjectId } = req.params; 
   // Fetch topics from the database
-  db.query('SELECT id,topic FROM topics WHERE subjectId = ?', [subjectId], (err, results) => {
+  // db.query('SELECT id,topic FROM topics WHERE subjectId = ?', [subjectId], (err, results) => {
+  db.query('SELECT id,chapter FROM chapter WHERE subjectId = ?', [subjectId], (err, results) => {
+    if (err) {
+      console.error('Error fetching topics:', err); // Log the error
+      return res.status(500).send('Error fetching topics');
+    }
+    // Send the topics as a JSON response
+    res.json({ chapter: results });
+  });
+});
+app.get('/api/topics/:chapterId', (req, res) => {
+  const { chapterId } = req.params;  
+  // Fetch topics from the database
+  db.query('SELECT id,topic FROM topics WHERE chapterId = ?', [chapterId], (err, results) => {
     if (err) {
       console.error('Error fetching topics:', err); // Log the error
       return res.status(500).send('Error fetching topics');
@@ -193,6 +218,8 @@ app.get('/api/content/:subtopicName', async (req, res) => {
 
 
 // ================================================================
+// this is for livechanneltime fetch topic data 
+
 app.get('/api/topics', async (req, res) => {
   const { subjectId } = req.query;  // Extract subjectId from query parameters
   // console.log('Subject ID:', subjectId);
@@ -204,7 +231,7 @@ app.get('/api/topics', async (req, res) => {
 
   try {
     // Use a promise-based approach to fetch topics
-    db.query('SELECT DISTINCT topic FROM topics WHERE subjectId = ?', [subjectId], (err, results) => {
+    db.query('SELECT DISTINCT topic,id FROM topics WHERE subjectId = ?', [subjectId], (err, results) => {
       //console.log('Fetched Topics:', results);
       if (err) {
         // console.error('Error fetching topics:', err);
@@ -224,11 +251,36 @@ app.get('/api/topics', async (req, res) => {
     res.status(500).json({ message: 'An unexpected error occurred', error: error.message });
   }
 });
+//===============================================================
+// this is for livechanneltime fetch subtopic data 
 
+app.get("/api/subtopics", (req, res) => {
+  const { topicId } = req.query;
+
+  if (!topicId) {
+      return res.status(400).json({ error: "topicId is required" });
+  }
+
+  const query = "SELECT subTopic,id FROM subtopics WHERE topicId = ?";
+
+  db.query(query, [topicId], (err, results) => {
+      if (err) {
+          console.error("Error fetching subtopics:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+
+      res.json(results);
+  });
+});
 
 // ================================================================
-
-// Start the server
+// Home Route
+app.get("/", (req, res) => {
+  res.send("Welcome to the server!");
+});
+// const { authenticateToken } = require("./Registration/Register");
+// Start Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -26,6 +26,11 @@ const Navbar = ({isLoggedIn}) => {
                             </Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link" to="/facultyindex/livechannel">
+                                Add Live Channel Time
+                            </Link>
+                        </li>
+                        <li className="nav-item">
                             {isLoggedIn &&<Link className="nav-link" to="/logout">
                                 Logout
                             </Link>}

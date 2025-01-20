@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./db"); // Database connection object
+// const authenticateUser = require("../authMiddleware");
 
 // Helper function for query execution using promises
 const query = (sql, params) => {
@@ -17,7 +18,9 @@ const query = (sql, params) => {
 
 router.post("/add-topic", async (req, res) => {
   const {
-    selectedTopic,
+    chapterId,
+    isAddingNewChapter,
+    topic,
     subTopic,
     isAddingNewTopic,
     courseId,
@@ -28,36 +31,61 @@ router.post("/add-topic", async (req, res) => {
     nptelVideos,
     videoFolder,
   } = req.body;
-
+// console.log(req.body);
   try {
+    let chapterIdToUse = chapterId; // Default to provided chapterId
     let topicId;
 
-    // Add a new topic or retrieve an existing one
-    if (isAddingNewTopic) {
-      const topicResult = await query(
-        "INSERT INTO topics (topic, courseId, branchId, semesterId, subjectId) VALUES (?, ?, ?, ?, ?)",
-        [selectedTopic, courseId, branchId, semesterId, subjectId]
+    // Add a new chapter if required
+    if (isAddingNewChapter) {
+      const chapterResult = await query(
+        "INSERT INTO chapter (chapter, courseId, branchId, semesterId, subjectId) VALUES (?, ?, ?, ?, ?)",
+        [chapterId, courseId, branchId, semesterId, subjectId]
       );
-      topicId = topicResult.insertId;
+      chapterIdToUse = chapterResult.insertId; // Use the newly added chapter ID
     } else {
-      const existingTopic = await query(
-        "SELECT id FROM topics WHERE topic = ? AND courseId = ? AND branchId = ? AND semesterId = ? AND subjectId = ?",
-        [selectedTopic, courseId, branchId, semesterId, subjectId]
+      // Check if the chapter exists
+      const existingChapter = await query(
+        "SELECT id FROM chapter WHERE id = ? AND courseId = ? AND branchId = ? AND semesterId = ? AND subjectId = ?",
+        [chapterId, courseId, branchId, semesterId, subjectId]
       );
+      if (!existingChapter.length) {
+        return res.status(404).json({ message: "Selected chapter not found." });
+      }
+      chapterIdToUse = existingChapter[0].id;
+      
+    }
 
+    // Add a new topic if required
+    if (isAddingNewTopic) {
+      
+      const topicResult = await query(
+        "INSERT INTO topics (topic, chapterId, courseId, branchId, semesterId, subjectId) VALUES (?, ?, ?, ?, ?, ?)",
+        [topic, chapterIdToUse, courseId, branchId, semesterId, subjectId]
+      );
+      topicId = topicResult.insertId; // Use the newly added topic ID
+    } else {
+     
+      // Check if the topic exists
+      const existingTopic = await query(
+        "SELECT id FROM topics WHERE  chapterId = ? AND courseId = ? AND branchId = ? AND semesterId = ? AND subjectId = ?",
+        [chapterIdToUse, courseId, branchId, semesterId, subjectId]
+      );
+      
+      
       if (!existingTopic.length) {
         return res.status(404).json({ message: "Selected topic not found." });
       }
-
+      
       topicId = existingTopic[0].id;
+      
     }
-
     // Add the subtopic
     const subTopicResult = await query(
       "INSERT INTO subtopics (subTopic, topicId) VALUES (?, ?)",
       [subTopic, topicId]
     );
-    const subTopicId = subTopicResult.insertId;
+    const subTopicId = subTopicResult.insertId; // Use the newly added subtopic ID
 
     // Insert links (basic, medium, advanced)
     const linkPromises = Object.keys(levels).flatMap((level) =>
@@ -71,7 +99,6 @@ router.post("/add-topic", async (req, res) => {
     );
 
     // Insert NPTEL videos
-    
     const videoPromises = nptelVideos.map(({ title, description, video }) =>
       query(
         "INSERT INTO nptel_videos (title, description, videoName, subTopicId, folder_path) VALUES (?, ?, ?, ?, ?)",

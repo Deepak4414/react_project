@@ -7,7 +7,7 @@ import "./Footer.css";
 const Footer = () => {
   return (
     <>
-    <footer className="bg-dark text-white py-4 mt-5">
+    <footer className="bg-dark text-white py-4">
       <div className="container text-center">
         <ul className="list-inline mb-3">
           <li className="list-inline-item">

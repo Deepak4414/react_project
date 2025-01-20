@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+.bower_components/
+jspm_packages/
+
+# React
+build/
+dist/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# Editor Files
+.idea/
+.vscode/
+*.swp
+
+# Other
+*.bak
+*.tmp

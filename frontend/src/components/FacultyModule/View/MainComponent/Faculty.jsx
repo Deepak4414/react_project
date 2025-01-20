@@ -6,6 +6,8 @@ import AddCourse from "./AddCourse";
 import AddTopic from "./AddTopic";
 import UpdateCourse from "./UpdateCourse";
 import Logout from "../../../Registration/Logout";
+import LiveChannel from "./LiveChannel";
+import LiveChannelTime from "./LiveChannelTime";
 
 function Faculty({isLoggedIn}) {
    const [userState, setUserState] = useState(null);
@@ -30,6 +32,8 @@ function Faculty({isLoggedIn}) {
                     <Route path="/add" element={<AddCourse />} />
                     <Route path="/add-topic" element={<AddTopic />} />
                     <Route path="/update" element={<UpdateCourse />} />
+                    <Route path="/livechannel" element={<LiveChannel />} />
+                    <Route path="/livechanneltime" element={<LiveChannelTime/>}/>
                     <Route path="/logout" element={Logout} />
                 </Routes>
             </div>
