@@ -9,7 +9,7 @@ function Navbar({isLoggedIn}) {
       <div className="navbar-logo">
         <img src="/image/logo.png" alt="Vignan Logo" />
       </div>
-      <h3 style={{color: 'white', textAlign: 'center'}}>E Content from Internet and Local Source </h3>
+      <h3 style={{color: 'white', textAlign: 'center'}}>E Content from Internet and Local Sources </h3>
       <ul className="navbar-links">
         <li><Link to="/studentindex" state={{ username: 'john_doe' }}>Home</Link></li>
         <li><Link to="/studentindex/explore-material">Explore Material</Link></li>

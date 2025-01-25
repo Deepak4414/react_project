@@ -15,7 +15,7 @@ router.get("/videos", async (req, res) => {
     // Query database for video details
     const videos = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT videoName, folder_path,title,description FROM nptel_videos WHERE subTopicId = ?",
+        "SELECT videoName, folder_path,title,description,video_level FROM nptel_videos WHERE subTopicId = ?",
         [subTopic],
         (err, results) => {
           if (err) reject(err);
@@ -30,7 +30,7 @@ router.get("/videos", async (req, res) => {
     const videoNames = videos.map(({ videoName }) => videoName);
     const title = videos.map(({title})=>title);
     const description = videos.map(({description})=>description);
-    
+    const video_level = videos.map(({video_level})=>video_level);
     // Verify existence of videos in their respective folders
     const verifiedVideos = videos
       .map(({ videoName, folder_path }) => {
@@ -43,7 +43,7 @@ router.get("/videos", async (req, res) => {
       return res.status(404).json({ error: "No valid videos found." });
     }
 
-    res.json([verifiedVideos,videoNames,title,description]); // Send verified video paths
+    res.json([verifiedVideos,videoNames,title,description,video_level]); // Send verified video paths
   } catch (error) {
     console.error("Error fetching videos:", error);
     res.status(500).json({ error: "Failed to fetch videos." });

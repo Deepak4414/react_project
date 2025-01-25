@@ -38,7 +38,7 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
   }
 
   if (error) {
-    return <div>Error: {error.response?.data?.message || error.message}</div>;
+    return <div>{error.response?.data?.message || error.message}</div>;
   }
 
   if (!liveData) {
@@ -48,7 +48,7 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
   return (
     <div>
       <a href="http://192.168.68.10:9080">
-        <img src="/image/live-logo.png" alt="Live Logo" style={{ width: "100px", height: "80px" }} />
+        <img src="/image/cdot_logo.png" alt="Live Logo" style={{ width: "80px", height: "80px" }} />
       </a>
       <p>
         {console.log(liveData.level)}

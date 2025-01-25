@@ -7,10 +7,10 @@ const NptelContent = ({ subtopic }) => {
   const [videoNames, setVideoNames] = useState([]);
   const [error, setError] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [title,setTitle]=useState("");
-  const [description,setDescription]=useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedVideoName, setSelectedVideoName] = useState("");
-
+  const [video_level, setVideoLevel] = useState([]);
   useEffect(() => {
     const fetchVideos = async () => {
       try {
@@ -21,6 +21,7 @@ const NptelContent = ({ subtopic }) => {
         setVideoNames(response.data[1]);
         setTitle(response.data[2]);
         setDescription(response.data[3]);
+        setVideoLevel(response.data[4]);
         setError("");
       } catch (err) {
         setVideos([]);
@@ -42,7 +43,7 @@ const NptelContent = ({ subtopic }) => {
   };
 
   return (
-    <div className="nptel-container"  style={{ width: '200px' }}>
+    <div className="nptel-container" style={{ width: '200px' }}>
       {/* <h2>Videos for Subtopic: {subtopic}</h2> */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -62,6 +63,7 @@ const NptelContent = ({ subtopic }) => {
           >
             <h3>{title[index]}</h3>
             <p>{description[index]}</p>
+            <p>{video_level[index]}</p>
             <img
               src="/image/image.png" // Replace with actual thumbnail source
               alt={videoNames[index] || "Video"}
@@ -72,6 +74,18 @@ const NptelContent = ({ subtopic }) => {
                 marginBottom: "10px",
               }}
             />
+            <p>
+              <strong>Level:</strong>{" "}
+              <span style={{ textDecoration: video_level[index] === "Basic" ? "none" : "line-through" }}>
+                Basic
+              </span>{" "}
+              <span style={{ textDecoration: video_level[index] === "Intermediate" ? "none" : "line-through" }}>
+                Intermediate
+              </span>{" "}
+              <span style={{ textDecoration: video_level[index] === "Advanced" ? "none" : "line-through" }}>
+                Advance
+              </span>
+            </p>
 
           </div>
         ))}

@@ -36,7 +36,6 @@ const AddTopic = () => {
                     const response = await axios.get(
                         `http://localhost:5000/api/chapter/${subject}`
                     );
-                    console.log(response.data.chapter);
                     setChapters(response.data.chapter);
                 }
             } catch (error) {
@@ -72,7 +71,7 @@ const AddTopic = () => {
     const handleVideoDataChange = (updatedData) => {
         setNptelData(updatedData);
     };
-
+   
     const handleFolderNameChange = (folderName) => {
         setFolderName(folderName);
     };
@@ -106,6 +105,7 @@ const AddTopic = () => {
             levels,
             nptelVideos: nptelData,
             videoFolder: folderName,
+            
         };
 
         try {

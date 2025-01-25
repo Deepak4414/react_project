@@ -25,7 +25,7 @@ const LiveChannelTime = () => {
                         `http://localhost:5000/api/topics/?subjectId=${subject}`
                     );
                     setTopics(response.data);
-                
+
                 }
             } catch (error) {
                 console.error("Error fetching topics:", error);
@@ -159,14 +159,18 @@ const LiveChannelTime = () => {
                             <label htmlFor="channel" className="form-label">
                                 Channel
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 id="channel"
                                 name="channel"
                                 className="form-control"
                                 value={formData.channel}
                                 onChange={handleInputChange}
-                            />
+                            >
+                                <option value="">Select a channel</option>
+                                <option value="DD SWAYAM PRABHA 1">DD SWAYAM PRABHA 1</option>
+                                <option value="DD SWAYAM PRABHA 2">DD SWAYAM PRABHA 2</option>
+                                <option value="DD SWAYAM PRABHA 3">DD SWAYAM PRABHA 3</option>
+                            </select>
                         </div>
 
                         <div className="mb-3">

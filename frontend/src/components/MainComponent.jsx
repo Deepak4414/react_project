@@ -6,7 +6,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 const MainComponent = () => {
     return (
         <div>
-            
+            {}
             {/* <Studentindex/> */}
             {/* <Login/> */}
             {/* <Registration/> */}

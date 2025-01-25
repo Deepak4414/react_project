@@ -99,10 +99,11 @@ router.post("/add-topic", async (req, res) => {
     );
 
     // Insert NPTEL videos
-    const videoPromises = nptelVideos.map(({ title, description, video }) =>
+ 
+    const videoPromises = nptelVideos.map(({ title, description, video,videoLevel }) =>
       query(
-        "INSERT INTO nptel_videos (title, description, videoName, subTopicId, folder_path) VALUES (?, ?, ?, ?, ?)",
-        [title, description, video, subTopicId, videoFolder]
+        "INSERT INTO nptel_videos (title, description,video_level, videoName, subTopicId, folder_path) VALUES (?, ?, ?, ?, ?, ?)",
+        [title, description,videoLevel, video, subTopicId, videoFolder]
       )
     );
 

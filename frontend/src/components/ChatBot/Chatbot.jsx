@@ -1,75 +1,39 @@
-import React, { useState } from "react";
-import axios from "axios";
-
+import React, { useState } from 'react';
+import './Chatbot.css';
 const Chatbot = () => {
-    const [messages, setMessages] = useState([]);
-    const [input, setInput] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-    const sendMessage = async () => {
-        if (!input.trim()) return;
+  const handleOpenChat = () => {
+    setIsOpen(true);
+  };
 
-        const userMessage = { sender: "user", text: input };
-        setMessages([...messages, userMessage]);
+  const handleCloseChat = () => {
+    setIsOpen(false);
+  };
 
-        try {
-            const response = await axios.post("http://localhost:5000/api/chat", {
-                message: input,
-            });
-
-            const botMessage = { sender: "bot", text: response.data.reply };
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-        } catch (error) {
-            const errorMessage = { sender: "bot", text: "Error connecting to the chatbot API." };
-            setMessages((prevMessages) => [...prevMessages, errorMessage]);
-        }
-
-        setInput("");
-    };
-
-    return (
-        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <div
-                style={{
-                    height: "400px",
-                    border: "1px solid #ccc",
-                    padding: "10px",
-                    overflowY: "scroll",
-                    marginBottom: "10px",
-                }}
-            >
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            textAlign: msg.sender === "user" ? "right" : "left",
-                            margin: "5px 0",
-                        }}
-                    >
-                        <span
-                            style={{
-                                display: "inline-block",
-                                padding: "10px",
-                                borderRadius: "10px",
-                                backgroundColor: msg.sender === "user" ? "#daf8cb" : "#f1f0f0",
-                            }}
-                        >
-                            {msg.text}
-                        </span>
-                    </div>
-                ))}
-            </div>
-            <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
-                style={{ width: "80%", padding: "10px", marginRight: "10px" }}
-            />
-            <button onClick={sendMessage} style={{ padding: "10px 20px" }}>
-                Send
+  return (
+    <div>
+      <button className="chat-btn" onClick={handleOpenChat}>
+        <img src="/image/ai-logo.png" alt="" style={{width: 30, height: 30}}/>
+      </button>
+      {isOpen && (
+        <div className="chat-box">
+          <iframe
+            src="https://copilotstudio.microsoft.com/environments/Default-3b0993d8-31db-4db6-b617-64ac193c7ace/bots/crb47_agentFghfw8/webchat?__version__=2"
+            frameborder="0"
+            style={{ width: '100%', height: '100%' }}
+          />
+          <div className="chat-box-footer">
+            <input type="text" placeholder="Type a message..." />
+            <button type="submit">Send</button>
+            <button className="close-btn" onClick={handleCloseChat}>
+              x
             </button>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Chatbot;
