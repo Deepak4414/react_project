@@ -223,6 +223,11 @@ cors@^2.8.5:
     object-assign "^4"
     vary "^1"
 
+cosine-similarity@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/cosine-similarity/-/cosine-similarity-1.0.1.tgz"
+  integrity sha512-qLkCCpVR/v026TtNsnbkLGzlDAoklAKlhJCQwlyDdqbFanSWflzbNzH/Uwe3T/ezAzRk4V2+Ngfqcog1aZ2q/A==
+
 debug@2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"

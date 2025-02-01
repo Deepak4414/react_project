@@ -55,7 +55,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
 
   const renderCardContent = (item) => (
     <div key={item.id} className="card mb-3" style={{ width: '300px' }}>
-      <div className="card-body" style={{ padding: '10px' }}>
+      <div className="card-body" style={{ padding: '10px'}}>
         <h3
           className="card-title"
           style={{

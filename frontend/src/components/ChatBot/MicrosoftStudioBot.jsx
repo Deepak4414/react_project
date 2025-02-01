@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './Chatbot.css';
-const Chatbot = () => {
+import './MicrosoftStudioBot.css';
+const MicrosoftStudioBot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenChat = () => {
@@ -36,4 +36,4 @@ const Chatbot = () => {
   );
 };
 
-export default Chatbot;
+export default MicrosoftStudioBot;

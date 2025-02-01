@@ -1,0 +1,34 @@
+/* ShowInChatBox.css */
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.message.user {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+}
+
+.message.bot {
+    background-color: #e9ecef;
+    color: black;
+    margin-right: auto;
+}
+
+.message-text {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.message-link:hover {
+    text-decoration: underline;
+}
