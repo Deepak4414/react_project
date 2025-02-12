@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Logout = ({ onLogout }) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        localStorage.removeItem('userState');
-        // Clear any authentication tokens or user data here
-        localStorage.removeItem('authToken'); // Example: remove auth token from local storage
-        // On Logout
-        
-        onLogout(); // Call the onLogout function to update the state in the parent component
-        navigate('/'); // Redirect to the login page
-    }, [navigate, onLogout]);
+  useEffect(() => {
+    const logout = async () => {
+      await onLogout();
+      navigate('/');
+      setLoading(false);
+    };
+    logout();
+  }, [onLogout, navigate]);
 
-    return (
-        <div>
-            <h2>Logging out...</h2>
-        </div>
-    );
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return <div>Logged out successfully!</div>;
 };
 
 export default Logout;

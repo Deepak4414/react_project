@@ -51,7 +51,6 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
         <img src="/image/cdot_logo.png" alt="Live Logo" style={{ width: "80px", height: "80px" }} />
       </a>
       <p>
-        {console.log(liveData.level)}
         It is Available on <strong>{liveData.channel}</strong> channel at{" "}
         <strong>{liveData.time}</strong> on <strong>{formatDate(liveData.date)}</strong>.
         <br />

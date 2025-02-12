@@ -9,6 +9,9 @@ const db = require('./storeTopic/db');
 const ratinglink =require('./Routes/Rating');
 const nptelVideoRouter = require('./Routes/NptelVideo'); // Import the NptelVideo router
 const liveChannelRouter = require('./Routes/LiveChannelTime'); // Import the LiveChannelTime router
+const UploadVfstrVideo = require('./Routes/Upload-Vfstr-Video');
+const VfstrVideo = require('./Routes/Vfstr-video');
+
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
 const dotenv = require("dotenv");
@@ -22,7 +25,10 @@ dotenv.config();
 
 // Routes
 app.use("/api/", apiRoutes);
-
+//=================================================
+app.use("/api/", VfstrVideo);
+// =================================================
+app.use("/api/", UploadVfstrVideo);
 // =================================================
 app.use('/api/',liveChannelRouter);
 //=================================================

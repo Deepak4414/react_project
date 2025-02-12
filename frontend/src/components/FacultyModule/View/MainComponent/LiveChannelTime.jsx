@@ -70,7 +70,6 @@ const LiveChannelTime = () => {
             subTopicId: selectedSubTopic,
             ...formData,
         };
-        console.log(requestData);
         try {
             await axios.post("http://localhost:5000/api/schedule/add", requestData);
             alert("Schedule added successfully.");

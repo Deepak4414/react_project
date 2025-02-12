@@ -19,24 +19,31 @@ const Home = ({ isLoggedIn, onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { ...formData, role: loginType });
-      alert(response.data.message);
-      if (response.data.success) {
-        document.querySelector('#loginModal .btn-close').click(); // Close the modal
-        onLogin(); // Update the login status in the parent component
-        const userState = { username: formData.username };
-        if (loginType === 'student') {
-          localStorage.setItem('userState', JSON.stringify(userState));
-          navigate('/studentindex', { state: userState }); // Redirect to student index page with username
-        } else if (loginType === 'faculty') {
-          localStorage.setItem('userState', JSON.stringify(userState));
-          navigate('/facultyindex', { state: userState }); // Redirect to faculty index page with username
+        const response = await axios.post('http://localhost:5000/api/login', { ...formData, role: loginType });
+        alert(response.data.message);
+
+        if (response.data.success) {
+            // Close the modal
+            document.querySelector('#loginModal .btn-close').click();
+
+            // Store the JWT token and user state in localStorage
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userState', JSON.stringify({ username: formData.username, role: loginType }));
+
+            // Update the login status in the parent component
+            onLogin();
+
+            // Redirect based on role
+            if (loginType === 'student') {
+                navigate('/studentindex');
+            } else if (loginType === 'faculty') {
+                navigate('/facultyindex');
+            }
         }
-      }
     } catch (error) {
-      alert('Error logging in');
+        alert('Error logging in');
     }
-  };
+};
   const handleRegister = () => {
     document.querySelector('#loginModal .btn-close').click(); // Close the modal
     navigate('/register'); // Navigate to the registration page

@@ -31,9 +31,14 @@ const Navbar = ({isLoggedIn}) => {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            {isLoggedIn &&<Link className="nav-link" to="/logout">
+                            <Link className="nav-link" to="/facultyindex/addvfstrvideo">
+                                Add VFSTR Video
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/logout">
                                 Logout
-                            </Link>}
+                            </Link>
                         </li>
                     </ul>
                 </div>

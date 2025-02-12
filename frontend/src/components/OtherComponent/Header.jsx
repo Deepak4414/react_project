@@ -3,7 +3,7 @@ import React from 'react';
 const Header = ({ isLoggedIn }) => {
     return (
         <header className="d-flex justify-content-between align-items-center py-3">
-            <img src="/image/logo.png" alt="Logo" className="img-fluid" style={{ maxHeight: '60px' }} />
+            <img src="/image/logo.svg" alt="Logo" className="img-fluid" style={{ maxHeight: '60px' }} />
             <ul className="nav">
                 {!isLoggedIn && (
                     <li className="nav-item">

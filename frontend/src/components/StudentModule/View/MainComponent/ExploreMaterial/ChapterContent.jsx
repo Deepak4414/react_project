@@ -55,7 +55,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
 
   const renderCardContent = (item) => (
     <div key={item.id} className="card mb-3" style={{ width: '300px' }}>
-      <div className="card-body" style={{ padding: '10px'}}>
+      <div className="card-body" style={{ padding: '10px' }}>
         <h3
           className="card-title"
           style={{
@@ -77,22 +77,22 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
           ) : (
             <span>
               {truncateText(item.title || "No Title Available", 10000)}{" "}
-             
+
+
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm"
+              >
                 <img
                   src="/image/link_logo.png"
                   alt="Link"
                   className="me-2"
-                  style={{ width: "24px", cursor: "pointer" }}
+                  style={{ width: "30px", cursor: "pointer" }}
                 />
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary btn-sm"
-                >
-                  Link
-                </a>
-              
+              </a>
+
             </span>
           )}
         </h3>

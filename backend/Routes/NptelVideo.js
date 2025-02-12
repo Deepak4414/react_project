@@ -53,7 +53,7 @@ router.get("/videos", async (req, res) => {
 // Endpoint to stream a video
 router.get("/video", (req, res) => {
   const videoPath = req.query.path;
-
+  console.log(videoPath);
   if (!videoPath || !fs.existsSync(videoPath)) {
     return res.status(404).json({ error: "Video not found." });
   }
@@ -97,7 +97,6 @@ router.get("/video", (req, res) => {
 // Video folder
 router.get("/nptelvideos/:subject", (req, res) => {
   const subject = req.params.subject;
-
   // fetch subject name from subject id
   const subjectName = "select * from subjects where subjectId = ?";
   db.query(subjectName, subject, (err, results) => {
@@ -105,7 +104,7 @@ router.get("/nptelvideos/:subject", (req, res) => {
       console.error("Error fetching subject name:", err);
       return res.status(500).send("Failed to fetch videos.");
     }
-
+    if(results[0].subjectName.length){
     // fetch video files from the subject folder
     const VIDEO_FOLDER = `D:/Videos/${results[0].subjectName}`;
     fs.readdir(VIDEO_FOLDER, (err, files) => {
@@ -122,6 +121,10 @@ router.get("/nptelvideos/:subject", (req, res) => {
 
       res.json([videoFiles,VIDEO_FOLDER]);
     });
+  }
+  else{
+    res.json({message:"No videos available for this subject"})
+  }
   });
 });
 

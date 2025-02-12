@@ -1,83 +1,121 @@
+/* General Styles */
 .home-container {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4; 
-    justify-content: space-between;
-    flex-direction: column;
-    display: flex;
-    height: 90vh;
-    min-height: 100vh; /* Ensure the container takes at least the full viewport height */
-}
-
-footer {
-    margin-top: auto; /* Push the footer to the bottom */
+    color: #333;
     text-align: center;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
 }
 
-.header {
-    text-align: center;
-    background-color: #4CAF50;
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
     color: white;
-    padding: 20px;
+    padding: 100px 20px;
 }
 
-.student-profiles {
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #ff3b2f;
+}
+
+/* Features Section */
+.features-section {
+    padding: 60px 20px;
+    background: #f9f9f9;
+}
+
+.features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+
+.features-grid {
     display: flex;
+    justify-content: space-around;
     flex-wrap: wrap;
-    justify-content: center;
-    margin: auto 0;
+    gap: 20px;
+}
+
+.feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.feature-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* Student Profiles Section */
+.student-profiles {
+    padding: 60px 20px;
 }
 
 .student-card {
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin: 10px;
     padding: 20px;
-    width: 500px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: left;
 }
 
-.student-card img {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-bottom: 15px;
+.student-card h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
 .student-card h3 {
-    margin: 10px 0;
-    font-size: 1.5em;
-    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
 }
 
 .student-card p {
-    color: #777;
-    font-size: 1em;
-    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #666;
 }
 
-.student-card a {
-    text-decoration: none;
-    color: #4CAF50;
-    font-weight: bold;
-    transition: color 0.3s;
+/* Footer Section */
+.footer-section {
+    background: #333;
+    color: white;
+    padding: 20px;
+    margin-top: 60px;
 }
 
-.student-card a:hover {
-    color: #388E3C;
-}
-
-.student-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.footer-section p {
+    margin: 0;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../Css/NptelContent.css";
+import VfstrVideo from "./VfstrVideo/VfstrVideo";
 
 const NptelContent = ({ subtopic }) => {
   const [videos, setVideos] = useState([]);
@@ -61,9 +62,9 @@ const NptelContent = ({ subtopic }) => {
             }}
             onClick={() => openVideo(videoPath, videoNames[index])}
           >
-            <h3>{title[index]}</h3>
+           
+            <h4 style={{}}>{title[index]}</h4>
             <p>{description[index]}</p>
-            <p>{video_level[index]}</p>
             <img
               src="/image/image.png" // Replace with actual thumbnail source
               alt={videoNames[index] || "Video"}
@@ -89,8 +90,9 @@ const NptelContent = ({ subtopic }) => {
 
           </div>
         ))}
+        
       </div>
-
+      <VfstrVideo subtopic={subtopic}/>
       {selectedVideo && (
         <div className="nptel-modal-overlay">
           <div className="nptel-modal-content">
@@ -108,7 +110,6 @@ const NptelContent = ({ subtopic }) => {
                 )}`}
                 type="video/mp4"
               />
-
               Your browser does not support the video tag.
             </video>
             <p><strong>Video Name:</strong> {selectedVideoName}</p>

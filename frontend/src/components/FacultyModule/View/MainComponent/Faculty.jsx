@@ -8,7 +8,8 @@ import UpdateCourse from "./UpdateCourse";
 import Logout from "../../../Registration/Logout";
 import LiveChannel from "./LiveChannel";
 import LiveChannelTime from "./LiveChannelTime";
-
+import AddVfstrVideo from "./AddVfstrVideo/AddVfstrVideo";
+import SaveVfstrVideo from "./AddVfstrVideo/SaveVfstrVideo";
 function Faculty({isLoggedIn}) {
    const [userState, setUserState] = useState(null);
    
@@ -34,6 +35,8 @@ function Faculty({isLoggedIn}) {
                     <Route path="/update" element={<UpdateCourse />} />
                     <Route path="/livechannel" element={<LiveChannel />} />
                     <Route path="/livechanneltime" element={<LiveChannelTime/>}/>
+                    <Route path="/addvfstrvideo" element={<AddVfstrVideo />} />
+                    <Route path="/savevfstrvideo" element={<SaveVfstrVideo />} />
                     <Route path="/logout" element={Logout} />
                 </Routes>
             </div>
