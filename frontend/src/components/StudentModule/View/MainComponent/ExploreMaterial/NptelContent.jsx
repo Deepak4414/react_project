@@ -45,7 +45,7 @@ const NptelContent = ({ subtopic }) => {
 
   return (
     <div className="nptel-container" style={{ width: '200px' }}>
-      {error && <p >{error}</p>}
+      {error && <p  >{error}</p>}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {videos.map((videoPath, index) => (
@@ -83,7 +83,7 @@ const NptelContent = ({ subtopic }) => {
                 Intermediate
               </span>{" "}
               <span style={{ textDecoration: video_level[index] === "Advanced" ? "none" : "line-through" }}>
-                Advance
+                Advanced
               </span>
             </p>
 

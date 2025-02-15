@@ -4,11 +4,9 @@ import MainComponent from './components/MainComponent';
 
 const MainApp = () => {
     return (
-        // <BrowserRouter>
             <div>
                 <MainComponent />
             </div>
-        // </BrowserRouter>
     );
 };
 

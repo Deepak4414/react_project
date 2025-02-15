@@ -38,9 +38,9 @@ const MainApp = () => {
 
   return (
     <Router>
-      <div className="app-container">
+      <div className="app-container" >
         {/* Main Content */}
-        <div className="main-content">
+        <div className="main-content" >
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home isLoggedIn={isLoggedIn} onLogin={handleLogin} />} />

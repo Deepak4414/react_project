@@ -6,7 +6,7 @@
 
 /* Left Column */
 .left-column {
-    width: 30%;
+    width: 25%;
     background-color: #ffffff;
     border-right: 1px solid #e0e0e0;
     padding: 20px;
@@ -25,8 +25,6 @@
 
 .left-column ul {
     list-style: none;
-    /* padding: 0; */
-    /* margin: 0; */
 }
 
 .left-column li {
@@ -55,10 +53,12 @@
     border-color: #007bff;
     box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
 }
+
 .chapter-list {
     margin-top: 10px;
     padding-left: 1px;
 }
+
 .topics-list button {
     display: block;
     width: 100%;
@@ -81,6 +81,7 @@
     border-color: #dfc56d;
     box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
 }
+
 .subtopics-list {
     margin-top: 10px;
     padding-left: 1px;
@@ -111,14 +112,13 @@
 
 /* Right Column */
 .right-column {
-    display: flex; /* Use flexbox */
-    flex-direction: column; /* Stack children vertically */
-    width: 75%; /* Full width */
+    width: 75%;
     height: 100vh; /* Full viewport height */
     box-sizing: border-box; /* Include padding and border in element's total width and height */
+    overflow-y: auto;
 }
+
 .chapter-content {
-     /* flex: 1; Allow ChapterContent to grow and fill the space */
     overflow: auto; /* Add scroll if content overflows */
-    width :fit-content
+    width: fit-content;
 }

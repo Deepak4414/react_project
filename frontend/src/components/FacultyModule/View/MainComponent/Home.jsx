@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import '../../Css/Home.css'; // Import CSS for styling
 
 const Home = ({ username }) => {
     // Ensure 'username' is correctly extracted if passed as an object
@@ -10,27 +9,24 @@ const Home = ({ username }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch user details on component mount or when 'username' changes
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                // Fetch user details from API using the 'user' extracted from 'username'
                 const response = await axios.get(`http://localhost:5000/api/user?username=${user}`);
-                setUsers(response.data.results); // Assuming 'results' contains the data
+                setUsers(response.data.results); 
             } catch (err) {
-                setError('Error fetching user details'); // Handle error
+                setError('Error fetching user details');
             } finally {
                 setLoading(false); // Set loading to false after request completes
             }
         };
 
-        // Only call the API if 'user' is defined
+       
         if (user) {
             fetchUserDetails();
         }
     }, [user]); // Dependency array includes 'user' to re-fetch when it changes
 
-    // Render loading, error, or user details
     return (
         <div className="home-container">
             <header className="header">

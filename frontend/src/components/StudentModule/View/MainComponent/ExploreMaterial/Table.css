@@ -33,6 +33,8 @@ th {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fafafa;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .content-item h5 {
@@ -44,6 +46,7 @@ th {
 .content-item p {
   margin: 5px 0;
   color: #555;
+  white-space: nowrap;
 }
 
 .content-item a {

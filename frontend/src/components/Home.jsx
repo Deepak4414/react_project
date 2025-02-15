@@ -57,9 +57,9 @@ const Home = ({ isLoggedIn, onLogin }) => {
       <div className="row align-items-center">
         <div className="col-md-6">
           <div className="text-center text-md-start">
-            <h1 className="display-4 mb-4">Digital Education Platform</h1>
-            <p className="lead mb-4">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt</p>
-            <a href="#" className="btn btn-primary btn-lg">Go Live</a>
+            <h1 className="display-4 mb-4 fw-normal">Digital Education Platform</h1>
+            {/* <p className="lead mb-4">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt</p> */}
+            {/* <a href="#" className="btn btn-primary btn-lg">Go Live</a> */}
           </div>
         </div>
         <div className="col-md-6">

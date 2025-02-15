@@ -113,64 +113,63 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
   );
   return (
     <div className="containers">
-      <div className="chapter">
-        <div className="topic">
-          <table className="table table-bordered">
-            <thead className="table-dark">
-              <tr >
-                <th colSpan={3} style={{ textAlign: 'center' }}> E-Content from Internet</th>
-                <th colSpan={1} style={{ textAlign: 'center' }}>Content from local server</th>
-                <th rowSpan={2} style={{ textAlign: 'center' }}>Live Video from local C-DoT BBG</th>
-              </tr>
+  <div className="chapter">
+    <div className="topic">
+      <table className="table table-bordered">
+        <thead className="table-dark">
+          <tr >
+            <th colSpan={3} style={{ textAlign: 'center', width: '48%' }}> E-Content from Internet</th>
+            <th colSpan={1} style={{ textAlign: 'center', width: '16%' }}>Content from local server</th>
+            <th rowSpan={2} style={{ textAlign: 'center', width: '16%' }}>Live Video from local C-DoT BBG</th>
+          </tr>
 
-              <tr>
-                <th>Basic Level</th>
-                <th>Intermediate Level</th>
-                <th>Advanced Level</th>
-                <th>NPTEL Content and VFSTR Content</th>
+          <tr>
+            <th style={{ width: '16%' }}>Basic Level</th>
+            <th style={{ width: '16%' }}>Intermediate Level</th>
+            <th style={{ width: '16%' }}>Advanced Level</th>
+            <th style={{ width: '16%' }}>NPTEL Content and VFSTR Content</th>
 
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {levels.basic && levels.basic.length > 0 ? (
-                    levels.basic.map(renderCardContent)
-                  ) : (
-                    <p>No Basic Level Content Available</p>
-                  )}
-                </td>
-                <td>
-                  {levels.medium && levels.medium.length > 0 ? (
-                    levels.medium.map(renderCardContent)
-                  ) : (
-                    <p>No Medium Level Content Available</p>
-                  )}
-                </td>
-                <td>
-                  {levels.advanced && levels.advanced.length > 0 ? (
-                    levels.advanced.map(renderCardContent)
-                  ) : (
-                    <p>No Advanced Level Content Available</p>
-                  )}
-                </td>
-                <td>
-                  <NptelContent subtopic={id} />
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={{ width: '16%' }}>
+              {levels.basic && levels.basic.length > 0 ? (
+                levels.basic.map(renderCardContent)
+              ) : (
+                <p  style={{ width: '250px' }}>No Basic Level Content Available</p>
+              )}
+            </td>
+            <td style={{ width: '16%' }}>
+              {levels.medium && levels.medium.length > 0 ? (
+                levels.medium.map(renderCardContent)
+              ) : (
+                <p  style={{ width: '250px' }}>No Medium Level Content Available</p>
+              )}
+            </td>
+            <td style={{ width: '16%' }}>
+              {levels.advanced && levels.advanced.length > 0 ? (
+                levels.advanced.map(renderCardContent)
+              ) : (
+                <p style={{ width: '250px' }}>No Advanced Level Content Available</p>
+              )}
+            </td>
+            <td style={{ width: '16%' }}>
+              <NptelContent subtopic={id} />
 
-                </td>
-                <td>
+            </td>
+            <td style={{ width: '16%' }}>
 
-                  <LiveVideoContent subtopic={id} topicId={topicId} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {videoUrl && <VideoModal videoUrl={videoUrl} onClose={closeModal} />}
-      {feedbackMessage && <p className="feedback-message">{feedbackMessage}</p>}
+              <LiveVideoContent subtopic={id} topicId={topicId} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  );
+  </div>
+  {videoUrl && <VideoModal videoUrl={videoUrl} onClose={closeModal} />}
+  {feedbackMessage && <p className="feedback-message">{feedbackMessage}</p>}
+</div>  );
 };
 
 export default ChapterContent;
