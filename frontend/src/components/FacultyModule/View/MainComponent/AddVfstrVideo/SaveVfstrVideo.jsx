@@ -60,7 +60,7 @@ const SaveVfstrVideo = () => {
         description: '',
         video: '',
         videoLevel: '',
-        videoFile: null,
+        textFile: '',
       },
     ]);
   };
@@ -79,43 +79,37 @@ const SaveVfstrVideo = () => {
     setVideoForms(updatedForms);
   };
 
-  // Handle video upload
   const handleUploadVideo = async (id) => {
     try {
       const form = videoForms.find((form) => form.id === id);
-
-      // if (!form.videoFile) {
-      //   alert('Please select a video file.');
-      //   return;
-      // }
-
+  
       const formData = new FormData();
-      formData.append('title', form.title);
-      formData.append('description', form.description);
-      formData.append('video', form.video);
-      formData.append('videoLevel', form.videoLevel);
-      formData.append('videoFile', form.videoFile);
-      formData.append('subject', subject); // Include the subject in the form data
-      formData.append('topicId',selectedTopic);
-      formData.append('subTopicId',selectedSubTopic); // Include the topic name in the form data
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("video", form.video);
+      formData.append("videoLevel", form.videoLevel);
+      formData.append("videoFile", form.textFile);
+      formData.append("subject", subject || "default");
+      formData.append("topicId", selectedTopic);
+      formData.append("subTopicId", selectedSubTopic);
+  
       const response = await axios.post(
-        'http://localhost:5000/api/upload-vfstr-video',
+        "http://localhost:5000/api/upload-vfstr-video",
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      console.log('Video uploaded successfully:', response.data);
-      alert('Video uploaded successfully!');
-      navigate('/facultyindex/addvfstrvideo');
+  
+      console.log("Video uploaded successfully:", response.data);
+      alert("Video uploaded successfully!");
+      navigate("/facultyindex/addvfstrvideo");
     } catch (error) {
-      console.error('Error uploading video:', error);
-      alert('Error uploading video. Please try again.');
+      console.error("Error uploading video:", error);
+      alert("Error uploading video. Please try again.");
     }
   };
+  
+  
+  
 
   // Fetch video names and folder name from the backend
   useEffect(() => {
@@ -241,14 +235,14 @@ const SaveVfstrVideo = () => {
                   </div>
                 </div>
 
-                {/* Video File Input */}
+                {/*  File Input */}
                 <div className="row mb-2">
                   <div className="col-md-6">
-                    <label>Video File:</label>
+                    <label>File:</label>
                     <input
                       type="file"
                       className="form-control"
-                      onChange={(e) => handleFormChange(form.id, 'videoFile', e.target.files[0])}
+                      onChange={(e) => handleFormChange(form.id, 'textFile', e.target.files[0])}
                     />
                   </div>
                 </div>

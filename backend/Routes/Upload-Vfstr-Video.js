@@ -5,58 +5,72 @@ const path = require("path");
 const db = require("../storeTopic/db");
 const router = express.Router();
 
-// Ensure folder exists before saving files
-const ensureUploadFolderExists = (folderPath) => {
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
+/// Ensure folder exists before moving file
+const ensureUploadFolderExists = (uploadPath) => {
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
   }
 };
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const folderName = req.body.subject || "default"; // Default folder if subject is missing
-    const uploadPath = path.join(__dirname, `../uploads/${folderName}`);
+//  First, store file in memory (so we can parse text fields first)
+const upload = multer({ storage: multer.memoryStorage() });
 
-    ensureUploadFolderExists(uploadPath); // Ensure folder exists
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Middleware to handle request body before setting destination
+const processUpload = (req, res, next) => {
+  upload.fields([{ name: "videoFile", maxCount: 1 }])(req, res, (err) => {
+    if (err) return res.status(400).json({ message: "File upload error", error: err });
+
+    const subjectId=req.body.subject;
+    const subjectName = "select * from subjects where subjectId = ?";
+    db.query(subjectName, subjectId, (err, results) => {
+      if (err) {
+        return res.status(400).json({ message: "Error fetching subject", error: err });
+        }
+    
+    const subject = results[0].subjectName || "default"; // Use "default" if missing
+    req.uploadPath = `D:/videos/VFSTR/${subject}/FILES`;
+    ensureUploadFolderExists(req.uploadPath);
+    next();
+  });
 });
+};
 
-const upload = multer({ storage });
-
-// Handle video & file upload
-router.post("/upload-vfstr-video", upload.single("videoFile"), (req, res) => {
+// 2️⃣ Upload video route (Moves file after parsing body)
+router.post("/upload-vfstr-video", processUpload, (req, res) => {
   try {
-    const { title, description,video, videoLevel, subject, topicId, subTopicId } = req.body;
-    const videoFile = req.file;
+    const { title, description, video, videoLevel, subject, topicId, subTopicId } = req.body;
+    
+    if (!subject) {
+      return res.status(400).json({ message: "Subject is missing in request body" });
+    }
 
-    // Set default values for empty fields
-    const videoName = video ? video : null;
-    const fileName = videoFile ? videoFile.originalname : null;
-    const fileBuffer = videoFile ? fs.readFileSync(videoFile.path) : null;
+    // Move file from memory to the correct folder
+    const videoFile = req.files["videoFile"] ? req.files["videoFile"][0] : null;
+    let filePath = null;
+    let fileName = null;
 
-    // Save video details to the database
+    if (videoFile) {
+      fileName = `${Date.now()}-${videoFile.originalname}`;
+      filePath = path.join(req.uploadPath, fileName);
+      fs.writeFileSync(filePath, videoFile.buffer); // Save file to disk
+    }
+
+    // Save data to database
     const videoData = {
-      title: title || null, // If empty, insert NULL
+      title: title || null,
       description: description || null,
-      video_name: videoName,
+      video_name: video || null,
       video_level: videoLevel || null,
-      file_name: fileName,
-      file: fileBuffer, // Store BLOB or NULL
+      file_name: fileName || null,
+      file: filePath || null,
       topicId: topicId || null,
       subTopicId: subTopicId || null,
       subject: subject || null,
     };
 
-    // Insert into database
-    const query = "INSERT INTO vfstr_videos SET ?";
-    db.query(query, videoData, (err, result) => {
+    db.query("INSERT INTO vfstr_videos SET ?", videoData, (err, result) => {
       if (err) {
-        console.error("Error inserting:", err);
+        console.error("Database error:", err);
         return res.status(500).json({ message: "Error inserting data into database." });
       }
       res.status(201).json({ message: "Video uploaded successfully!", videoData });
@@ -66,6 +80,8 @@ router.post("/upload-vfstr-video", upload.single("videoFile"), (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
+
+
 
 
 // Video folder

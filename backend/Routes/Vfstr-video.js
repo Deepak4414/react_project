@@ -4,6 +4,17 @@ const db = require("../storeTopic/db");
 const fs = require("fs");
 const path = require("path");
 
+// pdf file path 
+router.use("/videos", express.static(path.join("D:/Videos/VFSTR")));
+router.get("/pdf", (req, res) => {
+  const pdfPath = req.query.path;
+  if (!pdfPath) return res.status(400).send("Missing PDF path");
+
+  const absolutePath = path.resolve(pdfPath);
+  res.sendFile(absolutePath);
+});
+
+
 router.get("/vfstr-videos", async (req, res) => {
   const { subTopic } = req.query;
 
@@ -32,7 +43,7 @@ router.get("/vfstr-videos", async (req, res) => {
       video_name: file.video_name,
       video_level: file.video_level,
       file_name: file.file_name,
-      file: file.file ? Buffer.from(file.file).toString("base64") : null,
+      file: file.file ,
     }));
 
     // If videos exist, fetch from folder

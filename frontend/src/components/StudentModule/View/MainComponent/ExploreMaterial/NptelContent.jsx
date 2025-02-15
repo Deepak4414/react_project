@@ -45,8 +45,7 @@ const NptelContent = ({ subtopic }) => {
 
   return (
     <div className="nptel-container" style={{ width: '200px' }}>
-      {/* <h2>Videos for Subtopic: {subtopic}</h2> */}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p >{error}</p>}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {videos.map((videoPath, index) => (
@@ -63,7 +62,7 @@ const NptelContent = ({ subtopic }) => {
             onClick={() => openVideo(videoPath, videoNames[index])}
           >
            
-            <h4 style={{}}>{title[index]}</h4>
+            <h4 style={{ fontSize: '16px', fontWeight:"bold"}}>{title[index]}</h4>
             <p>{description[index]}</p>
             <img
               src="/image/image.png" // Replace with actual thumbnail source

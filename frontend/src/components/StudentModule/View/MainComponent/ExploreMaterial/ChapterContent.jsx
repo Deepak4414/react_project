@@ -118,7 +118,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
           <table className="table table-bordered">
             <thead className="table-dark">
               <tr >
-                <th colSpan={3} style={{ textAlign: 'center' }}> E Content from Internet</th>
+                <th colSpan={3} style={{ textAlign: 'center' }}> E-Content from Internet</th>
                 <th colSpan={1} style={{ textAlign: 'center' }}>Content from local server</th>
                 <th rowSpan={2} style={{ textAlign: 'center' }}>Live Video from local C-DoT BBG</th>
               </tr>

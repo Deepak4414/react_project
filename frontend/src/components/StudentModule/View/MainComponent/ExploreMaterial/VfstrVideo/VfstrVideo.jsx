@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import base64 from "base64-js";
 
 const VfstrVideo = ({ subtopic }) => {
   const [vfstrFiles, setVfstrFiles] = useState([]);
   const [error, setError] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedVideoName, setSelectedVideoName] = useState("");
-  const [videoPath, setVideoPath] = useState("");
 
   useEffect(() => {
     const fetchVfstrFiles = async () => {
@@ -15,11 +13,12 @@ const VfstrVideo = ({ subtopic }) => {
         const response = await axios.get("http://localhost:5000/api/vfstr-videos", {
           params: { subTopic: subtopic },
         });
+
+        console.log("Vfstr Files:", response.data);
         setVfstrFiles(response.data.videofiles || []);
-        setVideoPath(response.data.folder);
         setError("");
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching files:", err);
         setVfstrFiles([]);
         setError(err.response?.data?.error || "Failed to fetch Vfstr videos and PDFs.");
       }
@@ -33,26 +32,28 @@ const VfstrVideo = ({ subtopic }) => {
     return fileName.split(".").pop().toLowerCase();
   };
 
-  const openPDF = (base64String, fileName) => {
-    if (!base64String) {
-      alert("File data is missing.");
+  const openPDF = (pdfPath) => {
+    if (!pdfPath) {
+      alert("PDF file path is missing.");
       return;
     }
 
-    const byteCharacters = base64.toByteArray(base64String);
-    const blob = new Blob([byteCharacters], { type: "application/pdf" });
-    const fileUrl = URL.createObjectURL(blob);
+    // Convert Windows path to a valid URL format
+    const formattedPath = pdfPath.replace(/\\/g, "/").replace("D:/Videos/VFSTR/", "");
 
-    const newTab = window.open();
-    if (newTab) {
-      newTab.document.write(`<iframe src="${fileUrl}" width="100%" height="100%"></iframe>`);
-    } else {
-      alert("Please allow popups to view the PDF.");
-    }
+
+    // Construct URL and open PDF
+    const fileUrl = `http://localhost:5000/api/pdf?path=${encodeURIComponent(formattedPath)}`;
+    window.open(fileUrl, "_blank");
   };
 
   const openVideoModal = (videoName, videoPath) => {
-    setSelectedVideo(`${videoPath}\\${videoName}`);
+    if (!videoName) {
+      alert("Invalid video file.");
+      return;
+    }
+    const fullPath = `${videoPath}/${videoName}`.replace(/\\/g, "/");
+    setSelectedVideo(fullPath);
     setSelectedVideoName(videoName);
   };
 
@@ -64,71 +65,96 @@ const VfstrVideo = ({ subtopic }) => {
   return (
     <div className="vfstr-container" style={{ width: "100%" }}>
       {error && <p style={{ color: "red" }}>{error}</p>}
+
       {vfstrFiles.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
           {vfstrFiles.map((file, index) => (
-            <div
-              key={index}
-              style={{
-                width: "250px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "10px",
-                textAlign: "center",
-              }}
-            >
-              <h5>{file.title || "No Title"}</h5>
-              <p>{file.description || "No Description"}</p>
-
-              {/* PDF Handling */}
-              {file.file_name && getFileExtension(file.file_name) === "pdf" ? (
-                <img
-                  src="/image/link_logo.png"
-                  alt="PDF"
+            <React.Fragment key={index}>
+              {/* PDF Card */}
+              {file.file_name && getFileExtension(file.file_name) === "pdf" && (
+                <div
                   style={{
-                    width: "20%",
-                    height: "auto",
-                    borderRadius: "4px",
-                    marginBottom: "10px",
-                    cursor: "pointer",
+                    width: "250px",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "10px",
+                    textAlign: "center",
                   }}
-                  onClick={() => openPDF(file.file, file.file_name)}
-                />
-              ) : null}
+                >
+                  <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
+                  <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
 
-              {/* Video Handling */}
-              {file.video_name && getFileExtension(file.video_name) === "mp4" ? (
-                <img
-                  src="/image/logo.svg"
-                  alt="Video"
+                  <img
+                    src="/image/link_logo.png"
+                    alt="PDF"
+                    style={{
+                      width: "20%",
+                      height: "auto",
+                      borderRadius: "4px",
+                      marginBottom: "10px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => openPDF(file.file)}
+                  />
+
+                  <p>
+                    <strong>Level:</strong>{" "}
+                    <span style={{ textDecoration: file.video_level === "Basic" ? "none" : "line-through" }}>Basic</span>{" "}
+                    <span style={{ textDecoration: file.video_level === "Intermediate" ? "none" : "line-through" }}>
+                      Intermediate
+                    </span>{" "}
+                    <span style={{ textDecoration: file.video_level === "Advanced" ? "none" : "line-through" }}>
+                      Advanced
+                    </span>
+                  </p>
+                </div>
+              )}
+
+              {/* Video Card */}
+              {file.video_name && getFileExtension(file.video_name) === "mp4" && (
+                <div
                   style={{
-                    width: "60%",
-                    height: "auto",
-                    borderRadius: "4px",
-                    marginBottom: "10px",
-                    cursor: "pointer",
+                    width: "250px",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "10px",
+                    textAlign: "center",
                   }}
-                  onClick={() => openVideoModal(file.video_name, videoPath)}
-                />
-              ) : null}
-              <p>
-                <strong>Level:</strong>{" "}
-                <span style={{ textDecoration: file.video_level === "Basic" ? "none" : "line-through" }}>
-                  Basic
-                </span>{" "}
-                <span style={{ textDecoration: file.video_level === "Intermediate" ? "none" : "line-through" }}>
-                  Intermediate
-                </span>{" "}
-                <span style={{ textDecoration: file.video_level === "Advanced" ? "none" : "line-through" }}>
-                  Advance
-                </span>
-              </p>
-            </div>
+                >
+                  <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
+                  <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
+
+                  <img
+                    src="/image/logo.svg"
+                    alt="Video"
+                    style={{
+                      width: "60%",
+                      height: "auto",
+                      borderRadius: "4px",
+                      marginBottom: "10px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => openVideoModal(file.video_name, "D:/Videos/VFSTR")}
+                  />
+
+                  <p>
+                    <strong>Level:</strong>{" "}
+                    <span style={{ textDecoration: file.video_level === "Basic" ? "none" : "line-through" }}>Basic</span>{" "}
+                    <span style={{ textDecoration: file.video_level === "Intermediate" ? "none" : "line-through" }}>
+                      Intermediate
+                    </span>{" "}
+                    <span style={{ textDecoration: file.video_level === "Advanced" ? "none" : "line-through" }}>
+                      Advanced
+                    </span>
+                  </p>
+                </div>
+              )}
+            </React.Fragment>
           ))}
         </div>
       )}
 
-      {/* Modal for Video Display */}
+      {/* Video Modal */}
       {selectedVideo && (
         <div className="nptel-modal-overlay">
           <div className="nptel-modal-content">
