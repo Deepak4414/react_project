@@ -4,12 +4,13 @@ import Navbar from "./Navbar";
 import Home from "./Home";
 import AddCourse from "./AddCourse";
 import AddTopic from "./AddTopic";
-import UpdateCourse from "./UpdateCourse";
+import UpdateCourse from "./Update/UpdateCourse";
 import Logout from "../../../Registration/Logout";
 import LiveChannel from "./LiveChannel";
 import LiveChannelTime from "./LiveChannelTime";
 import AddVfstrVideo from "./AddVfstrVideo/AddVfstrVideo";
 import SaveVfstrVideo from "./AddVfstrVideo/SaveVfstrVideo";
+import UpdateTopic from "./Update/UpdateTopic";
 function Faculty({isLoggedIn}) {
    const [userState, setUserState] = useState(null);
    
@@ -37,6 +38,7 @@ function Faculty({isLoggedIn}) {
                     <Route path="/livechanneltime" element={<LiveChannelTime/>}/>
                     <Route path="/addvfstrvideo" element={<AddVfstrVideo />} />
                     <Route path="/savevfstrvideo" element={<SaveVfstrVideo />} />
+                    <Route path="/update-topic" element={<UpdateTopic />} />"
                     <Route path="/logout" element={Logout} />
                 </Routes>
             </div>

@@ -64,7 +64,7 @@ const VfstrVideo = ({ subtopic }) => {
 
   return (
     <div className="vfstr-container" style={{ width: "100%" }}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
 
       {vfstrFiles.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
@@ -96,17 +96,19 @@ const VfstrVideo = ({ subtopic }) => {
                     }}
                     onClick={() => openPDF(file.file)}
                   />
-
-                  <p>
-                    <strong>Level:</strong>{" "}
-                    <span style={{ textDecoration: file.video_level === "Basic" ? "none" : "line-through" }}>Basic</span>{" "}
-                    <span style={{ textDecoration: file.video_level === "Intermediate" ? "none" : "line-through" }}>
-                      Intermediate
-                    </span>{" "}
-                    <span style={{ textDecoration: file.video_level === "Advanced" ? "none" : "line-through" }}>
-                      Advanced
-                    </span>
-                  </p>
+                 
+                 {file.file_level?.length > 0 && (
+                    <p>
+                      <strong>Level:</strong>{" "}
+                      <span style={{ textDecoration: file.file_level === "Basic" ? "none" : "line-through" }}>Basic</span>{" "}
+                      <span style={{ textDecoration: file.file_level === "Intermediate" ? "none" : "line-through" }}>
+                        Intermediate
+                      </span>{" "}
+                      <span style={{ textDecoration: file.file_level === "Advanced" ? "none" : "line-through" }}>
+                        Advanced
+                      </span>
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -136,7 +138,7 @@ const VfstrVideo = ({ subtopic }) => {
                     }}
                     onClick={() => openVideoModal(file.video_name, "D:/Videos/VFSTR")}
                   />
-
+                {file.file_level?.length > 0 && (
                   <p>
                     <strong>Level:</strong>{" "}
                     <span style={{ textDecoration: file.video_level === "Basic" ? "none" : "line-through" }}>Basic</span>{" "}
@@ -147,6 +149,7 @@ const VfstrVideo = ({ subtopic }) => {
                       Advanced
                     </span>
                   </p>
+                )}
                 </div>
               )}
             </React.Fragment>

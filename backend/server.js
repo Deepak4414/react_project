@@ -10,7 +10,8 @@ const ratinglink =require('./Routes/Rating');
 const nptelVideoRouter = require('./Routes/NptelVideo'); // Import the NptelVideo router
 const liveChannelRouter = require('./Routes/LiveChannelTime'); // Import the LiveChannelTime router
 const UploadVfstrVideo = require('./Routes/Upload-Vfstr-Video');
-const VfstrVideo = require('./Routes/Vfstr-video');
+const VfstrVideo = require('./Routes/Vfstr-video'); 
+const linksRouter = require("./Routes/Links"); // Import the links API
 
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
@@ -25,8 +26,8 @@ dotenv.config();
 
 
 ///==========================================
-
-
+//upadate the links and data like link
+app.use("/api/", linksRouter); // Register the links API
 
 //============================================================
 // Routes
