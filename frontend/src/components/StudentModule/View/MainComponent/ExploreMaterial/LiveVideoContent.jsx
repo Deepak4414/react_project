@@ -15,7 +15,7 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
 
         setLiveData(response.data); // Update liveData with the response data
       } catch (err) {
-        setError(err);
+        setError();
       } finally {
         setLoading(false);
       }
@@ -42,7 +42,7 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
   }
 
   if (!liveData) {
-    return <div>No live video details available.</div>;
+    return <div><img src="/image/cdot_logo.png" alt="Live Logo" style={{ width: "80px", height: "80px" }} /></div>;
   }
 
   return (
@@ -63,7 +63,7 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
         Intermediate
       </span>{" "}
       <span style={{ textDecoration: liveData.level === "advanced" ? "none" : "line-through" }}>
-        Advance
+        Advanced
       </span>
     </p>
     </div>

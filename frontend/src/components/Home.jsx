@@ -54,7 +54,7 @@ const Home = ({ isLoggedIn, onLogin }) => {
       <Header isLoggedIn={isLoggedIn} />
 
       {/* Main Content Section */}
-      <div className="row align-items-center">
+      <div className="row align-items-center"style={{ height: '450px' }}>
         <div className="col-md-6">
           <div className="text-center text-md-start">
             <h1 className="display-4 mb-4 fw-normal">Digital Education Platform</h1>

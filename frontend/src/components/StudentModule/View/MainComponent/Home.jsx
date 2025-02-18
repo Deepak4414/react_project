@@ -5,14 +5,16 @@ const storage = {
     get: (key) => localStorage.getItem(key),
     set: (key, value) => localStorage.setItem(key, value),
     remove: (key) => localStorage.removeItem(key),
-  };
+};
 const Home = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch username from cookies
-    const username = storage.get('username'); // Retrieve username from local storage
+    // Fetch username from local storage
+    const userState = storage.get('userState');
+    const userData = JSON.parse(userState);
+    const username = userData.username;
 
     // Fetch user details on component mount
     useEffect(() => {
@@ -39,11 +41,11 @@ const Home = () => {
             <header className="hero-section">
                 <h1>Welcome to the Student Information Portal</h1>
                 <p>Empowering Students for Success</p>
-                <button className="cta-button">Get Started</button>
+                
             </header>
 
             {/* Features Section */}
-            <section className="features-section">
+            {/* <section className="features-section">
                 <h2>Why Choose Us?</h2>
                 <div className="features-grid">
                     <div className="feature-card">
@@ -59,7 +61,7 @@ const Home = () => {
                         <p>We are here to help you round the clock.</p>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Student Profiles Section */}
             <main className="student-profiles">
@@ -80,10 +82,6 @@ const Home = () => {
                 )}
             </main>
 
-            {/* Footer Section */}
-            <footer className="footer-section">
-                <p>&copy; 2023 Student Information Portal. All rights reserved.</p>
-            </footer>
         </div>
     );
 };

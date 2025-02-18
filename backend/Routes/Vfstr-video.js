@@ -67,7 +67,6 @@ router.get("/vfstr-videos", async (req, res) => {
             message: "No videos available for this subject.",
           });
         }
-
         const subjectName = subjectResult[0].subjectName;
         const VIDEO_FOLDER = path.join("D:/Videos/VFSTR", subjectName);
         fs.access(VIDEO_FOLDER, fs.constants.R_OK, (accessErr) => {

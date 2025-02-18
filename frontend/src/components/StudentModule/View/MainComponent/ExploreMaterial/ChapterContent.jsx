@@ -54,7 +54,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
   };
 
   const renderCardContent = (item) => (
-    <div key={item.id} className="card mb-3" style={{ width: '300px' }}>
+    <div key={item.id} className="card mb-3" style={{ width: '250px' }}>
       <div className="card-body" style={{ padding: '10px' }}>
         <h3
           className="card-title"
@@ -118,16 +118,16 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
       <table className="table table-bordered">
         <thead className="table-dark">
           <tr >
-            <th colSpan={3} style={{ textAlign: 'center', width: '48%' }}> E-Content from Internet</th>
+            <th colSpan={3} style={{ textAlign: 'center', width: '48%', fontSize: '20px'}}> E-Content from Internet</th>
             <th colSpan={1} style={{ textAlign: 'center', width: '16%' }}>Content from local server</th>
-            <th rowSpan={2} style={{ textAlign: 'center', width: '16%' }}>Live Video from local C-DoT BBG</th>
+            <th rowSpan={2} style={{ textAlign: 'center', width: '16%', fontSize: '14px'}}>Live Video from local C-DoT BBG</th>
           </tr>
 
           <tr>
-            <th style={{ width: '16%' }}>Basic Level</th>
-            <th style={{ width: '16%' }}>Intermediate Level</th>
-            <th style={{ width: '16%' }}>Advanced Level</th>
-            <th style={{ width: '16%' }}>NPTEL Content and VFSTR Content</th>
+            <th style={{ width: '16%',lineHeight: '3'}}>Basic Level</th>
+            <th style={{ width: '16%',lineHeight: '3' }}>Intermediate Level</th>
+            <th style={{ width: '16%',lineHeight: '3' }}>Advanced Level</th>
+            <th style={{ width: '16%',textAlign:'left' }}>NPTEL and VFSTR Content</th>
 
           </tr>
         </thead>

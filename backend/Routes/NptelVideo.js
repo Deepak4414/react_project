@@ -53,7 +53,6 @@ router.get("/videos", async (req, res) => {
 // Endpoint to stream a video
 router.get("/video", (req, res) => {
   const videoPath = req.query.path;
-  console.log(videoPath);
   if (!videoPath || !fs.existsSync(videoPath)) {
     return res.status(404).json({ error: "Video not found." });
   }

@@ -6,7 +6,7 @@ const VfstrVideo = ({ subtopic }) => {
   const [error, setError] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedVideoName, setSelectedVideoName] = useState("");
-
+  const [folder, setFolder] = useState("");
   useEffect(() => {
     const fetchVfstrFiles = async () => {
       try {
@@ -14,8 +14,9 @@ const VfstrVideo = ({ subtopic }) => {
           params: { subTopic: subtopic },
         });
 
-        console.log("Vfstr Files:", response.data);
+        // console.log("Vfstr Files:", response.data);
         setVfstrFiles(response.data.videofiles || []);
+        setFolder(response.data.folder);
         setError("");
       } catch (err) {
         console.error("Error fetching files:", err);
@@ -48,6 +49,7 @@ const VfstrVideo = ({ subtopic }) => {
   };
 
   const openVideoModal = (videoName, videoPath) => {
+    
     if (!videoName) {
       alert("Invalid video file.");
       return;
@@ -136,7 +138,7 @@ const VfstrVideo = ({ subtopic }) => {
                       marginBottom: "10px",
                       cursor: "pointer",
                     }}
-                    onClick={() => openVideoModal(file.video_name, "D:/Videos/VFSTR")}
+                    onClick={() => openVideoModal(file.video_name, folder)}
                   />
                 {file.file_level?.length > 0 && (
                   <p>
