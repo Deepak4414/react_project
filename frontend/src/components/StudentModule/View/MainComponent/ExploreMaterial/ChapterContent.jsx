@@ -53,8 +53,18 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
     return text.substring(0, maxLength) + "...";
   };
 
+ 
+const colortext = (text) => {
+  const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
+
+  const formattedText = text.split(timestampRegex).map((part, index) =>
+    part.match(timestampRegex) ? <span key={index} style={{ color: "red", textWrap:'nowrap'}}>{part}</span> : part
+  );
+
+  return <p>{formattedText}</p>;
+};
   const renderCardContent = (item) => (
-    <div key={item.id} className="card mb-3" style={{ width: '250px' }}>
+    <div key={item.id} className="card mb-1" style={{ width: '250px' }}>
       <div className="card-body" style={{ padding: '10px' }}>
         <h3
           className="card-title"
@@ -92,12 +102,11 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
                   style={{ width: "30px", cursor: "pointer" }}
                 />
               </a>
-
             </span>
           )}
         </h3>
         <p className="card-text" style={{ fontSize: '14px' }}>
-          {truncateText(item.description || "No Description Available", 10000)}
+          {colortext(item.description || "No Description Available")}
         </p>
         <p>
           Rating:{" "}
@@ -124,9 +133,9 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
           </tr>
 
           <tr>
-            <th style={{ width: '16%',lineHeight: '3'}}>Basic Level</th>
-            <th style={{ width: '16%',lineHeight: '3' }}>Intermediate Level</th>
-            <th style={{ width: '16%',lineHeight: '3' }}>Advanced Level</th>
+            <th style={{ textAlign: 'center',width: '16%',lineHeight: '3'}}>Basic Level</th>
+            <th style={{ textAlign: 'center',width: '16%',lineHeight: '3' }}>Intermediate Level</th>
+            <th style={{ textAlign: 'center',width: '16%',lineHeight: '3' }}>Advanced Level</th>
             <th style={{ width: '16%',textAlign:'left' }}>NPTEL and VFSTR Content</th>
 
           </tr>

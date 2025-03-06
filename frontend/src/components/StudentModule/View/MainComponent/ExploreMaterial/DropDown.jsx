@@ -77,7 +77,7 @@ const DropDown = ({ onSubmit }) => {
   };
 
   return (
-    <div>
+    <div className='main-container'>
       <form onSubmit={handleSubmit} className='dropdown-container'>
         <select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
           <option value="">Select Course</option>

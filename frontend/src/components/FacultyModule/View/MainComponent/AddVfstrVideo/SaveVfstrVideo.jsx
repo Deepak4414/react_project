@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SaveVfstrVideo = () => {
   const navigate = useNavigate();
@@ -9,27 +9,33 @@ const SaveVfstrVideo = () => {
 
   const [videoForms, setVideoForms] = useState([]);
   const [videoNames, setVideoNames] = useState([]);
-  const [folderName, setFolderName] = useState('');
+  const [folderName, setFolderName] = useState("");
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [subTopics, setSubTopics] = useState([]);
   const [selectedSubTopic, setSelectedSubTopic] = useState("");
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        if (subject) {
-          const response = await axios.get(
-            `http://localhost:5000/api/topics/?subjectId=${subject}`
-          );
-          setTopics(response.data);
+  const [chapters, setChapters] = useState([]);
+  const [selectedChapter, setSelectedChapter] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [selectedFaculty, setSelectedFaculty] = useState('');
 
-        }
-      } catch (error) {
-        console.error("Error fetching topics:", error);
-      }
-    };
-    fetchTopics();
+  useEffect(() => {
+    if (subject) {
+      axios
+        .get(`http://localhost:5000/api/chapter/${subject}`)
+        .then((response) => setChapters(response.data.chapter))
+        .catch((error) => console.error("Error fetching chapters:", error));
+    }
   }, [subject]);
+
+  useEffect(() => {
+    if (selectedChapter) {
+      axios
+        .get(`http://localhost:5000/api/topics/${selectedChapter}`)
+        .then((response) => setTopics(response.data.topics))
+        .catch((error) => console.error("Error fetching topics:", error));
+    }
+  }, [selectedChapter]);
 
   const fetchSubTopics = async (topicId) => {
     try {
@@ -56,11 +62,11 @@ const SaveVfstrVideo = () => {
       ...videoForms,
       {
         id: videoForms.length + 1,
-        title: '',
-        description: '',
-        video: '',
-        videoLevel: '',
-        textFile: '',
+        title: "",
+        description: "",
+        video: "",
+        videoLevel: "",
+        textFile: "",
       },
     ]);
   };
@@ -82,7 +88,7 @@ const SaveVfstrVideo = () => {
   const handleUploadVideo = async (id) => {
     try {
       const form = videoForms.find((form) => form.id === id);
-  
+
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("description", form.description);
@@ -92,13 +98,14 @@ const SaveVfstrVideo = () => {
       formData.append("subject", subject || "default");
       formData.append("topicId", selectedTopic);
       formData.append("subTopicId", selectedSubTopic);
-  
+      formData.append("facultyName", selectedFaculty); // Add faculty name to FormData
+
       const response = await axios.post(
         "http://localhost:5000/api/upload-vfstr-video",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-  
+
       console.log("Video uploaded successfully:", response.data);
       alert("Video uploaded successfully!");
       navigate("/facultyindex/addvfstrvideo");
@@ -107,9 +114,6 @@ const SaveVfstrVideo = () => {
       alert("Error uploading video. Please try again.");
     }
   };
-  
-  
-  
 
   // Fetch video names and folder name from the backend
   useEffect(() => {
@@ -121,9 +125,9 @@ const SaveVfstrVideo = () => {
 
         setVideoNames(response.data[0]); // Video names
         setFolderName(response.data[1]); // Folder name
-        console.log('Video names:', response.data[1]);
+        console.log("Video names:", response.data[1]);
       } catch (error) {
-        console.error('Error fetching video names:', error);
+        console.error("Error fetching video names:", error);
       }
     };
 
@@ -132,27 +136,62 @@ const SaveVfstrVideo = () => {
     }
   }, [subject]);
 
+  useEffect(() => {
+  const fetchFaculties = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/fetch-faculties');
+      setFaculties(response.data);
+    } catch (error) {
+      console.error('Error fetching faculties:', error);
+    }
+  };
+
+  fetchFaculties();
+}, []);
+const handleFacultyChange = (e) => {
+  const facultyName = e.target.value;
+  setSelectedFaculty(facultyName); // Update selected faculty
+};
   return (
     <>
       <div className="mb-3">
-        <label htmlFor="topic" className="form-label">
-          Select Topic
+        <label htmlFor="chapter" className="form-label">
+          Select Chapter
         </label>
         <select
-          id="topic"
+          id="chapter"
           className="form-select"
-          value={selectedTopic}
-          onChange={handleTopicChange}
+          value={selectedChapter}
+          onChange={(e) => setSelectedChapter(e.target.value)}
         >
-          <option value="">-- Select a Topic --</option>
-          {topics.map((topic) => (
-            <option key={topic.id} value={topic.id}>
-              {topic.topic}
+          <option value="">Select Chapter</option>
+          {chapters.map((chapter) => (
+            <option key={chapter.id} value={chapter.id}>
+              {chapter.chapter}
             </option>
           ))}
         </select>
       </div>
-
+      {selectedChapter.length > 0 && (
+        <div className="mb-3">
+          <label htmlFor="topic" className="form-label">
+            Select Topic
+          </label>
+          <select
+            id="topic"
+            className="form-select"
+            value={selectedTopic}
+            onChange={handleTopicChange}
+          >
+            <option value="">-- Select a Topic --</option>
+            {topics.map((topic) => (
+              <option key={topic.id} value={topic.id}>
+                {topic.topic}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       {subTopics.length > 0 && (
         <div className="mb-3">
           <label htmlFor="subTopic" className="form-label">
@@ -188,7 +227,9 @@ const SaveVfstrVideo = () => {
                       type="text"
                       className="form-control"
                       value={form.title}
-                      onChange={(e) => handleFormChange(form.id, 'title', e.target.value)}
+                      onChange={(e) =>
+                        handleFormChange(form.id, "title", e.target.value)
+                      }
                       placeholder="Enter video title"
                     />
                   </div>
@@ -197,7 +238,9 @@ const SaveVfstrVideo = () => {
                     <select
                       className="form-control"
                       value={form.video}
-                      onChange={(e) => handleFormChange(form.id, 'video', e.target.value)}
+                      onChange={(e) =>
+                        handleFormChange(form.id, "video", e.target.value)
+                      }
                     >
                       <option value="">-- Select a Video --</option>
                       {videoNames.map((video, index) => (
@@ -216,7 +259,9 @@ const SaveVfstrVideo = () => {
                     <textarea
                       className="form-control"
                       value={form.description}
-                      onChange={(e) => handleFormChange(form.id, 'description', e.target.value)}
+                      onChange={(e) =>
+                        handleFormChange(form.id, "description", e.target.value)
+                      }
                       placeholder="Enter video description"
                     />
                   </div>
@@ -225,7 +270,9 @@ const SaveVfstrVideo = () => {
                     <select
                       className="form-control"
                       value={form.videoLevel}
-                      onChange={(e) => handleFormChange(form.id, 'videoLevel', e.target.value)}
+                      onChange={(e) =>
+                        handleFormChange(form.id, "videoLevel", e.target.value)
+                      }
                     >
                       <option value="">-- Select a Level --</option>
                       <option value="Basic">Basic</option>
@@ -238,15 +285,33 @@ const SaveVfstrVideo = () => {
                 {/*  File Input */}
                 <div className="row mb-2">
                   <div className="col-md-6">
-                    <label>File:</label>
+                    <label>Pdf File:</label>
                     <input
                       type="file"
+                      accept=".pdf"
                       className="form-control"
-                      onChange={(e) => handleFormChange(form.id, 'textFile', e.target.files[0])}
+                      onChange={(e) =>
+                        handleFormChange(form.id, "textFile", e.target.files[0])
+                      }
                     />
                   </div>
+                  <div className="col-md-6">
+                    <label>Faculty Name:</label>
+                      <select
+                      className="form-control"
+                      value={selectedFaculty}
+                      onChange={handleFacultyChange}
+                    >
+                      <option value="">-- Select a Faculty Name --</option>
+                      {faculties.map((faculty) => (
+                        <option key={faculty._id} value={faculty.name}>
+                          {faculty.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-
+                      
                 {/* Upload and Remove Buttons */}
                 <div className="row mb-2">
                   <div className="col-md-6">
@@ -282,7 +347,6 @@ const SaveVfstrVideo = () => {
           </div>
         </>
       )}
-
     </>
   );
 };

@@ -22,7 +22,7 @@ router.get("/vfstr-videos", async (req, res) => {
     // Fetch video and PDF details from the database
     const files = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT id, title, description, video_name, video_level, file_name, file, subject FROM vfstr_videos WHERE subTopicId = ?",
+        "SELECT id, title, description, video_name, video_level, file_name, file, faculty_name, subject FROM vfstr_videos WHERE subTopicId = ?",
         [subTopic],
         (err, results) => {
           if (err) reject(err);
@@ -30,6 +30,7 @@ router.get("/vfstr-videos", async (req, res) => {
         }
       );
     });
+    // console.log(files);
 
     if (!files || files.length === 0) {
       return res.status(404).json({ error: "No files found for this subtopic." });
@@ -43,9 +44,9 @@ router.get("/vfstr-videos", async (req, res) => {
       video_name: file.video_name,
       video_level: file.video_level,
       file_name: file.file_name,
-      file: file.file ,
+      file: file.file,
+      faculty_name: file.faculty_name,
     }));
-
     // If videos exist, fetch from folder
     if (files[0].video_name && files[0].video_name.length > 0) {
       try {

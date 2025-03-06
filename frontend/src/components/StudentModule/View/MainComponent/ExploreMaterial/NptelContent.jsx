@@ -26,7 +26,7 @@ const NptelContent = ({ subtopic }) => {
         setError("");
       } catch (err) {
         setVideos([]);
-        setError(err.response?.data?.error || "Failed to fetch videos.");
+        setError( "NPTEL videos not available for this subtopic");
       }
     };
 
@@ -47,7 +47,7 @@ const NptelContent = ({ subtopic }) => {
     <div className="nptel-container" style={{ width: '200px' }}>
       {error && <p  >{error}</p>}
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBlock: "3px" }}>
         {videos.map((videoPath, index) => (
           <div
             key={index}
@@ -95,7 +95,7 @@ const NptelContent = ({ subtopic }) => {
       {selectedVideo && (
         <div className="nptel-modal-overlay">
           <div className="nptel-modal-content">
-            <h3>Subtopic: {subtopic}</h3>
+            {/* <h3>Subtopic: {subtopic}</h3> */}
 
             <video
               width="500px"

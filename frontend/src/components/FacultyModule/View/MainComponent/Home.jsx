@@ -56,25 +56,30 @@ const Home = ({ username }) => {
           </div>
           <div className="feature-card">
             <h3>
-              {" "}
               <Link className="nav-link" to="/facultyindex/update">
                 Update Course
               </Link>
             </h3>
           </div>
+         
           <div className="feature-card">
             <h3>
-              {" "}
-              <Link className="nav-link" to="/facultyindex/livechannel">
-                Add Live Channel Time
+              <Link className="nav-link" to="/facultyindex/addvfstrvideo">
+                Add VFSTR Video
               </Link>
             </h3>
           </div>
           <div className="feature-card">
             <h3>
-              {" "}
-              <Link className="nav-link" to="/facultyindex/addvfstrvideo">
-                Add VFSTR Video
+              <Link className="nav-link" to="/facultyindex/addfacultydetails">
+                Add Faculty Details
+              </Link>
+            </h3>
+          </div>
+          <div className="feature-card">
+            <h3>
+              <Link className="nav-link" to="/facultyindex/livechannel">
+                Add Live Channel Time
               </Link>
             </h3>
           </div>

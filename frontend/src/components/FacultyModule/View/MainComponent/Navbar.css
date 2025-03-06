@@ -1,26 +1,21 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #9370db;
-  padding: 10px 20px;
+
+.navbar-brand {
+  font-size: 1.5rem;
 }
 
-.navbar-logo img {
-  height: 50px;
+.navbar-nav .nav-item {
+  margin-right: 20px;
 }
 
-.navbar-links {
-  display: flex;
-  list-style: none;
+.navbar-nav .nav-link {
+  font-size: 1rem;
 }
 
-.navbar-links li {
-  margin: 0 15px;
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
 }
 
-.navbar-links a {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
+.navbar-toggler-icon {
+  font-size: 1.5rem;
 }

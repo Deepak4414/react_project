@@ -1,28 +1,68 @@
+/* Responsive Navbar CSS */
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #9370db;
-    padding: 3px 0 0px 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #9370db;
+  /* padding: 1rem; */
+  position: relative;
+}
+
+.navbar-logo img {
+  height: 50px;
+  background-color: white;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+}
+
+.navbar-links li {
+  margin: 0 15px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+/* Responsive Breakpoints */
+
+/* For smaller screens (max-width: 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .navbar-logo img {
-    height: 50px;
-    background-color:white;
+
+  .navbar-logo {
+    margin-bottom: 1rem;
   }
-  
+
   .navbar-links {
-    display: flex;
-    list-style: none;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
+
   .navbar-links li {
-    margin: 0 15px;
+    margin: 0.5rem 0;
   }
-  
+
+  .navbar-dot {
+    display: block;
+  }
+}
+
+/* For even smaller screens (max-width: 480px) */
+@media (max-width: 480px) {
+  .navbar-logo img {
+    height: 30px;
+  }
+
   .navbar-links a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
+    font-size: 1rem;
   }
-  
+}

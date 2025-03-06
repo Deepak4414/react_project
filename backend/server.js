@@ -12,7 +12,7 @@ const liveChannelRouter = require('./Routes/LiveChannelTime'); // Import the Liv
 const UploadVfstrVideo = require('./Routes/Upload-Vfstr-Video');
 const VfstrVideo = require('./Routes/Vfstr-video'); 
 const linksRouter = require("./Routes/Links"); // Import the links API
-
+const facultydetails = require('./Routes/FacultyDetails');
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
 const dotenv = require("dotenv");
@@ -25,6 +25,8 @@ dotenv.config();
 
 
 
+//=================================================
+app.use('/api/',nptelVideoRouter);
 ///==========================================
 //upadate the links and data like link
 app.use("/api/", linksRouter); // Register the links API
@@ -38,8 +40,6 @@ app.use("/api/", VfstrVideo);
 app.use("/api/", UploadVfstrVideo);
 // =================================================
 app.use('/api/',liveChannelRouter);
-//=================================================
-app.use('/api/',nptelVideoRouter);
 // =================================================
 app.use("/api/topics/", addTopicRouter); // Mount the topic router
 
@@ -53,6 +53,20 @@ app.use('/api/',UserRouter);
 
 //=================================================
 app.use('/api/',ratinglink);
+//=================================================
+// api for upload the faculty details
+app.use('/api/',facultydetails);
+// =================================================
+
+
+// =================================================
+
+
+// =================================================
+
+
+// =================================================
+
 
 //================================================
 // Define API endpoint to fetch data

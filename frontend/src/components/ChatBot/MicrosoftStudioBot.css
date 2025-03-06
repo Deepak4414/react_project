@@ -10,6 +10,8 @@
   border-radius: 50%;
   cursor: pointer;
   font-size: 24px;
+  z-index: 1000;
+  margin-bottom: 60px;
 }
 
 .chat-box {

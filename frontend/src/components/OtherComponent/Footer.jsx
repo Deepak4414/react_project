@@ -1,17 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import "./Footer.css";
 const Footer = () => {
+  const location = useLocation();
+
   return (
     <>
     <footer className="bg-dark text-white py-4">
       <div className="container text-center">
         <ul className="list-inline mb-3">
           <li className="list-inline-item">
-            <Link to="/about" className="text-white">About Us</Link>
+          <Link to="/home" className="text-white">Home</Link>
           </li>
           <li className="list-inline-item">
             <Link to="/contact" className="text-white">Contact Us</Link>

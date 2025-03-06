@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import Faculty_Photo from "./Faculty_Photo";
 const VfstrVideo = ({ subtopic }) => {
   const [vfstrFiles, setVfstrFiles] = useState([]);
   const [error, setError] = useState("");
@@ -14,7 +14,7 @@ const VfstrVideo = ({ subtopic }) => {
           params: { subTopic: subtopic },
         });
 
-        // console.log("Vfstr Files:", response.data);
+        // console.log("Vfstr Files:", response.data.videofiles);
         setVfstrFiles(response.data.videofiles || []);
         setFolder(response.data.folder);
         setError("");
@@ -49,7 +49,8 @@ const VfstrVideo = ({ subtopic }) => {
   };
 
   const openVideoModal = (videoName, videoPath) => {
-    
+    // console.log("Video Name:", videoName);
+    // console.log("Video Path:", videoPath);
     if (!videoName) {
       alert("Invalid video file.");
       return;
@@ -57,6 +58,7 @@ const VfstrVideo = ({ subtopic }) => {
     const fullPath = `${videoPath}/${videoName}`.replace(/\\/g, "/");
     setSelectedVideo(fullPath);
     setSelectedVideoName(videoName);
+    
   };
 
   const closeModal = () => {
@@ -69,7 +71,7 @@ const VfstrVideo = ({ subtopic }) => {
       {error && <p>{error}</p>}
 
       {vfstrFiles.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
           {vfstrFiles.map((file, index) => (
             <React.Fragment key={index}>
               {/* PDF Card */}
@@ -83,6 +85,7 @@ const VfstrVideo = ({ subtopic }) => {
                     textAlign: "center",
                   }}
                 >
+                  
                   <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
                   <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
 
@@ -125,7 +128,12 @@ const VfstrVideo = ({ subtopic }) => {
                     textAlign: "center",
                   }}
                 >
-                  <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
+                  <div style={{ display: "flex", justifyContent: "center"}}>
+                  <h5 style={{ fontSize:'15px', textAlign: "left",textWrap: 'stable' }}>{file.faculty_name}</h5>
+                    <Faculty_Photo name={file.faculty_name} />
+                  </div>
+                  --------------------------------
+                  <h4 style={{ fontSize: "16px",fontWeight:"bold" }}>{file.title || "No Title"}</h4>
                   <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
 
                   <img
@@ -158,12 +166,12 @@ const VfstrVideo = ({ subtopic }) => {
           ))}
         </div>
       )}
-
+{/* <Faculty_Photo/> */}
       {/* Video Modal */}
       {selectedVideo && (
         <div className="nptel-modal-overlay">
           <div className="nptel-modal-content">
-            <h3>Subtopic: {subtopic}</h3>
+            {/* <h3>Subtopic: {subtopic}</h3> */}
 
             <video
               width="500px"

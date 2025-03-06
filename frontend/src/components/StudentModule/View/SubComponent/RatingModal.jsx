@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import React from 'react';
 
 const RatingModal = ({ meaasge }) => {
     return (
-        <p>sdasdas</p>
+        <p></p>
     );
 };
 export default RatingModal;

@@ -11,6 +11,7 @@ import LiveChannelTime from "./LiveChannelTime";
 import AddVfstrVideo from "./AddVfstrVideo/AddVfstrVideo";
 import SaveVfstrVideo from "./AddVfstrVideo/SaveVfstrVideo";
 import UpdateTopic from "./Update/UpdateTopic";
+import AddFacultyDetalis from "./AddFacultyDetalis/AddFacultyDetalis";
 function Faculty({isLoggedIn}) {
    const [userState, setUserState] = useState(null);
    
@@ -38,7 +39,8 @@ function Faculty({isLoggedIn}) {
                     <Route path="/livechanneltime" element={<LiveChannelTime/>}/>
                     <Route path="/addvfstrvideo" element={<AddVfstrVideo />} />
                     <Route path="/savevfstrvideo" element={<SaveVfstrVideo />} />
-                    <Route path="/update-topic" element={<UpdateTopic />} />"
+                    <Route path="/update-topic" element={<UpdateTopic />} />
+                    <Route path="/addfacultydetails" element={<AddFacultyDetalis />} />
                     <Route path="/logout" element={Logout} />
                 </Routes>
             </div>

@@ -38,8 +38,7 @@ const processUpload = (req, res, next) => {
 // 2️⃣ Upload video route (Moves file after parsing body)
 router.post("/upload-vfstr-video", processUpload, (req, res) => {
   try {
-    const { title, description, video, videoLevel, subject, topicId, subTopicId } = req.body;
-    
+    const { title, description, video, videoLevel, subject, topicId, subTopicId,facultyName } = req.body;
     if (!subject) {
       return res.status(400).json({ message: "Subject is missing in request body" });
     }
@@ -66,6 +65,7 @@ router.post("/upload-vfstr-video", processUpload, (req, res) => {
       topicId: topicId || null,
       subTopicId: subTopicId || null,
       subject: subject || null,
+      faculty_name: facultyName || null
     };
 
     db.query("INSERT INTO vfstr_videos SET ?", videoData, (err, result) => {

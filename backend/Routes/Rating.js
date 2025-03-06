@@ -16,7 +16,7 @@ router.get('/rating/:item', (req, res) => {
 
     db.query(query, [item], (err, results) => {
         if (err) {
-            console.error('Error fetching ratings:', err);
+            console.error(err);
             return res.status(500).json({ error: 'Internal server error' });
         }
 
@@ -72,5 +72,58 @@ router.post("/rating", async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+// API endpoint to fetch existing rating
+router.get('/fetch-rating/:item/:username', (req, res) => {
+    try {
+        const item = req.params.item;
+        const username = req.params.username;
+
+        // Query to fetch the existing rating
+        const query = 'SELECT rating FROM rating WHERE item_id = ? AND user_id = ?';
+
+        // Execute the query
+        db.query(query, [item, username], (err, results) => {
+            if (err) {
+                // Return a 500 error if there's an internal server error
+                res.status(500).json({ error: 'Internal server error' });
+            } else if (results.length > 0) {
+                // Return the existing rating
+                res.status(200).json({ rating: results[0].rating });
+            } else {
+                // Return a 404 error if the rating is not found
+                res.status(404).json({ error: 'Rating not found' });
+            }
+        });
+    } catch (error) {
+        // Return a 500 error if there's an internal server error
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// API endpoint to update an existing rating
+router.put('/rating/:itemId/:username', (req, res) => {
+    const { itemId, username } = req.params;
+    const { rating } = req.body;
+    const query = `
+      UPDATE rating
+      SET rating = ?
+      WHERE item_id = ? AND user_id = ?;
+    `;
+  
+    db.query(query, [rating, itemId, username], (err, results) => {
+      if (err) {
+        console.error('Error updating rating:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+  
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ error: 'Rating not found' });
+      }
+  
+      res.send({ message: `Rating for item ${itemId} updated to ${rating} stars!` });
+    });
+  });
+  
 
 module.exports = router;

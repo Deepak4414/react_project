@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../../Css/TwoColumnPage.css';
 import ChapterContent from './ChapterContent';
 import PageNotFound from '../../SubComponent/PageNotFound';
-
+import SelectTopicSubTopic from '../../SubComponent/SelectTopicSubTopic';
 const TwoColumnPage = ({ selectedSubject, username }) => {
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -164,11 +164,14 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
                 </div>
               ))
             ) : (
-              <PageNotFound message="Please select Subtopics" />
+              // <PageNotFound message="Please select the Subtopics" />
+
+              <SelectTopicSubTopic selectedSubject={selectedSubject} />
             )}
           </div>
         ) : (
-          <PageNotFound message="Content is not available for this Subject" />
+          // <PageNotFound message="Please select the Topics" />
+          <SelectTopicSubTopic selectedSubject={selectedSubject} />
         )}
 
       </div>
