@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-const SelectTopicSubTopic = ({ selectedSubject }) => {
+import ChapterContent from '../MainComponent/ExploreMaterial/ChapterContent';
+const SelectTopicSubTopic = ({ selectedSubject,username, subTopicData }) => {
+  console.log("ad",subTopicData);
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState({});
   const [subtopics, setSubtopics] = useState({});
   const [selectedContent, setSelectedContent] = useState(null);
+  const [content, setContent] = useState({});
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -49,10 +51,54 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
     if (chapters.length > 0) fetchTopicsAndSubtopics();
   }, [chapters]);
 
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (selectedContent) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/content/${selectedContent.id}`);
+          setContent(response.data);
+          
+        } catch (error) {
+          console.error('Error fetching content:', error);
+        }
+      }
+    };
+    fetchContent();
+  }, [selectedContent]);
+
   const onSelectContent = (id, type) => {
     setSelectedContent({ id, type });
     console.log(`Selected ${type}: ${id}`);
   };
+
+//   const groupContentBySubTopicAndLevel = (content, subTopic) => {
+// console.log("content",content);
+//     const groupedContent = {};
+
+//     content.forEach((item) => {
+//       const { id, subTopicId, level, title, description, link, rating } = item;
+
+//       // Ensure subTopicId exists in the grouping
+//       if (!groupedContent[subTopicId]) {
+//         groupedContent[subTopicId] = {
+//           title: `SubTopic: ${subTopicId}`, // Provide a generic title if none exists
+//           levels: {
+//             basic: [],
+//             medium: [],
+//             advanced: [],
+//           },
+
+//         };
+//       }
+
+//       // Push the content into the appropriate level
+//       groupedContent[subTopicId].levels[level]?.push({ id, title, description, link, rating });
+//     });
+
+//     return groupedContent;
+//   };
+//   const groupedContent = groupContentBySubTopicAndLevel(content, subtopics);
+  
 
   return (
     <div className="two-column-page">
@@ -73,9 +119,22 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
                     <ul className="subtopics-lists">
                       {(subtopics[topic.id] || []).map((subtopic, subtopicIndex) => (
                         <li key={subtopic.id}>
-                          <p onClick={() => onSelectContent(subtopic.id, 'subtopic')}>
+                          <button onClick={() => onSelectContent(subtopic.id, 'subtopic')}>
                             {chapterIndex + 1}.{topicIndex + 1}.{subtopicIndex + 1} {subtopic.subTopic}
-                          </p>
+                          </button>
+                          {/* <div>
+            {Object.keys(groupedContent).length > 0 ? (
+              Object.entries(groupedContent).map(([subTopicId, subTopicData]) => (
+                <div key={subTopicId}>
+                  <ChapterContent subTopicData={subTopicData} username={username} id={subTopicId} topicId={topic} />
+                </div>
+              ))
+            ) : (
+              // <PageNotFound message="Please select the Subtopics" />
+
+              <SelectTopicSubTopic selectedSubject={selectedSubject} username={username} subTopicData={groupedContent} />
+            )}
+          </div> */}
                         </li>
                       ))}
                     </ul>
@@ -86,11 +145,6 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
           ))}
         </ul>
       </div>
-      {/* {selectedContent && (
-        <p>
-          Selected {selectedContent.type}: {selectedContent.id}
-        </p>
-      )} */}
     </div>
   );
 };

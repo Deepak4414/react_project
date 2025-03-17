@@ -59,7 +59,7 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
 
     try {
       const response = await axios.get(`http://localhost:5000/api/subtopics/${topicId}`);
-      console.log('Subtopics:', response.data);
+      // console.log('Subtopics:', response.data);
       setSubtopics(response.data);
     } catch (error) {
       console.error('Error fetching subtopics:', error);
@@ -78,7 +78,7 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
       console.error('Error fetching content:', error);
     }
   };
-  const groupContentBySubTopicAndLevel = (content, subTopic) => {
+  const groupContentBySubTopicAndLevel = (content) => {
 
     const groupedContent = {};
 
@@ -104,8 +104,7 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
 
     return groupedContent;
   };
-  const groupedContent = groupContentBySubTopicAndLevel(content, subtopics);
-
+  const groupedContent = groupContentBySubTopicAndLevel(content);
   return (
     <div className="two-column-page">
       {/* Left Column: Chapters, Topics, and Subtopics */}
@@ -164,14 +163,14 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
                 </div>
               ))
             ) : (
-              // <PageNotFound message="Please select the Subtopics" />
+              <PageNotFound message="Please select the Subtopics" />
 
-              <SelectTopicSubTopic selectedSubject={selectedSubject} />
+              // <SelectTopicSubTopic selectedSubject={selectedSubject} username={username} subTopicData={groupedContent} />
             )}
           </div>
         ) : (
-          // <PageNotFound message="Please select the Topics" />
-          <SelectTopicSubTopic selectedSubject={selectedSubject} />
+          <PageNotFound message="Please select the Topics" />
+          // <SelectTopicSubTopic selectedSubject={selectedSubject} />
         )}
 
       </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../Css/NptelContent.css";
 import VfstrVideo from "./VfstrVideo/VfstrVideo";
-
 const NptelContent = ({ subtopic }) => {
   const [videos, setVideos] = useState([]);
   const [videoNames, setVideoNames] = useState([]);
@@ -43,6 +42,27 @@ const NptelContent = ({ subtopic }) => {
     setSelectedVideoName("");
   };
 
+  const colortext = (text) => {
+    const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
+  
+    const formattedText = text.split(timestampRegex).map((part, index) =>
+      part.match(timestampRegex) ? 
+        <span key={index} style={{ color: "red", textWrap:'balance'}}>[{part}]</span> 
+        : 
+        part.replace(/[:\-]/g, '') // remove comma when no timestamp
+    );
+  
+    // add comma only when timestamp is present
+    const result = formattedText.map((item, index) => {
+      if (index > 0 && formattedText[index - 1].type === 'span') {
+        return <span key={index}>, {item}</span>;
+      }
+      return item;
+    });
+  
+    return <p>{result}</p>;
+  };
+  
   return (
     <div className="nptel-container" style={{ width: '200px' }}>
       {error && <p  >{error}</p>}
@@ -63,7 +83,7 @@ const NptelContent = ({ subtopic }) => {
           >
            
             <h4 style={{ fontSize: '16px', fontWeight:"bold"}}>{title[index]}</h4>
-            <p>{description[index]}</p>
+            <p>{colortext(description[index])}</p>
             <img
               src="/image/image.png" // Replace with actual thumbnail source
               alt={videoNames[index] || "Video"}

@@ -29,6 +29,7 @@ const VideoModal = ({ videoUrl, onClose }) => {
 };
 
 const ChapterContent = ({ subTopicData, username, id, topicId }) => {
+  // console.log(subTopicData, username, id, topicId);
   const [videoUrl, setVideoUrl] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const { title, levels } = subTopicData;
@@ -58,10 +59,21 @@ const colortext = (text) => {
   const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
 
   const formattedText = text.split(timestampRegex).map((part, index) =>
-    part.match(timestampRegex) ? <span key={index} style={{ color: "red", textWrap:'nowrap'}}>{part}</span> : part
+    part.match(timestampRegex) ? 
+      <span key={index} style={{ color: "red", textWrap:'balance'}}>[{part} min.]</span> 
+      : 
+      part.replace(/[:\-]/g, '') // remove comma when no timestamp
   );
 
-  return <p>{formattedText}</p>;
+  // add comma only when timestamp is present
+  const result = formattedText.map((item, index) => {
+    if (index > 0 && formattedText[index - 1].type === 'span') {
+      return <span key={index}>, {item}</span>;
+    }
+    return item;
+  });
+
+  return <p>{result}</p>;
 };
   const renderCardContent = (item) => (
     <div key={item.id} className="card mb-1" style={{ width: '250px' }}>

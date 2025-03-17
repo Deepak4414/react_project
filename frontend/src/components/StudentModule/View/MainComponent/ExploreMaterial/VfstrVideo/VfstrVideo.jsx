@@ -65,7 +65,28 @@ const VfstrVideo = ({ subtopic }) => {
     setSelectedVideo(null);
     setSelectedVideoName("");
   };
+  
 
+  const colortext = (text) => {
+    const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
+  
+    const formattedText = text.split(timestampRegex).map((part, index) =>
+      part.match(timestampRegex) ? 
+        <span key={index} style={{ color: "red", textWrap:'balance'}}>[{part} min.]</span> 
+        : 
+        part.replace(/[:\-]/g, '') // remove comma when no timestamp
+    );
+  
+    // add comma only when timestamp is present
+    const result = formattedText.map((item, index) => {
+      if (index > 0 && formattedText[index - 1].type === 'span') {
+        return <span key={index}>, {item}</span>;
+      }
+      return item;
+    });
+  
+    return <p>{result}</p>;
+  };
   return (
     <div className="vfstr-container" style={{ width: "100%" }}>
       {error && <p>{error}</p>}
@@ -128,13 +149,13 @@ const VfstrVideo = ({ subtopic }) => {
                     textAlign: "center",
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "center"}}>
-                  <h5 style={{ fontSize:'15px', textAlign: "left",textWrap: 'stable' }}>{file.faculty_name}</h5>
+                  <div style={{ display: "flex", justifyContent: "left"}}>
                     <Faculty_Photo name={file.faculty_name} />
                   </div>
                   --------------------------------
+                  
                   <h4 style={{ fontSize: "16px",fontWeight:"bold" }}>{file.title || "No Title"}</h4>
-                  <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
+                  <p style={{ fontSize: "15px" }}>{(file.description || "No Description")}</p>
 
                   <img
                     src="/image/logo.svg"

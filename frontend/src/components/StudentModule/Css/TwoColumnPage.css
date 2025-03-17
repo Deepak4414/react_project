@@ -27,7 +27,7 @@
 }
 
 .left-column li {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .left-column button {
@@ -38,7 +38,7 @@
     color: #333;
     border: 1px solid #ddd;
     text-align: left;
-    padding: 12px 15px;
+    padding: 8px 15px;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 8px;
@@ -94,8 +94,8 @@
     color: #555;
     border: 1px solid #ccc;
     text-align: left;
-    padding: 8px 15px;
-    margin: 3px 15px;
+    padding: 5px 15px;
+    margin: 4px 15px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.95rem;
