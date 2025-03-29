@@ -30,22 +30,7 @@ const Link = ({ level, index, data, handleInputChange, removeLink }) => {
         </div>
       </div>
       <div className="row mb-2">
-        <div className="col-md-6">
-          <label htmlFor={`${level}-rating-${index}`}>Rating</label>
-          <select
-            id={`${level}-rating-${index}`}
-            className="form-control"
-            value={data.rating}
-            onChange={(e) => handleInputChange(level, index, "rating", e.target.value)}
-
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
+        
         <div className="col-md-6">
           <label htmlFor={`${level}-description-${index}`}>Description</label>
           <textarea

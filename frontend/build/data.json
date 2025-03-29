@@ -1,0 +1,300 @@
+{
+  "courses": [
+    {
+      "name": "Engineering",
+      "branches": [
+        {
+          "name": "ComputerScience",
+          "semesters": [
+            {
+              "name": "Semester1",
+              "subjects": ["C Programming", "Python Programming", "Chemistry"]
+            },
+            {
+              "name": "Semester2",
+              "subjects": ["Math", "Electronics", "Programming"]
+            }
+          ]
+        },
+        {
+          "name": "Mechanical",
+          "semesters": [
+            {
+              "name": "Semester1",
+              "subjects": ["Math", "Physics", "Chemistry"]
+            },
+            {
+              "name": "Semester2",
+              "subjects": ["Math", "Mechanics", "Thermodynamics"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Science",
+      "branches": [
+        {
+          "name": "Physics",
+          "semesters": [
+            {
+              "name": "Semester1",
+              "subjects": ["Classical Mechanics", "Electromagnetism"]
+            },
+            {
+              "name": "Semester2",
+              "subjects": ["Quantum Mechanics", "Thermodynamics"]
+            }
+          ]
+        },
+        {
+          "name": "Chemistry",
+          "semesters": [
+            {
+              "name": "Semester1",
+              "subjects": ["Organic Chemistry", "Inorganic Chemistry"]
+            },
+            {
+              "name": "Semester2",
+              "subjects": ["Physical Chemistry", "Analytical Chemistry"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  
+    "topics": {
+      "C Programming": {
+        "Basics of C": {
+          "Introduction to C": {
+            "Basic": [
+              {
+                "title": "Introduction to C",
+                "data": "C is a general-purpose programming language that is extremely popular and widely used.",
+                "rating": 4,
+                "description": "C is a foundational programming language that has influenced many others. It is known for its efficiency and control, making it suitable for system programming and embedded systems.",
+                "link": "https://earth.esa.int/eogateway/gallery"
+              },
+              {
+                "title": "C Basics Overview",
+                "data": "An overview of the basics of C programming, including syntax and key concepts.",
+                "rating": 3,
+                "description": "Provides an introductory overview of key concepts in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Intermediate C Concepts",
+                "data": "Dive into intermediate topics like arrays, strings, and pointers.",
+                "rating": 4,
+                "description": "Learn more about using arrays and pointers in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "Advanced C Programming",
+                "data": "Advanced topics like memory management and file handling in C.",
+                "rating": 5,
+                "description": "Focus on advanced techniques such as dynamic memory allocation and efficient file handling.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          },
+          "Data Types and Variables": {
+            "Basic": [
+              {
+                "title": "Understanding Data Types",
+                "data": "Learn about fundamental data types in C.",
+                "rating": 4,
+                "description": "Introduction to integers, floats, characters, and more.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              },
+              {
+                "title": "Variables in C",
+                "data": "Explore how variables are declared and used.",
+                "rating": 3,
+                "description": "Understanding variable scope and lifetime.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Derived Data Types",
+                "data": "Learn about arrays, pointers, and function pointers.",
+                "rating": 4,
+                "description": "An in-depth look at derived types in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "User-Defined Data Types",
+                "data": "Learn about structures, unions, and typedef in C.",
+                "rating": 5,
+                "description": "Create complex data types using structures and unions.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          }
+        },
+        "Control Structures": {
+          "If-Else Statements": {
+            "Basic": [
+              {
+                "title": "Basic If-Else",
+                "data": "Understanding the fundamentals of conditional statements in C.",
+                "rating": 3,
+                "description": "A basic overview of if-else statements.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Nested If-Else",
+                "data": "Learn about nesting multiple if-else statements.",
+                "rating": 4,
+                "description": "Understanding nested conditional logic in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "Complex Conditional Logic",
+                "data": "Explore advanced conditional logic with multiple branches.",
+                "rating": 5,
+                "description": "Handling complex conditions effectively in C programs.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          },
+          "Loops in C": {
+            "Basic": [
+              {
+                "title": "Introduction to Loops",
+                "data": "An overview of looping constructs in C.",
+                "rating": 4,
+                "description": "C loops allow repetitive execution of code blocks.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Intermediate Looping Techniques",
+                "data": "Using nested loops and optimizing loop performance.",
+                "rating": 3,
+                "description": "Learn about advanced loop usage and efficiency.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "Advanced Loop Concepts",
+                "data": "Creating dynamic and efficient looping constructs.",
+                "rating": 5,
+                "description": "Master advanced looping techniques in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          }
+        },
+        "Functions in C": {
+          "Introduction to Functions": {
+            "Basic": [
+              {
+                "title": "Function Basics",
+                "data": "Learn what functions are and how to define them.",
+                "rating": 3,
+                "description": "An introduction to defining and using functions in C.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Parameter Passing",
+                "data": "Explore different ways to pass parameters to functions.",
+                "rating": 4,
+                "description": "Learn about pass-by-value and pass-by-reference.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "Recursive Functions",
+                "data": "Learn how to use recursion effectively in C.",
+                "rating": 5,
+                "description": "Explore advanced topics like tail recursion and stack optimization.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          }
+        },
+        "Pointers and Memory": {
+          "Introduction to Pointers": {
+            "Basic": [
+              {
+                "title": "What are Pointers?",
+                "data": "Learn about the concept of pointers in C.",
+                "rating": 4,
+                "description": "Introduction to the basics of pointers and memory addressing.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Pointer Arithmetic",
+                "data": "Learn about pointer operations and array manipulation.",
+                "rating": 4,
+                "description": "Explore pointer arithmetic and its practical uses.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "Dynamic Memory Management",
+                "data": "Learn how to manage memory using malloc and free.",
+                "rating": 5,
+                "description": "Handle memory allocation and deallocation dynamically.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          }
+        },
+        "File Handling": {
+          "File I/O Basics": {
+            "Basic": [
+              {
+                "title": "Introduction to File Handling",
+                "data": "Learn how to read and write files in C.",
+                "rating": 4,
+                "description": "Basic operations like opening, reading, and writing files.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Intermediate": [
+              {
+                "title": "Binary Files",
+                "data": "Explore working with binary files in C.",
+                "rating": 4,
+                "description": "Understand how to read and write binary data.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ],
+            "Advanced": [
+              {
+                "title": "File Streams and Buffers",
+                "data": "Learn advanced techniques for handling file streams.",
+                "rating": 5,
+                "description": "Optimize file operations using advanced stream techniques.",
+                "link": "https://www.youtube.com/watch?v=KJgsSFOSQv0"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+  

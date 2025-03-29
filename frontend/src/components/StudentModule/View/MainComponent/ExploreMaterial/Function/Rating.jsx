@@ -7,7 +7,6 @@ const Rating = ({ item, username }) => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [existingRating, setExistingRating] = useState(null);
     const [error, setError] = useState(null);
-
     useEffect(() => {
         const fetchExistingRating = async () => {
             try {
@@ -44,7 +43,8 @@ const Rating = ({ item, username }) => {
                 });
 
                 if (response.status === 200) {
-                    setFeedbackMessage(`Rating for item ${itemId} updated to ${ratingValue} stars!`);
+                    setExistingRating(ratingValue);
+                    setFeedbackMessage(`Rating has updated from ${existingRating} to ${ratingValue} stars!`);
                 } else {
                     setError(`Failed to update rating: ${response.statusText}`);
                 }
@@ -57,7 +57,7 @@ const Rating = ({ item, username }) => {
                 });
 
                 if (response.status === 200) {
-                    setFeedbackMessage(`Thank you for rating item ${itemId} as ${ratingValue} stars!`);
+                    setFeedbackMessage(`Thank you for rating as ${ratingValue} stars!`);
                 } else {
                     setError(`Failed to submit rating: ${response.statusText}`);
                 }
@@ -66,7 +66,10 @@ const Rating = ({ item, username }) => {
             setError(`Error submitting rating: ${error.message}`);
         }
 
-        e.target.reset(); // Reset the form after submission
+        // Clear feedback message after 3 seconds
+        setTimeout(() => {
+            setFeedbackMessage("");
+        }, 3000);
     };
 
     return (
@@ -76,7 +79,7 @@ const Rating = ({ item, username }) => {
                 className="rating-form"
             >
                 <label htmlFor={`ratingValue-${item}`}>User`s Rating:</label>
-                <br />
+           
                 <input
                     type="number"
                     id={`ratingValue-${item}`}
@@ -85,7 +88,7 @@ const Rating = ({ item, username }) => {
                     max="5"
                     required
                     className="rating-input"
-                    defaultValue={existingRating || ""}
+                    defaultValue={existingRating || "" }
                 />
                 <button type="submit" className="rating-submit-btn">
                     {existingRating ? "Update" : "Submit"}
