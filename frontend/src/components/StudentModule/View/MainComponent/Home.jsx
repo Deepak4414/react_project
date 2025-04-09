@@ -37,31 +37,34 @@ const Home = () => {
     // Render loading, error, or user details
     return (
         <div className="home-container">
+             {/* 🔗 Link Table Section */}
+             <section className="link-table my-4 px-4">
+                
+                <div className="row row-cols-2 row-cols-md-4 g-3">
+                    <div className="col">
+                        <a href="#" className="btn btn-outline-primary w-100">TrueConf</a>
+                    </div>
+                    <div className="col">
+                        <a href="http://192.168.68.12:9080" className="btn btn-outline-primary w-100">Live Channel 1 </a>
+                    </div>
+                    <div className="col">
+                        <a href="http://192.168.68.11:9080" className="btn btn-outline-primary w-100">Live Channel 2</a>
+                    </div>
+                    <div className="col">
+                        <a href="http://192.168.68.10:9080" className="btn btn-outline-primary w-100">Live Channel 3</a>
+                    </div>
+                </div>
+            </section>
+
             {/* Hero Section */}
             <header className="hero-section">
                 <h1>Welcome to the Student Information Portal</h1>
                 <p>Empowering Students for Success</p>
                 
             </header>
-
-            {/* Features Section */}
-            {/* <section className="features-section">
-                <h2>Why Choose Us?</h2>
-                <div className="features-grid">
-                    <div className="feature-card">
-                        <h3>Easy Access</h3>
-                        <p>Access your student profile anytime, anywhere.</p>
-                    </div>
-                    <div className="feature-card">
-                        <h3>Secure Data</h3>
-                        <p>Your data is safe and secure with us.</p>
-                    </div>
-                    <div className="feature-card">
-                        <h3>24/7 Support</h3>
-                        <p>We are here to help you round the clock.</p>
-                    </div>
-                </div>
-            </section> */}
+           
+        
+           
 
             {/* Student Profiles Section */}
             <main className="student-profiles">

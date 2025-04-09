@@ -1,0 +1,131 @@
+.vfstr-container {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* -------- Modal Styling -------- */
+  .nptel-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(3px);
+    padding: 10px;
+  }
+  
+  .nptel-modal-content {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: zoomIn 0.3s ease-in-out;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .nptel-model-close {
+    background-color: #e53935;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .nptel-model-close:hover {
+    background-color: #c62828;
+  }
+  
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* -------- Card Layout -------- */
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .card {
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    background: #fdfdfd;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.02);
+  }
+  
+  /* -------- Tooltip -------- */
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+    margin: 6px 0;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .tooltip-trigger {
+    color: #1e88e5;
+    font-weight: 500;
+  }
+  
+  .tooltip-box {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 12px;
+  }
+  
+  .tooltip-container:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /* -------- Responsive -------- */
+  @media (max-width: 768px) {
+    .card {
+      width: 100%;
+    }
+  
+    .nptel-modal-content {
+      max-width: 90%;
+    }
+  }
+  

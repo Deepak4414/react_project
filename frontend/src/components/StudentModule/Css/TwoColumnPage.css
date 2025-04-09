@@ -10,8 +10,11 @@
     background-color: #ffffff;
     border-right: 1px solid #e0e0e0;
     padding: 5px;
-    overflow-y: auto;
+    overflow: visible;
+    position: relative;
+    z-index: 0; 
     box-shadow: 3px 0 8px rgba(0, 0, 0, 0.1);
+
 }
 
 .left-column h3 {
@@ -116,6 +119,8 @@
     height: 100vh; /* Full viewport height */
     box-sizing: border-box; /* Include padding and border in element's total width and height */
     overflow-y: auto;
+    position: relative;
+    z-index: 10;
 }
 
 .chapter-content {

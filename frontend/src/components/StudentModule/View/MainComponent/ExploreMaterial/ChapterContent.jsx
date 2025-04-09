@@ -55,26 +55,50 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
   };
 
  
-const colortext = (text) => {
-  const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
-
-  const formattedText = text.split(timestampRegex).map((part, index) =>
-    part.match(timestampRegex) ? 
-      <span key={index} style={{ color: "red", textWrap:'balance'}}>[{part} min.]</span> 
-      : 
-      part.replace(/[:\-]/g, '') // remove comma when no timestamp
-  );
-
-  // add comma only when timestamp is present
-  const result = formattedText.map((item, index) => {
-    if (index > 0 && formattedText[index - 1].type === 'span') {
-      return <span key={index}>, {item}</span>;
+  const colortext = (text) => {
+    // Step 1: Clean `:-`, `: -`, `: -,` patterns to just `:`
+    let cleanedText = text
+      .replace(/:\s*-\s*,?/g, '')  // remove ": -", ":-", ": -,"
+      .replace(/,\s+/g, ',');      // remove space after commas
+  
+    // Step 2: Define regex for timestamps
+    const timestampRegex = /\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?/g;
+  
+    // Step 3: Split into parts around timestamps
+    const parts = cleanedText
+      .split(/(\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?)/g)
+      .map(part => part.trim())
+      .filter(Boolean);
+  
+    const listItems = [];
+  
+    // Step 4: Format each topic + tooltip inside <li>
+    for (let i = 0; i < parts.length; i++) {
+      const current = parts[i];
+      const next = parts[i + 1];
+  
+      if (current.match(timestampRegex)) continue;
+  
+      if (next && next.match(timestampRegex)) {
+        const timestamp = next.replace(/[\[\]]/g, '').trim();
+  
+        listItems.push(
+          <li key={i} className="tooltip-container" >
+            <span className="tooltip-trigger">{current}</span>
+            <span className="tooltip-box">{timestamp} min.</span>
+          </li>
+        );
+  
+        i++; // Skip timestamp
+      } else {
+        listItems.push(<li key={i}>{current}</li>);
+      }
     }
-    return item;
-  });
+  
+    return <ul>{listItems}</ul>;
+  };
+  
 
-  return <p>{result}</p>;
-};
   const renderCardContent = (item) => (
     <div key={item.id} className="card mb-1" style={{ width: '250px' }}>
       <div className="card-body" style={{ padding: '10px' }}>

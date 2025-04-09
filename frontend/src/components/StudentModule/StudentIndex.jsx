@@ -1,6 +1,6 @@
 import React from 'react';
 import  { useState, useEffect } from 'react';
-import {  Routes, Route } from 'react-router-dom';
+import {  Routes, Route, Outlet } from 'react-router-dom';
 import Navbar from '../StudentModule/View/MainComponent/Navbar'; // Assuming you have a Navbar component
 import Home from './View/MainComponent/Home'; // Assuming you have a Home component
 import ExploreMaterial from '../StudentModule/View/MainComponent/ExploreMaterial'; // Assuming you have an ExploreMaterial component
@@ -30,6 +30,7 @@ function StudentIndex({isLoggedIn}) {
           <Route path="/view-course" element={<Home />} />
           <Route path="/logout" element={<Logout />} />   
         </Routes>
+        <Outlet />
       </main>
     </div>
   );

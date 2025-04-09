@@ -12,6 +12,7 @@ import AddVfstrVideo from "./AddVfstrVideo/AddVfstrVideo";
 import SaveVfstrVideo from "./AddVfstrVideo/SaveVfstrVideo";
 import UpdateTopic from "./Update/UpdateTopic";
 import AddFacultyDetalis from "./AddFacultyDetalis/AddFacultyDetalis";
+import ExploreMaterial from "../../../StudentModule/View/MainComponent/ExploreMaterial";
 function Faculty({isLoggedIn}) {
    const [userState, setUserState] = useState(null);
    
@@ -29,7 +30,7 @@ function Faculty({isLoggedIn}) {
         <>
             <Navbar isLoggedIn={isLoggedIn}/>
             
-            <div className="container mt-4">
+            <div className="">
                 <Routes>
                     <Route path="/" element={<Home username={userState}/>} />
                     <Route path="/add" element={<AddCourse />} />
@@ -41,6 +42,8 @@ function Faculty({isLoggedIn}) {
                     <Route path="/savevfstrvideo" element={<SaveVfstrVideo />} />
                     <Route path="/update-topic" element={<UpdateTopic />} />
                     <Route path="/addfacultydetails" element={<AddFacultyDetalis />} />
+                    <Route path="/explore-material" element={<ExploreMaterial username={userState} />} />
+                    
                     <Route path="/logout" element={Logout} />
                 </Routes>
             </div>

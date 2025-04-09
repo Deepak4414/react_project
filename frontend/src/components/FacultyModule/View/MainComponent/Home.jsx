@@ -40,13 +40,7 @@ const Home = ({ username }) => {
       <section className="features-section">
         <div className="features-grid">
          
-          {/* <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex">
-                Home
-              </Link>
-            </h3>
-          </div> */}
+          
           <div className="feature-card">
             <h3>
               <Link className="nav-link" to="/facultyindex/add">
@@ -80,6 +74,27 @@ const Home = ({ username }) => {
             <h3>
               <Link className="nav-link" to="/facultyindex/livechannel">
                 Add Live Channel Time
+              </Link>
+            </h3>
+          </div>
+          <div className="feature-card">
+            <h3>
+              <Link className="nav-link" to="/facultyindex/explore-material">
+                Preview the Content
+              </Link>
+            </h3>
+          </div>
+          <div className="feature-card">
+            <h3>
+              <Link className="nav-link" to="">
+               #
+              </Link>
+            </h3>
+          </div>
+          <div className="feature-card">
+            <h3>
+              <Link className="nav-link" to="">
+               #
               </Link>
             </h3>
           </div>

@@ -21,74 +21,75 @@ const SaveVfstrVideo = () => {
 
   useEffect(() => {
     if (subject) {
-      axios
-        .get(`http://localhost:5000/api/chapter/${subject}`)
-        .then((response) => setChapters(response.data.chapter))
-        .catch((error) => console.error("Error fetching chapters:", error));
+      axios.get(`http://localhost:5000/api/chapter/${subject}`)
+        .then(res => setChapters(res.data.chapter))
+        .catch(err => console.error("Chapter fetch error:", err));
     }
   }, [subject]);
 
   useEffect(() => {
     if (selectedChapter) {
-      axios
-        .get(`http://localhost:5000/api/topics/${selectedChapter}`)
-        .then((response) => setTopics(response.data.topics))
-        .catch((error) => console.error("Error fetching topics:", error));
+      axios.get(`http://localhost:5000/api/topics/${selectedChapter}`)
+        .then(res => setTopics(res.data.topics))
+        .catch(err => console.error("Topic fetch error:", err));
     }
   }, [selectedChapter]);
 
+  useEffect(() => {
+    if (subject) {
+      axios.get(`http://localhost:5000/api/vfstrvideos/${subject}`)
+        .then(res => {
+          setVideoNames(res.data[0]);
+          setFolderName(res.data[1]);
+        })
+        .catch(err => console.error("Video names fetch error:", err));
+    }
+  }, [subject]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/fetch-faculties')
+      .then(res => setFaculties(res.data))
+      .catch(err => console.error("Faculty fetch error:", err));
+  }, []);
+
   const fetchSubTopics = async (topicId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/subtopics?topicId=${topicId}`
-      );
-      setSubTopics(response.data);
-    } catch (error) {
-      console.error("Error fetching subtopics:", error);
+      const res = await axios.get(`http://localhost:5000/api/subtopics?topicId=${topicId}`);
+      setSubTopics(res.data);
+    } catch (err) {
+      console.error("Subtopic fetch error:", err);
     }
   };
 
   const handleTopicChange = (e) => {
-    const topicId = e.target.value;
-    setSelectedTopic(topicId);
+    const id = e.target.value;
+    setSelectedTopic(id);
     setSelectedSubTopic("");
-    setSubTopics([]);
-    if (topicId) fetchSubTopics(topicId);
+    fetchSubTopics(id);
   };
 
-  // Handle adding a new video form
   const handleAddVideoForm = () => {
-    setVideoForms([
-      ...videoForms,
-      {
-        id: videoForms.length + 1,
-        title: "",
-        description: "",
-        video: "",
-        videoLevel: "",
-        textFile: "",
-      },
-    ]);
+    setVideoForms([...videoForms, {
+      id: videoForms.length + 1,
+      title: "",
+      description: "",
+      video: "",
+      videoLevel: "",
+      textFile: ""
+    }]);
   };
 
-  // Handle removing a video form
   const handleRemoveVideoForm = (id) => {
-    const updatedForms = videoForms.filter((form) => form.id !== id);
-    setVideoForms(updatedForms);
+    setVideoForms(videoForms.filter(f => f.id !== id));
   };
 
-  // Handle changes in the form fields
   const handleFormChange = (id, field, value) => {
-    const updatedForms = videoForms.map((form) =>
-      form.id === id ? { ...form, [field]: value } : form
-    );
-    setVideoForms(updatedForms);
+    setVideoForms(videoForms.map(f => f.id === id ? { ...f, [field]: value } : f));
   };
 
   const handleUploadVideo = async (id) => {
     try {
-      const form = videoForms.find((form) => form.id === id);
-
+      const form = videoForms.find(f => f.id === id);
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("description", form.description);
@@ -98,256 +99,143 @@ const SaveVfstrVideo = () => {
       formData.append("subject", subject || "default");
       formData.append("topicId", selectedTopic);
       formData.append("subTopicId", selectedSubTopic);
-      formData.append("facultyName", selectedFaculty); // Add faculty name to FormData
+      formData.append("facultyName", selectedFaculty);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/upload-vfstr-video",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      await axios.post("http://localhost:5000/api/upload-vfstr-video", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
-      console.log("Video uploaded successfully:", response.data);
       alert("Video uploaded successfully!");
       navigate("/facultyindex/addvfstrvideo");
     } catch (error) {
-      console.error("Error uploading video:", error);
-      alert("Error uploading video. Please try again.");
+      console.error("Upload error:", error);
+      alert("Upload failed.");
     }
   };
 
-  // Fetch video names and folder name from the backend
-  useEffect(() => {
-    const fetchVideoNames = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/vfstrvideos/${subject}`
-        );
+  const handleFacultyChange = (e) => setSelectedFaculty(e.target.value);
 
-        setVideoNames(response.data[0]); // Video names
-        setFolderName(response.data[1]); // Folder name
-        console.log("Video names:", response.data[1]);
-      } catch (error) {
-        console.error("Error fetching video names:", error);
-      }
-    };
-
-    if (subject) {
-      fetchVideoNames();
-    }
-  }, [subject]);
-
-  useEffect(() => {
-  const fetchFaculties = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/fetch-faculties');
-      setFaculties(response.data);
-    } catch (error) {
-      console.error('Error fetching faculties:', error);
-    }
-  };
-
-  fetchFaculties();
-}, []);
-const handleFacultyChange = (e) => {
-  const facultyName = e.target.value;
-  setSelectedFaculty(facultyName); // Update selected faculty
-};
   return (
-    <>
-      <div className="mb-3">
-        <label htmlFor="chapter" className="form-label">
-          Select Chapter
-        </label>
-        <select
-          id="chapter"
-          className="form-select"
-          value={selectedChapter}
-          onChange={(e) => setSelectedChapter(e.target.value)}
-        >
-          <option value="">Select Chapter</option>
-          {chapters.map((chapter) => (
-            <option key={chapter.id} value={chapter.id}>
-              {chapter.chapter}
-            </option>
-          ))}
-        </select>
-      </div>
-      {selectedChapter.length > 0 && (
-        <div className="mb-3">
-          <label htmlFor="topic" className="form-label">
-            Select Topic
-          </label>
-          <select
-            id="topic"
-            className="form-select"
-            value={selectedTopic}
-            onChange={handleTopicChange}
-          >
-            <option value="">-- Select a Topic --</option>
-            {topics.map((topic) => (
-              <option key={topic.id} value={topic.id}>
-                {topic.topic}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {subTopics.length > 0 && (
-        <div className="mb-3">
-          <label htmlFor="subTopic" className="form-label">
-            Select Subtopic
-          </label>
-          <select
-            id="subTopic"
-            className="form-select"
-            value={selectedSubTopic}
-            onChange={(e) => setSelectedSubTopic(e.target.value)}
-          >
-            <option value="">-- Select a Subtopic --</option>
-            {subTopics.map((subTopic) => (
-              <option key={subTopic.id} value={subTopic.id}>
-                {subTopic.subTopic}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+    <div className="container my-4">
+      <div className="row">
+        {/* Left Column: Form */}
+        <div className="col-md-6">
+          <h4 className="mb-3">Upload VFSTR Video</h4>
 
-      {selectedSubTopic && (
-        <>
-          <div className="container mt-4">
-            {/* Render video forms */}
-            {videoForms.map((form) => (
-              <div key={form.id} className="border p-3 mb-3">
-                {/* Video Title and Video Name in the same row */}
-                <div className="row mb-2">
-                  <div className="col-md-6">
-                    <label>Video Title:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={form.title}
-                      onChange={(e) =>
-                        handleFormChange(form.id, "title", e.target.value)
-                      }
-                      placeholder="Enter video title"
-                    />
+          <div className="mb-3">
+            <label className="form-label">Select Chapter</label>
+            <select className="form-select" value={selectedChapter} onChange={(e) => setSelectedChapter(e.target.value)}>
+              <option value="">-- Select Chapter --</option>
+              {chapters.map(ch => (
+                <option key={ch.id} value={ch.id}>{ch.chapter}</option>
+              ))}
+            </select>
+          </div>
+
+          {selectedChapter && (
+            <>
+              <div className="mb-3">
+                <label className="form-label">Select Topic</label>
+                <select className="form-select" value={selectedTopic} onChange={handleTopicChange}>
+                  <option value="">-- Select Topic --</option>
+                  {topics.map(topic => (
+                    <option key={topic.id} value={topic.id}>{topic.topic}</option>
+                  ))}
+                </select>
+              </div>
+
+              {subTopics.length > 0 && (
+                <div className="mb-3">
+                  <label className="form-label">Select Subtopic</label>
+                  <select className="form-select" value={selectedSubTopic} onChange={(e) => setSelectedSubTopic(e.target.value)}>
+                    <option value="">-- Select Subtopic --</option>
+                    {subTopics.map(st => (
+                      <option key={st.id} value={st.id}>{st.subTopic}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </>
+          )}
+
+          {selectedSubTopic && (
+            <div>
+              {videoForms.map(form => (
+                <div key={form.id} className="border p-3 rounded mb-4 shadow-sm bg-light">
+                  <div className="mb-2">
+                    <label>Video Title</label>
+                    <input type="text" className="form-control" value={form.title} onChange={(e) => handleFormChange(form.id, "title", e.target.value)} />
                   </div>
-                  <div className="col-md-6">
-                    <label>Video Name:</label>
-                    <select
-                      className="form-control"
-                      value={form.video}
-                      onChange={(e) =>
-                        handleFormChange(form.id, "video", e.target.value)
-                      }
-                    >
-                      <option value="">-- Select a Video --</option>
-                      {videoNames.map((video, index) => (
-                        <option key={index} value={video}>
-                          {video}
-                        </option>
+
+                  <div className="mb-2">
+                    <label>Video Description</label>
+                    <textarea className="form-control" value={form.description} onChange={(e) => handleFormChange(form.id, "description", e.target.value)} />
+                  </div>
+
+                  <div className="mb-2">
+                    <label>Video File Name</label>
+                    <select className="form-control" value={form.video} onChange={(e) => handleFormChange(form.id, "video", e.target.value)}>
+                      <option value="">-- Select Video --</option>
+                      {videoNames.map((v, i) => (
+                        <option key={i} value={v}>{v}</option>
                       ))}
                     </select>
                   </div>
-                </div>
 
-                {/* Video Description and Video Level in the same row */}
-                <div className="row mb-2">
-                  <div className="col-md-6">
-                    <label>Video Description:</label>
-                    <textarea
-                      className="form-control"
-                      value={form.description}
-                      onChange={(e) =>
-                        handleFormChange(form.id, "description", e.target.value)
-                      }
-                      placeholder="Enter video description"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label>Level of Video:</label>
-                    <select
-                      className="form-control"
-                      value={form.videoLevel}
-                      onChange={(e) =>
-                        handleFormChange(form.id, "videoLevel", e.target.value)
-                      }
-                    >
-                      <option value="">-- Select a Level --</option>
+                  <div className="mb-2">
+                    <label>Level</label>
+                    <select className="form-control" value={form.videoLevel} onChange={(e) => handleFormChange(form.id, "videoLevel", e.target.value)}>
+                      <option value="">-- Select Level --</option>
                       <option value="Basic">Basic</option>
                       <option value="Intermediate">Intermediate</option>
                       <option value="Advanced">Advanced</option>
                     </select>
                   </div>
-                </div>
 
-                {/*  File Input */}
-                <div className="row mb-2">
-                  <div className="col-md-6">
-                    <label>Pdf File:</label>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      className="form-control"
-                      onChange={(e) =>
-                        handleFormChange(form.id, "textFile", e.target.files[0])
-                      }
-                    />
+                  <div className="mb-2">
+                    <label>Upload PDF</label>
+                    <input type="file" accept=".pdf" className="form-control" onChange={(e) => handleFormChange(form.id, "textFile", e.target.files[0])} />
                   </div>
-                  <div className="col-md-6">
-                    <label>Faculty Name:</label>
-                      <select
-                      className="form-control"
-                      value={selectedFaculty}
-                      onChange={handleFacultyChange}
-                    >
-                      <option value="">-- Select a Faculty Name --</option>
-                      {faculties.map((faculty) => (
-                        <option key={faculty._id} value={faculty.name}>
-                          {faculty.name}
-                        </option>
+
+                  <div className="mb-2">
+                    <label>Faculty Name</label>
+                    <select className="form-control" value={selectedFaculty} onChange={handleFacultyChange}>
+                      <option value="">-- Select Faculty --</option>
+                      {faculties.map(f => (
+                        <option key={f._id} value={f.name}>{f.name}</option>
                       ))}
                     </select>
                   </div>
-                </div>
-                      
-                {/* Upload and Remove Buttons */}
-                <div className="row mb-2">
-                  <div className="col-md-6">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => handleUploadVideo(form.id)}
-                    >
-                      Upload Video
-                    </button>
-                  </div>
-                  <div className="col-md-6">
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => handleRemoveVideoForm(form.id)}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
 
-            {/* Add Video Form Button */}
-            <button
-              type="button"
-              className="btn btn-primary mb-3"
-              onClick={handleAddVideoForm}
-            >
-              Add VFSTR Video
-            </button>
-          </div>
-        </>
-      )}
-    </>
+                  <div className="d-flex justify-content-between mt-3">
+                    <button className="btn btn-success" onClick={() => handleUploadVideo(form.id)}>Upload</button>
+                    <button className="btn btn-outline-danger" onClick={() => handleRemoveVideoForm(form.id)}>Remove</button>
+                  </div>
+                </div>
+              ))}
+
+              <button className="btn btn-primary" onClick={handleAddVideoForm}>+ Add Video</button>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Preview */}
+        <div className="col-md-6">
+          <h5 className="mb-3">Live Preview</h5>
+          {videoForms.map(form => (
+            <div key={form.id} className="card mb-3 shadow-sm">
+              <div className="card-body">
+                <h6 className="card-title">{form.title || "Untitled Video"}</h6>
+                <p className="card-text">{form.description || "No description provided."}</p>
+                <p><strong>Level:</strong> {form.videoLevel || "N/A"}</p>
+                <p><strong>Video File:</strong> {form.video || "Not selected"}</p>
+                <p><strong>Faculty:</strong> {selectedFaculty || "N/A"}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

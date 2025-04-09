@@ -12,7 +12,7 @@
     border-radius: 5px;
     padding: 10px;
     position: absolute;
-    z-index: 1;
+    z-index: 99999;
     bottom: 150%; /* Adjust for placement */
     left: 50%;
     transform: translateX(-50%);
@@ -20,6 +20,7 @@
     transition: opacity 0.3s ease-in-out;
     width: 300px; /* Updated width for better layout */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 99999;
   }
   
   .rating-tooltip:hover .tooltip-text {

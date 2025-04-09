@@ -42,7 +42,6 @@ const VfstrVideo = ({ subtopic }) => {
     // Convert Windows path to a valid URL format
     const formattedPath = pdfPath.replace(/\\/g, "/").replace("D:/Videos/VFSTR/", "");
 
-
     // Construct URL and open PDF
     const fileUrl = `http://localhost:5000/api/pdf?path=${encodeURIComponent(formattedPath)}`;
     window.open(fileUrl, "_blank");
@@ -68,24 +67,46 @@ const VfstrVideo = ({ subtopic }) => {
   
 
   const colortext = (text) => {
-    const timestampRegex = /\[?(\d{1,2}:\d{2} -? \d{1,2}:\d{2}|\d{1,2}:\d{2})\]?/g;
+    // Step 1: Clean `:-`, `: -`, `: -,` patterns to just `:`
+    let cleanedText = text
+      .replace(/:\s*-\s*,?/g, '')  // remove ": -", ":-", ": -,"
+      .replace(/,\s+/g, ',');      // remove space after commas
   
-    const formattedText = text.split(timestampRegex).map((part, index) =>
-      part.match(timestampRegex) ? 
-        <span key={index} style={{ color: "red", textWrap:'balance'}}>[{part} min.]</span> 
-        : 
-        part.replace(/[:\-]/g, '') // remove comma when no timestamp
-    );
+    // Step 2: Define regex for timestamps
+    const timestampRegex = /\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?/g;
   
-    // add comma only when timestamp is present
-    const result = formattedText.map((item, index) => {
-      if (index > 0 && formattedText[index - 1].type === 'span') {
-        return <span key={index}>, {item}</span>;
+    // Step 3: Split into parts around timestamps
+    const parts = cleanedText
+      .split(/(\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?)/g)
+      .map(part => part.trim())
+      .filter(Boolean);
+  
+    const listItems = [];
+  
+    // Step 4: Format each topic + tooltip inside <li>
+    for (let i = 0; i < parts.length; i++) {
+      const current = parts[i];
+      const next = parts[i + 1];
+  
+      if (current.match(timestampRegex)) continue;
+  
+      if (next && next.match(timestampRegex)) {
+        const timestamp = next.replace(/[\[\]]/g, '').trim();
+  
+        listItems.push(
+          <li key={i} className="tooltip-container" >
+            <span className="tooltip-trigger">{current}</span>
+            <span className="tooltip-box">{timestamp} min.</span>
+          </li>
+        );
+  
+        i++; // Skip timestamp
+      } else {
+        listItems.push(<li key={i}>{current}</li>);
       }
-      return item;
-    });
+    }
   
-    return <p>{result}</p>;
+    return <ul>{listItems}</ul>;
   };
   return (
     <div className="vfstr-container" style={{ width: "100%" }}>
@@ -155,7 +176,7 @@ const VfstrVideo = ({ subtopic }) => {
                   --------------------------------
                   
                   <h4 style={{ fontSize: "16px",fontWeight:"bold" }}>{file.title || "No Title"}</h4>
-                  <p style={{ fontSize: "15px" }}>{(file.description || "No Description")}</p>
+                  <p style={{ fontSize: "15px" }}>{(colortext(file.description) || "No Description")}</p>
 
                   <img
                     src="/image/logo.svg"
