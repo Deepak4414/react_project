@@ -20,7 +20,6 @@ const NptelContent = ({ subtopic }) => {
         const response = await axios.get("http://localhost:5000/api/videos", {
           params: { subTopic: subtopic },
         });
-
         setVideos(response.data[0]);
         setVideoNames(response.data[1]);
         setTitle(response.data[2]);
@@ -83,7 +82,7 @@ const NptelContent = ({ subtopic }) => {
   };
 
   return (
-    <div className="nptel-container" style={{ maxWidth: '1200px', margin: 'auto' }}>
+    <div className="nptel-container" style={{ maxWidth: '1200px', margin: 'auto',minWidth: '250px' }}>
       {error && <p>{error}</p>}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBlock: "10px" }}>

@@ -7,7 +7,19 @@ import Link from "./Link";
 
 const AddTopic = () => {
     const location = useLocation();
-    const { course, branch, semester, subject } = location.state || {};
+    const queryParams = new URLSearchParams(location.search);
+    const navigate = useNavigate();
+    const course = queryParams.get("course");
+    const branch = queryParams.get("branch");
+    const semester = queryParams.get("semester");
+    const subject = queryParams.get("subject");
+    useEffect(() => {
+        if (!course || !branch || !semester || !subject) {
+          // If any parameter is missing, redirect back
+          navigate("/facultyindex/add");
+        }
+      }, [course, branch, semester, subject, navigate]);
+
     const [chapters, setChapters] = useState([]);
     const [topics, setTopics] = useState([]);
     const [subTopic, setSubTopic] = useState("");
@@ -25,7 +37,6 @@ const AddTopic = () => {
     const [loading, setLoading] = useState(false);
     const [nptelData, setNptelData] = useState([]);
     const [folderName, setFolderName] = useState("");
-    const navigate = useNavigate();
 
     // Fetch chapters for the subject
     useEffect(() => {

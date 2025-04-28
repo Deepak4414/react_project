@@ -1,34 +1,92 @@
 /* ShowInChatBox.css */
+.chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-window {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.5rem; /* Prevents scrollbar from overlapping content */
+}
+
+/* Custom scrollbar styling */
+.chat-window::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-window::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.chat-window::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Rest of your existing styles... */
 .message {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 70%;
-    word-wrap: break-word;
-}
-
-.message.user {
-    background-color: #007bff;
-    color: white;
-    margin-left: auto;
-}
-
-.message.bot {
-    background-color: #e9ecef;
-    color: black;
-    margin-right: auto;
-}
-
-.message-text {
-    font-size: 14px;
+    max-width: 85%;
+    padding: 0.8rem 1rem;
+    border-radius: 1rem;
     line-height: 1.5;
 }
 
-.message-link {
-    color: #007bff;
-    text-decoration: none;
+.message.user {
+    align-self: flex-end;
+    background-color: #3b82f6;
+    color: white;
+    border-bottom-right-radius: 0.2rem;
 }
 
-.message-link:hover {
-    text-decoration: underline;
+.message.bot {
+    align-self: flex-start;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    border-bottom-left-radius: 0.2rem;
+}
+
+pre {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+    font-size: 0.9em;
+}
+
+code:not(pre code) {
+    background: #e2e8f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.message.user code:not(pre code) {
+    background: #2563eb;
+    color: #bfdbfe;
+}
+
+ul, ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+li {
+    margin-bottom: 0.3rem;
+}
+
+strong {
+    font-weight: 600;
 }

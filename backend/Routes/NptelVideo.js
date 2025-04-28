@@ -10,7 +10,6 @@ app.use(cors());
 // Fetch video details for a specific subTopic
 router.get("/videos", async (req, res) => {
   const { subTopic } = req.query;
-
   try {
     // Query database for video details
     const videos = await new Promise((resolve, reject) => {

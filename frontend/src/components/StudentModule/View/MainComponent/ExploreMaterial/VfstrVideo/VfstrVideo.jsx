@@ -67,45 +67,38 @@ const VfstrVideo = ({ subtopic }) => {
   
 
   const colortext = (text) => {
-    // Step 1: Clean `:-`, `: -`, `: -,` patterns to just `:`
     let cleanedText = text
-      .replace(/:\s*-\s*,?/g, '')  // remove ": -", ":-", ": -,"
-      .replace(/,\s+/g, ',');      // remove space after commas
-  
-    // Step 2: Define regex for timestamps
+      .replace(/:\s*-\s*,?/g, '')
+      .replace(/,\s+/g, ',');
+
     const timestampRegex = /\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?/g;
-  
-    // Step 3: Split into parts around timestamps
     const parts = cleanedText
       .split(/(\[?\d{1,2}:\d{2}(?:\s*-\s*\d{1,2}:\d{2})?\]?)/g)
       .map(part => part.trim())
       .filter(Boolean);
-  
+
     const listItems = [];
-  
-    // Step 4: Format each topic + tooltip inside <li>
+
     for (let i = 0; i < parts.length; i++) {
       const current = parts[i];
       const next = parts[i + 1];
-  
+
       if (current.match(timestampRegex)) continue;
-  
+
       if (next && next.match(timestampRegex)) {
         const timestamp = next.replace(/[\[\]]/g, '').trim();
-  
         listItems.push(
-          <li key={i} className="tooltip-container" >
+          <li key={i} className="tooltip-container">
             <span className="tooltip-trigger">{current}</span>
             <span className="tooltip-box">{timestamp} min.</span>
           </li>
         );
-  
-        i++; // Skip timestamp
+        i++;
       } else {
         listItems.push(<li key={i}>{current}</li>);
       }
     }
-  
+
     return <ul>{listItems}</ul>;
   };
   return (
@@ -129,7 +122,7 @@ const VfstrVideo = ({ subtopic }) => {
                 >
                   
                   <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
-                  <p style={{ fontSize: "15px" }}>{file.description || "No Description"}</p>
+                  <p style={{ fontSize: "15px" }}>{colortext(file.description) || "No Description"}</p>
 
                   <img
                     src="/image/link_logo.png"

@@ -14,6 +14,7 @@ import Privacy from './OtherComponent/Privacy';
 import ProtectedRoute from './ProtectedRoute/ProtectedRoute';
 import Header from './OtherComponent/Header'; // ✅ Import header here
 import LoginModal from './LoginModal'; // ✅ Import LoginModal here
+import MannKiBaat from './Mann-Ki-Baat/MannKiBaat'; // ✅ Import MannKiBaat here
 // 🧠 Custom wrapper to use location inside MainApp
 const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
   const location = useLocation();
@@ -42,6 +43,7 @@ const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
           {/* Protected Routes - Student */}
           <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} role="student" />}>
             <Route path="/studentindex/*" element={<StudentIndex />}>
+            <Route path="mann-ki-baat" element={<MannKiBaat />} />
               <Route path="contact" element={<Contact />} />
               <Route path="privacy" element={<Privacy />} />
               <Route path="terms" element={<Terms />} />

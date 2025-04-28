@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import axios from 'axios';
 import '../../Css/Home.css'; // Import CSS for styling
 const storage = {
@@ -40,18 +41,32 @@ const Home = () => {
              {/* 🔗 Link Table Section */}
              <section className="link-table my-4 px-4">
                 
-                <div className="row row-cols-2 row-cols-md-4 g-3">
+                <div className="row row-cols-2 row-cols-md-4 g-3" >
                     <div className="col">
-                        <a href="#" className="btn btn-outline-primary w-100">TrueConf</a>
+                        <a href="#" className="btn btn-outline-primary w-100">
+                            <img src="/image/OIP.jpg" alt="" style={{width:"300px", height:"50px"}}/>
+                        </a>
                     </div>
                     <div className="col">
-                        <a href="http://192.168.68.12:9080" className="btn btn-outline-primary w-100">Live Channel 1 </a>
+                        <a href="http://192.168.68.12:9080" className="btn btn-outline-primary w-100">
+                        <img src="/image/cdot_logo.png" alt="" style={{width:"50px", height:"40px"}}/>
+                        Live Content from server 1 </a>
                     </div>
                     <div className="col">
-                        <a href="http://192.168.68.11:9080" className="btn btn-outline-primary w-100">Live Channel 2</a>
+                        <a href="http://192.168.68.11:9080" className="btn btn-outline-primary w-100">
+                        <img src="/image/cdot_logo.png" alt="" style={{width:"50px", height:"40px"}}/>
+                         Live Content from server 2</a>
                     </div>
                     <div className="col">
-                        <a href="http://192.168.68.10:9080" className="btn btn-outline-primary w-100">Live Channel 3</a>
+                        <a href="http://192.168.68.10:9080" className="btn btn-outline-primary w-100">
+                        <img src="/image/cdot_logo.png" alt="" style={{width:"50px", height:"40px"}}/>
+                        Live Content from server 3</a>
+                    </div>
+                    <div className="col">
+                        <Link to="/studentindex/mann-ki-baat" className="btn btn-outline-primary w-100">Maan ki Baat</Link>
+                    </div>
+                    <div className="col">
+                        <Link to="#" className="btn btn-outline-primary w-100">Campus Radio</Link>
                     </div>
                 </div>
             </section>

@@ -1,150 +1,181 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ChapterContent from '../MainComponent/ExploreMaterial/ChapterContent';
-const SelectTopicSubTopic = ({ selectedSubject,username, subTopicData }) => {
-  console.log("ad",subTopicData);
+import '../../Css/TwoColumnPage.css';
+import './SelectTopicSubTopic.css';
+
+const SelectTopicSubTopic = ({ selectedSubject, username, onSubtopicSelect }) => {
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState({});
   const [subtopics, setSubtopics] = useState({});
-  const [selectedContent, setSelectedContent] = useState(null);
-  const [content, setContent] = useState({});
+  const [selectedSubtopicId, setSelectedSubtopicId] = useState(null);
+  const [content, setContent] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchChapters = async () => {
+    const fetchData = async () => {
+      if (!selectedSubject) return;
+      
       try {
-        const response = await axios.get(`http://localhost:5000/api/chapter/${selectedSubject}`);
-        setChapters(response.data.chapter);
+        setLoading(true);
+        const chaptersRes = await axios.get(`http://localhost:5000/api/chapter/${selectedSubject}`);
+        setChapters(chaptersRes.data.chapter);
+        
+        const topicsData = {};
+        for (const chapter of chaptersRes.data.chapter) {
+          const topicsRes = await axios.get(`http://localhost:5000/api/topics/${chapter.id}`);
+          topicsData[chapter.id] = topicsRes.data.topics;
+        }
+        setTopics(topicsData);
+        
+        const subtopicsData = {};
+        for (const chapter of chaptersRes.data.chapter) {
+          for (const topic of topicsData[chapter.id] || []) {
+            const subtopicsRes = await axios.get(`http://localhost:5000/api/subtopics/${topic.id}`);
+            subtopicsData[topic.id] = subtopicsRes.data;
+          }
+        }
+        setSubtopics(subtopicsData);
       } catch (error) {
-        console.error('Error fetching chapters:', error);
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    if (selectedSubject) fetchChapters();
+    
+    fetchData();
   }, [selectedSubject]);
 
-  useEffect(() => {
-    const fetchTopicsAndSubtopics = async () => {
-      let topicsData = {};
-      let subtopicsData = {};
-
-      for (let chapter of chapters) {
-        try {
-          const topicResponse = await axios.get(`http://localhost:5000/api/topics/${chapter.id}`);
-          topicsData[chapter.id] = topicResponse.data.topics;
-
-          for (let topic of topicResponse.data.topics) {
-            try {
-              const subtopicResponse = await axios.get(`http://localhost:5000/api/subtopics/${topic.id}`);
-              subtopicsData[topic.id] = subtopicResponse.data;
-            } catch (subtopicError) {
-              console.error('Error fetching subtopics:', subtopicError);
-            }
+  const handleSubtopicSelect = async (subtopic) => {
+    if (onSubtopicSelect) {
+      // Find the chapter and topic for this subtopic
+      let chapterId, topicId;
+      for (const chapter of chapters) {
+        for (const topic of topics[chapter.id] || []) {
+          if (subtopics[topic.id]?.some(st => st.id === subtopic.id)) {
+            chapterId = chapter.id;
+            topicId = topic.id;
+            break;
           }
-        } catch (topicError) {
-          console.error('Error fetching topics:', topicError);
         }
+        if (chapterId) break;
       }
-
-      setTopics(topicsData);
-      setSubtopics(subtopicsData);
-    };
-
-    if (chapters.length > 0) fetchTopicsAndSubtopics();
-  }, [chapters]);
-
-  useEffect(() => {
-    const fetchContent = async () => {
-      if (selectedContent) {
-        try {
-          const response = await axios.get(`http://localhost:5000/api/content/${selectedContent.id}`);
-          setContent(response.data);
-          
-        } catch (error) {
-          console.error('Error fetching content:', error);
-        }
-      }
-    };
-    fetchContent();
-  }, [selectedContent]);
-
-  const onSelectContent = (id, type) => {
-    setSelectedContent({ id, type });
-    console.log(`Selected ${type}: ${id}`);
+      
+      onSubtopicSelect(chapterId, topicId, subtopic.id);
+      return;
+    }
+    
+    setLoading(true);
+    setSelectedSubtopicId(subtopic.id);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/content/${subtopic.id}`);
+      setContent(response.data);
+    } catch (error) {
+      console.error('Error fetching content:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-//   const groupContentBySubTopicAndLevel = (content, subTopic) => {
-// console.log("content",content);
-//     const groupedContent = {};
+  const groupContentBySubTopicAndLevel = (content) => {
+    const grouped = {};
+    content.forEach(item => {
+      if (!grouped[item.subTopicId]) {
+        grouped[item.subTopicId] = {
+          title: `SubTopic: ${item.subTopicId}`,
+          levels: { basic: [], medium: [], advanced: [] }
+        };
+      }
+      grouped[item.subTopicId].levels[item.level]?.push(item);
+    });
+    return grouped;
+  };
 
-//     content.forEach((item) => {
-//       const { id, subTopicId, level, title, description, link, rating } = item;
+  const findTopicIdForSubtopic = (subtopicId) => {
+    for (const topicId in subtopics) {
+      if (subtopics[topicId].some(st => st.id === subtopicId)) {
+        return topicId;
+      }
+    }
+    return null;
+  };
 
-//       // Ensure subTopicId exists in the grouping
-//       if (!groupedContent[subTopicId]) {
-//         groupedContent[subTopicId] = {
-//           title: `SubTopic: ${subTopicId}`, // Provide a generic title if none exists
-//           levels: {
-//             basic: [],
-//             medium: [],
-//             advanced: [],
-//           },
+  const renderChapterColumns = () => {
+    if (loading) return <div className="loading">Loading chapters...</div>;
+    
+    return (
+      <div className="chapters-grid">
+        {chapters.map((chapter, chapterIndex) => (
+          <div key={chapter.id} className="chapter-column">
+            <h5 className="chapter-title">
+              {chapterIndex + 1}. {chapter.chapter}
+            </h5>
+            
+            {/* Topics for this chapter */}
+            <ul className="topics-list">
+              {(topics[chapter.id] || []).map((topic, topicIndex) => (
+                <li key={topic.id} className="topic-item">
+                  <div className="topic-name">
+                    {chapterIndex + 1}.{topicIndex + 1} {topic.topic}
+                  </div>
+                  
+                  {/* Subtopics for this topic */}
+                  <ul className="subtopics-list">
+                    {(subtopics[topic.id] || []).map((subtopic, subtopicIndex) => (
+                      <li key={subtopic.id}>
+                        <button
+                          onClick={() => handleSubtopicSelect(subtopic)}
+                          className="subtopic-button"
+                        >
+                          {chapterIndex + 1}.{topicIndex + 1}.{subtopicIndex + 1} {subtopic.subTopic}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
-//         };
-//       }
-
-//       // Push the content into the appropriate level
-//       groupedContent[subTopicId].levels[level]?.push({ id, title, description, link, rating });
-//     });
-
-//     return groupedContent;
-//   };
-//   const groupedContent = groupContentBySubTopicAndLevel(content, subtopics);
-  
+  const renderContentView = () => {
+    const groupedContent = groupContentBySubTopicAndLevel(content);
+    const topicId = findTopicIdForSubtopic(selectedSubtopicId);
+    
+    return (
+      <div className="content-view">
+        <button 
+          className="back-button"
+          onClick={() => setSelectedSubtopicId(null)}
+        >
+          ← Back to Chapters
+        </button>
+        
+        {loading ? (
+          <div className="loading">Loading content...</div>
+        ) : Object.keys(groupedContent).length > 0 ? (
+          Object.entries(groupedContent).map(([subTopicId, subTopicData]) => (
+            <ChapterContent
+              key={subTopicId}
+              subTopicData={subTopicData}
+              username={username}
+              id={subTopicId}
+              topicId={topicId}
+            />
+          ))
+        ) : (
+          <div className="no-content">No content available for this subtopic</div>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="two-column-page">
-      <div className="left-columns">
-        <h3>Chapters</h3>
-        <ul className='chapter-lists'>
-          {chapters.map((chapter, chapterIndex) => (
-            <li key={chapter.id}>
-              <p onClick={() => onSelectContent(chapter.id, 'chapter')}>
-                {chapterIndex + 1}. {chapter.chapter}
-              </p>
-              <ul className="topics-lists">
-                {(topics[chapter.id] || []).map((topic, topicIndex) => (
-                  <li key={topic.id}>
-                    <p onClick={() => onSelectContent(topic.id, 'topic')}>
-                      {chapterIndex + 1}.{topicIndex + 1} {topic.topic}
-                    </p>
-                    <ul className="subtopics-lists">
-                      {(subtopics[topic.id] || []).map((subtopic, subtopicIndex) => (
-                        <li key={subtopic.id}>
-                          <button onClick={() => onSelectContent(subtopic.id, 'subtopic')}>
-                            {chapterIndex + 1}.{topicIndex + 1}.{subtopicIndex + 1} {subtopic.subTopic}
-                          </button>
-                          {/* <div>
-            {Object.keys(groupedContent).length > 0 ? (
-              Object.entries(groupedContent).map(([subTopicId, subTopicData]) => (
-                <div key={subTopicId}>
-                  <ChapterContent subTopicData={subTopicData} username={username} id={subTopicId} topicId={topic} />
-                </div>
-              ))
-            ) : (
-              // <PageNotFound message="Please select the Subtopics" />
-
-              <SelectTopicSubTopic selectedSubject={selectedSubject} username={username} subTopicData={groupedContent} />
-            )}
-          </div> */}
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="explore-container">
+      {selectedSubtopicId ? renderContentView() : renderChapterColumns()}
     </div>
   );
 };

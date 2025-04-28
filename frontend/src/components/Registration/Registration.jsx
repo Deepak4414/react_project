@@ -34,7 +34,7 @@
                 alert("User registered successfully");
                 navigate('/');
             } catch (error) {
-                alert("Error registering user");
+                alert("User already exists");
             }
         };
 

@@ -80,7 +80,7 @@ const DropDown = ({ onSubmit }) => {
     <div className='main-container'>
       <form onSubmit={handleSubmit} className='dropdown-container'>
         <select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
-          <option value="">Select Course</option>
+          <option value="">Select the Program</option>
           {courses.map((course) => (
             <option key={course.courseId} value={course.courseId}>
               {course.courseName}
@@ -90,7 +90,7 @@ const DropDown = ({ onSubmit }) => {
 
         {selectedCourse && (
           <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)}>
-            <option value="">Select Branch</option>
+            <option value="">Select discipline</option>
             {branches.map((branch) => (
               <option key={branch.branchId} value={branch.branchId}>
                 {branch.branchName}
@@ -112,7 +112,7 @@ const DropDown = ({ onSubmit }) => {
 
         {selectedSemester && (
           <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
-            <option value="">Select Subject</option>
+            <option value="">Select Courses</option>
             {subjects.map((subject) => (
               <option key={subject.subjectId} value={subject.subjectId}>
                 {subject.subjectName}

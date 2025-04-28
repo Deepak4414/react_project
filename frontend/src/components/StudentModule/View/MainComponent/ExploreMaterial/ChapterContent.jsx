@@ -164,7 +164,9 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
         <thead className="table-dark">
           <tr >
             <th colSpan={3} style={{ textAlign: 'center', width: '48%', fontSize: '20px'}}> E-Content from Internet</th>
-            <th colSpan={1} style={{ textAlign: 'center', width: '16%' }}>Content from local server</th>
+            <th rowSpan={2} style={{ textAlign: 'center', width: '16%',lineHeight: '3' }}>Content from local server
+            NPTEL and VFSTR Content
+            </th>
             <th rowSpan={2} style={{ textAlign: 'center', width: '16%', fontSize: '14px'}}>Live Video from local C-DoT BBG</th>
           </tr>
 
@@ -172,7 +174,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
             <th style={{ textAlign: 'center',width: '16%',lineHeight: '3'}}>Basic Level</th>
             <th style={{ textAlign: 'center',width: '16%',lineHeight: '3' }}>Intermediate Level</th>
             <th style={{ textAlign: 'center',width: '16%',lineHeight: '3' }}>Advanced Level</th>
-            <th style={{ width: '16%',textAlign:'left' }}>NPTEL and VFSTR Content</th>
+            {/* <th style={{ width: '16%',textAlign:'left'  }}>NPTEL and VFSTR Content</th> */}
 
           </tr>
         </thead>

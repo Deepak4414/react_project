@@ -7,12 +7,13 @@ const registerRouter = require('./Registration/Register');
 const UserRouter = require('./Routes/User');
 const db = require('./storeTopic/db');
 const ratinglink =require('./Routes/Rating');
-const nptelVideoRouter = require('./Routes/NptelVideo'); // Import the NptelVideo router
 const liveChannelRouter = require('./Routes/LiveChannelTime'); // Import the LiveChannelTime router
 const UploadVfstrVideo = require('./Routes/Upload-Vfstr-Video');
 const VfstrVideo = require('./Routes/Vfstr-video'); 
 const linksRouter = require("./Routes/Links"); // Import the links API
 const facultydetails = require('./Routes/FacultyDetails');
+const mannKiBaatRouter = require( './Routes/MannKiBaatRouter'); // Import the Mann Ki Baat router
+const nptelvideofetch = require('./Routes/NptelVideo'); // Import the NptelVideoFetch router
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
 const dotenv = require("dotenv");
@@ -24,10 +25,9 @@ app.use(bodyParser.json());
 dotenv.config();
 
 
-
+app.use("/api/mannKiBaat", mannKiBaatRouter);
 //=================================================
-app.use('/api/',nptelVideoRouter);
-///==========================================
+
 //upadate the links and data like link
 app.use("/api/", linksRouter); // Register the links API
 
@@ -42,9 +42,7 @@ app.use("/api/", UploadVfstrVideo);
 app.use('/api/',liveChannelRouter);
 // =================================================
 app.use("/api/topics/", addTopicRouter); // Mount the topic router
-
 // =================================================
-
 //Router api for Registration of student
 app.use('/api/',registerRouter);
 
@@ -57,10 +55,10 @@ app.use('/api/',ratinglink);
 // api for upload the faculty details
 app.use('/api/',facultydetails);
 // =================================================
-
+app.use('/api/',addTopicRouter);
 
 // =================================================
-
+app.use('/api/',nptelvideofetch);
 
 // =================================================
 

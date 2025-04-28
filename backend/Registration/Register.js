@@ -21,13 +21,13 @@ router.post("/register", async (req, res) => {
     db.query(query, [name, email, username, hashedPassword, role], (err) => {
       if (err) {
         console.error("Error inserting user into the database:", err);
-        return res.status(500).json({ message: "Error registering user" });
+        return res.status(500).json({ message: "User already exist" });
       }
       res.json({ message: "User registered successfully!" });
     });
   } catch (error) {
-    console.error("Error during registration:", error);
-    res.status(500).json({ message: "Error registering user" });
+    console.error("User already exist", error);
+    res.status(500).json({ message: "User already exist" });
   }
 });
 // Login endpoint

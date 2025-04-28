@@ -61,20 +61,16 @@ function AddCourse() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (selectedCourse && selectedBranch && selectedSemester && selectedSubject) {
-      navigate("/facultyindex/add-topic", {
-        state: {
-          course: selectedCourse,
-          branch: selectedBranch,
-          semester: selectedSemester,
-          subject: selectedSubject,
-        },
-      });
+      navigate(
+        `/facultyindex/add-topic?course=${selectedCourse}&branch=${selectedBranch}&semester=${selectedSemester}&subject=${selectedSubject}`
+      );
     } else {
       alert("Please complete all selections.");
     }
   };
+  
 
   return (
     <div className="container my-5">

@@ -33,7 +33,7 @@ router.get("/vfstr-videos", async (req, res) => {
     // console.log(files);
 
     if (!files || files.length === 0) {
-      return res.status(404).json({ error: "No files found for this subtopic." });
+      return res.status(404).json({ error: "No VFSTR content are available for this subtopic." });
     }
 
     // Convert BLOB to Base64 for PDF files
