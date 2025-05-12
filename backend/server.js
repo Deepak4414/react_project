@@ -14,6 +14,7 @@ const linksRouter = require("./Routes/Links"); // Import the links API
 const facultydetails = require('./Routes/FacultyDetails');
 const mannKiBaatRouter = require( './Routes/MannKiBaatRouter'); // Import the Mann Ki Baat router
 const nptelvideofetch = require('./Routes/NptelVideo'); // Import the NptelVideoFetch router
+const Question = require('./Routes/Questions'); // Import the Questions router
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
 const dotenv = require("dotenv");
@@ -61,7 +62,8 @@ app.use('/api/',addTopicRouter);
 app.use('/api/',nptelvideofetch);
 
 // =================================================
-
+// api for upload the question paper
+app.use('/api/',Question);
 
 // =================================================
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './Home';
-import Login from './Registration/Login';
 import Logout from './Registration/Logout';
 import StudentIndex from './StudentModule/StudentIndex';
 import FacultyIndex from './FacultyModule/FacultyIndex';
@@ -32,7 +31,6 @@ const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} onLogin={handleLogin} />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
           <Route path="/about" element={<About />} />

@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NptelContent from "./NptelContent";
 import Link from "./Link";
 
 const AddTopic = () => {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
     const navigate = useNavigate();
-    const course = queryParams.get("course");
-    const branch = queryParams.get("branch");
-    const semester = queryParams.get("semester");
-    const subject = queryParams.get("subject");
-    useEffect(() => {
-        if (!course || !branch || !semester || !subject) {
-          // If any parameter is missing, redirect back
-          navigate("/facultyindex/add");
-        }
-      }, [course, branch, semester, subject, navigate]);
+    const { state } = useLocation();
+
+    const { course, branch, semester, subject } = state || {};
 
     const [chapters, setChapters] = useState([]);
     const [topics, setTopics] = useState([]);

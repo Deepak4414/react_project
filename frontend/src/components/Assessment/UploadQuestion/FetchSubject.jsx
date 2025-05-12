@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function AddCourse() {
+function FetchSubject() {
   const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
@@ -63,7 +63,7 @@ function AddCourse() {
     e.preventDefault();
   
     if (selectedCourse && selectedBranch && selectedSemester && selectedSubject) {
-      navigate("/facultyindex/add-topic", {
+      navigate("/facultyindex/addQuestion", {
         state: {
           course: selectedCourse,
           branch: selectedBranch,
@@ -154,7 +154,7 @@ function AddCourse() {
           </div>
 
           <button type="submit" className="btn btn-primary w-100 py-3">
-            Add Topics
+            Add Question
           </button>
         </form>
       </div>
@@ -162,4 +162,4 @@ function AddCourse() {
   );
 }
 
-export default AddCourse;
+export default FetchSubject;

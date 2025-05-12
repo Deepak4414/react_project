@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./ChatBot.css"; // Add CSS for better styling
 import ShowInChatBox from "./ShowInChatBox";
-const ChatBot = () => {
+const ChatBot = ({subject,subTopicName, level}) => {
+    let prompt = `In the course of "${subject}". Explain about "${subTopicName}". Assume that I am at "${level}" level to learn.`;
     const [messages, setMessages] = useState([]);
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState(prompt);
     const chatContainerRef = useRef(null);
 
     // Auto-scroll to the latest message

@@ -7,7 +7,7 @@
 
 /* Left Column - Navigation */
 .left-column {
-    width: 300px; /* Fixed width for better control */
+    width: 300px;
     background-color: #ffffff;
     border-right: 1px solid #e0e0e0;
     padding: 20px 15px;
@@ -33,24 +33,30 @@
     margin-bottom: 20px;
 }
 
-.left-column h5 {
+.chapter-heading {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 1.1rem;
     color: #34495e;
     font-weight: 600;
     margin: 0 0 10px 0;
     padding: 8px 12px;
-    background-color: #f8f9fa;
     border-left: 4px solid #007bff;
     border-radius: 4px;
-    display: flex;
-    align-items: center;
+    transition: background-color 0.2s ease;
 }
 
-.left-column h3::before {
-    content: "•";
+.chapter-heading:hover {
+    background-color: #f0f7ff;
+}
+
+.toggle-icon {
+    font-weight: bold;
+    font-size: 1.2rem;
     color: #007bff;
-    margin-right: 8px;
-    font-size: 1.3rem;
+    margin-left: 10px;
 }
 
 .topic-section {
@@ -166,4 +172,3 @@
         width: 100%;
     }
 }
-

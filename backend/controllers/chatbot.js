@@ -2,14 +2,17 @@ const fetch = require("node-fetch");
 const pool = require("../config/db");
 require("dotenv").config();
 
-async function chatbot(query) {
+async function chatbot(message, level) {
+ 
   let connection;
+  let subtopicName = message;
+  let query = message;
+  console.log("Received message:", message, "Level:", level);
   try {
-    // Connect to the database
     connection = await pool.getConnection();
 
-    // Get relevant context from DB
-    const sqlQuery = `
+    // Build dynamic SQL with optional filters
+    let sqlQuery = `
       SELECT 
         c.courseName AS course,
         b.branchName AS branch,
@@ -35,30 +38,53 @@ async function chatbot(query) {
         subtopics st ON t.id = st.topicId
       LEFT JOIN 
         links l ON st.id = l.subTopicId
+      WHERE 1=1
+    `;
+
+    const params = [];
+
+    if (subtopicName) {
+      sqlQuery += ` AND st.subTopic = ?`;
+      params.push(subtopicName);
+    }
+
+    if (level) {
+      sqlQuery += ` AND l.level = ?`;
+      params.push(level);
+    }
+
+    sqlQuery += `
       ORDER BY 
         c.courseName, b.branchName, s.semesterName, sub.subjectName, t.topic, st.subTopic
     `;
 
-    const [results] = await connection.query(sqlQuery);
-    // Prepare prompt context
-    const context = results
-      .map(
-        (result) =>
-          `Subject: ${result.subject}, Subtopic: ${result.subtopic}, Link: ${result.link_url}, Description: ${result.link_description}, Level: ${result.link_level}`
-      )
-      .join("\n");
+    const [results] = await connection.query(sqlQuery, params);
+
+    // Prepare context
+    const context = results.length > 0
+      ? results
+          .map(
+            (result) =>
+              `Subject: ${result.subject}, Subtopic: ${result.subtopic}, Link: ${result.link_url}, Description: ${result.link_description}, Level: ${result.link_level}`
+          )
+          .join("\n")
+      : "No relevant database data available.";
+
+    // Build the prompt
     const prompt = `
-You are a highly knowledgeable AI assistant. Answer the user's query as accurately as possible.
+You are a highly knowledgeable AI assistant.
 
-If the query relates to C programming, prioritize the following database context:
-${context || "No relevant database data available."}
+Focus specifically on this context extracted from the database:
+${context}
 
-If the query is general or not covered in the context, use your knowledge to provide a helpful answer.
+The user's query should be answered based on the provided subtopic and level when available.
+If insufficient data is available, provide a general but helpful answer.
 
 User Query:
 ${query}
     `;
-    // Call Gemini REST API
+
+    // Call Gemini
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
@@ -76,7 +102,8 @@ ${query}
     );
 
     const data = await response.json();
-console.log("Gemini API response:", data.candidates?.[0]?.content?.parts?.[0]?.text);
+    console.log("Gemini API response:", data.candidates?.[0]?.content?.parts?.[0]?.text);
+
     if (!response.ok) {
       console.error("Gemini API error:", data);
       throw new Error(data.error?.message || "Unknown error");

@@ -122,7 +122,7 @@ const VfstrVideo = ({ subtopic }) => {
                 >
                   
                   <h4 style={{ fontSize: "16px", fontWeight: "bold" }}>{file.title || "No Title"}</h4>
-                  <p style={{ fontSize: "15px" }}>{colortext(file.description) || "No Description"}</p>
+                  <p style={{ fontSize: "15px",textAlign:"left" }}>{colortext(file.description) || "No Description"}</p>
 
                   <img
                     src="/image/link_logo.png"
@@ -166,10 +166,10 @@ const VfstrVideo = ({ subtopic }) => {
                   <div style={{ display: "flex", justifyContent: "left"}}>
                     <Faculty_Photo name={file.faculty_name} />
                   </div>
-                  --------------------------------
+                  ------------------------------------------
                   
                   <h4 style={{ fontSize: "16px",fontWeight:"bold" }}>{file.title || "No Title"}</h4>
-                  <p style={{ fontSize: "15px" }}>{(colortext(file.description) || "No Description")}</p>
+                  <p style={{ fontSize: "15px",textAlign:"left" }}>{(colortext(file.description) || "No Description")}</p>
 
                   <img
                     src="/image/logo.svg"

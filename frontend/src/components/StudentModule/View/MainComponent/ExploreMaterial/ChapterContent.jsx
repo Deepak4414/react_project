@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./Table.css";
 import "../../../Css/VideoModal.css";
 import Rating from './Function/Rating';
 import NptelContent from "./NptelContent";
 import RatingTooltip from "./Function/RatingTooltip";
 import LiveVideoContent from "./LiveVideoContent";
-
+import MainBot from "../../../../DeepSeek/MainBot";
+import AttempTest from "../../../../Assessment/GiveAssessment/AttempTest";
 
 const VideoModal = ({ videoUrl, onClose }) => {
   return (
@@ -28,11 +30,28 @@ const VideoModal = ({ videoUrl, onClose }) => {
   );
 };
 
-const ChapterContent = ({ subTopicData, username, id, topicId }) => {
-  // console.log(subTopicData, username, id, topicId);
+const ChapterContent = ({ subTopicData, username, id, topicId, subject,subTopicName  }) => {
   const [videoUrl, setVideoUrl] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const { title, levels } = subTopicData;
+  const [subjectName, setSubjectName] = useState("");
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const chaptersResponse = await axios.get(
+          `http://localhost:5000/api/subjects/${subject}`
+        );
+        setSubjectName(chaptersResponse.data[0].subjectName);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    if (subject) fetchData();
+  }, [subject]);
+
 
   const isYouTubeLink = (link) => {
     return link && (link.includes("youtube.com") || link.includes("youtu.be"));
@@ -99,7 +118,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
   };
   
 
-  const renderCardContent = (item) => (
+  const renderCardContent = (item,level) => (
     <div key={item.id} className="card mb-1" style={{ width: '250px' }}>
       <div className="card-body" style={{ padding: '10px' }}>
         <h3
@@ -124,7 +143,6 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
             <span>
               {truncateText(item.title || "No Title Available", 10000)}{" "}
 
-
               <a
                 href={item.link}
                 target="_blank"
@@ -144,6 +162,10 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
         <p className="card-text" style={{ fontSize: '14px' }}>
           {colortext(item.description || "No Description Available")}
         </p>
+
+        {/* Pass title and level here */}
+        <MainBot subject={subjectName} subTopicName={subTopicName} level={level} /> 
+
         <p>
           Rating:{" "}
           <RatingTooltip
@@ -152,7 +174,9 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
             rating={item.rating || 0}
           />
         </p>
+      
         <Rating item={item.id} username={username.username} />
+        
       </div>
     </div>
   );
@@ -182,21 +206,28 @@ const ChapterContent = ({ subTopicData, username, id, topicId }) => {
           <tr>
             <td style={{ width: '16%' }}>
               {levels.basic && levels.basic.length > 0 ? (
-                levels.basic.map(renderCardContent)
+                 levels.basic.map((item) => renderCardContent(item, 'Basic'))
               ) : (
                 <p  style={{ width: '250px' }}>No Basic Level Content Available</p>
               )}
+              <AttempTest 
+                  subtopic={id} 
+                  topicId={topicId} 
+                  subject={subject} 
+                  username={username.username} 
+                />
+                          
             </td>
             <td style={{ width: '16%' }}>
               {levels.medium && levels.medium.length > 0 ? (
-                levels.medium.map(renderCardContent)
+                 levels.medium.map((item) => renderCardContent(item, 'Medium'))
               ) : (
                 <p  style={{ width: '250px' }}>No Medium Level Content Available</p>
               )}
             </td>
             <td style={{ width: '16%' }}>
               {levels.advanced && levels.advanced.length > 0 ? (
-                levels.advanced.map(renderCardContent)
+               levels.advanced.map((item) => renderCardContent(item, 'Advanced'))
               ) : (
                 <p style={{ width: '250px' }}>No Advanced Level Content Available</p>
               )}

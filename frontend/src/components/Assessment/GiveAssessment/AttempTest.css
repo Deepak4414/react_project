@@ -1,0 +1,252 @@
+/* Button Styles */
+.attempt-test-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .attempt-test-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-container {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+  }
+  
+  .modal-close-btn:hover {
+    color: #333;
+  }
+  
+  /* Test Content Styles */
+  .test-content {
+    padding: 30px;
+  }
+  
+  .test-content h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  .progress-indicator {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+  }
+  
+  .question-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  
+  .question-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #34495e;
+  }
+  
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .option-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .option-item:hover {
+    background-color: #ecf0f1;
+  }
+  
+  .option-item input {
+    margin-right: 10px;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .nav-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .prev-btn {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+  }
+  
+  .prev-btn:hover {
+    background-color: #a6acaf;
+  }
+  
+  .next-btn, .submit-btn {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .next-btn:hover, .submit-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .submit-btn {
+    background-color: #27ae60;
+  }
+  
+  .submit-btn:hover {
+    background-color: #219653;
+  }
+  
+  /* Results Styles */
+  .results-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .score-display {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+  
+  .high-score {
+    color: #27ae60;
+    font-weight: bold;
+  }
+  
+  .low-score {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+  
+  .close-results-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+  }
+  
+  .close-results-btn:hover {
+    background-color: #2980b9;
+  }
+  /* Review Answers Styles */
+.review-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .review-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+  }
+  
+  .review-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .answers-review {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+  }
+  
+  .review-item {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .review-item h4 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+  
+  .review-item p {
+    margin: 8px 0;
+  }
+  
+  .explanation {
+    font-style: italic;
+    color: #7f8c8d;
+    padding-left: 10px;
+    border-left: 3px solid #bdc3c7;
+  }
+  
+  /* Answer status indicators */
+  .review-item.correct {
+    border-left: 4px solid #27ae60;
+    background-color: rgba(39, 174, 96, 0.1);
+  }
+  
+  .review-item.incorrect {
+    border-left: 4px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+  
+  .review-item.unanswered {
+    border-left: 4px solid #f39c12;
+    background-color: rgba(243, 156, 18, 0.1);
+  }

@@ -105,7 +105,12 @@ const NptelContent = ({ subtopic }) => {
             }}
           >
             <h4 style={{ fontSize: '16px', fontWeight: "bold" }}>{title?.[index]}</h4>
-            <p>{colortext(description?.[index] || "")}</p>
+            {/* description for nptel  */}
+            <p style={{
+               textAlign: "left", 
+              }}
+            >{colortext(description?.[index] || "")}</p>
+
             <img
               src="/image/image.png"
               alt={videoNames[index] || "Video"}

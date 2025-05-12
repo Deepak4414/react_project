@@ -1,68 +1,155 @@
-/* Responsive Navbar CSS */
-
+/* Navbar Container */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #9370db;
-  /* padding: 1rem; */
-  position: relative;
+  padding: 0.8rem 2rem;
+  background-color: #2c3e50;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Brand/Logo Section */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
 }
 
 .navbar-logo img {
-  height: 50px;
-  background-color: white;
+  height: auto;
+  max-height: 50px;
+}
+
+.navbar-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+  color: white;
+}
+
+/* Navigation Links */
+.navbar-menu {
+  display: flex;
 }
 
 .navbar-links {
   display: flex;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .navbar-links li {
-  margin: 0 15px;
+  position: relative;
 }
 
 .navbar-links a {
-  text-decoration: none;
   color: white;
-  font-weight: bold;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-/* Responsive Breakpoints */
+.navbar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
-/* For smaller screens (max-width: 768px) */
+.navbar-links .active a {
+  background-color: #3498db;
+  color: white;
+}
+
+/* User Section */
+.navbar-user {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.username {
+  background-color: #3498db;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Buttons */
+.logout-button, .login-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.login-button {
+  background-color: #2ecc71;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.login-button:hover {
+  background-color: #27ae60;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    align-items: flex-start;
+    padding: 1rem;
   }
 
-  .navbar-logo {
+  .navbar-brand {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
     margin-bottom: 1rem;
   }
 
+  .navbar-title {
+    font-size: 1rem;
+  }
+
   .navbar-links {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar-links li {
-    margin: 0.5rem 0;
-  }
-
-  .navbar-dot {
-    display: block;
+    gap: 0.8rem;
   }
 }
 
-/* For even smaller screens (max-width: 480px) */
 @media (max-width: 480px) {
-  .navbar-logo img {
-    height: 30px;
+  .navbar-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .navbar-links li {
+    width: 100%;
+    text-align: center;
   }
 
   .navbar-links a {
-    font-size: 1rem;
+    display: block;
+    padding: 0.5rem;
   }
 }

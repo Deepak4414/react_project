@@ -1,125 +1,113 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../SubComponent/LoadingSpinner";
+import ErrorMessage from "../SubComponent/ErrorMessage";
+import "../../Css/Home.css";
 
-const Home = ({ username }) => {
-  // Ensure 'username' is correctly extracted if passed as an object
-  const user = username && username.username ? username.username : username;
-
-  const [users, setUsers] = useState([]);
+const Home = () => {
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Get username from localStorage
+  const getUsernameFromStorage = () => {
+    try {
+      const userState = localStorage.getItem('userState');
+      if (userState) {
+        const parsedState = JSON.parse(userState);
+        return parsedState.username;
+      }
+      return null;
+    } catch (err) {
+      console.error("Error parsing userState from localStorage:", err);
+      return null;
+    }
+  };
+
+  const username = getUsernameFromStorage();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
+        if (!username) {
+          throw new Error("No username found in storage");
+        }
+        
         const response = await axios.get(
-          `http://localhost:5000/api/user?username=${user}`
+          `http://localhost:5000/api/user?username=${username}`
         );
-        setUsers(response.data.results);
+        
+        if (response.data.results && response.data.results.length > 0) {
+          setUserData(response.data.results[0]);
+        } else {
+          setError("No faculty data found");
+        }
       } catch (err) {
-        setError("Error fetching user details");
+        setError(err.message || "Error fetching faculty details");
       } finally {
-        setLoading(false); // Set loading to false after request completes
+        setLoading(false);
       }
     };
 
-    if (user) {
-      fetchUserDetails();
-    }
-  }, [user]); // Dependency array includes 'user' to re-fetch when it changes
+    fetchUserDetails();
+  }, [username]);
+
+  const facultyFeatures = [
+    { path: "/facultyindex/add", label: "Add Course", icon: "📚" },
+    { path: "/facultyindex/update", label: "Update Course", icon: "✏️" },
+    { path: "/facultyindex/addvfstrvideo", label: "Add VFSTR Video", icon: "🎥" },
+    { path: "/facultyindex/addfacultydetails", label: "Add Faculty Details", icon: "👨‍🏫" },
+    { path: "/facultyindex/livechannel", label: "Live Channel", icon: "📡" },
+    { path: "/facultyindex/explore-material", label: "Preview Content", icon: "👀" },
+    { path: "/facultyindex/update-topic", label: "Update Topic", icon: "🔄" },
+    { path : "/facultyindex/fetch-subject-for-question", label: "Add Question", icon: "❓" },
+  ];
 
   return (
-    <div className="home-container">
-      <header className="header">
-        <h1>Welcome to the Faculty Information Portal</h1>
-        <p>Faculty is the way to achieve success</p>
+    <div className="faculty-home-container">
+      {/* Hero Banner */}
+      <header className="faculty-hero">
+        <h1>Welcome to Faculty Portal</h1>
+        <p>Empowering educators to shape the future</p>
       </header>
 
-      {/* Features Section */}
-      <section className="features-section">
+      
+
+      {/* Quick Access Features */}
+      <section className="faculty-features">
+        <h2 className="section-title">Quick Access</h2>
         <div className="features-grid">
-         
-          
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/add">
-                Add Course
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/update">
-                Update Course
-              </Link>
-            </h3>
-          </div>
-         
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/addvfstrvideo">
-                Add VFSTR Video
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/addfacultydetails">
-                Add Faculty Details
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/livechannel">
-                Add Live Channel Time
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="/facultyindex/explore-material">
-                Preview the Content
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="">
-               #
-              </Link>
-            </h3>
-          </div>
-          <div className="feature-card">
-            <h3>
-              <Link className="nav-link" to="">
-               #
-              </Link>
-            </h3>
-          </div>
+          {facultyFeatures.map((feature, index) => (
+            <Link to={feature.path} key={index} className="feature-card">
+              <span className="feature-icon">{feature.icon}</span>
+              <h3>{feature.label}</h3>
+            </Link>
+          ))}
         </div>
       </section>
-
-      <main className="student-profiles">
-        {loading ? (
-          <p>Loading user details...</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : users && users.length > 0 ? (
-          users.map((user, index) => (
-            <div className="student-card" key={index}>
-              <h1>Faculty Profile: {user.username}</h1>
-              <h3>{user.name}</h3>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
+      {/* Faculty Profile Section */}
+      {loading ? (
+        <LoadingSpinner />
+      ) : error ? (
+        <ErrorMessage message={error} />
+      ) : userData ? (
+        <section className="faculty-profile">
+          <div className="profile-card">
+            <div className="profile-header">
+              <h2>{userData.name}</h2>
+              <span className="faculty-badge">Faculty</span>
             </div>
-          ))
-        ) : (
-          <p>No user details available</p>
-        )}
-      </main>
+
+            
+            <div className="profile-details">
+              <p><span>Username:</span> {userData.username}</p>
+              <p><span>Email:</span> {userData.email}</p>
+              <p><span>Department:</span> {userData.department || "Not specified"}</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 };

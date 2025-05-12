@@ -1,0 +1,67 @@
+/* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+   
+  .hero-content {
+    max-width: fit-content;
+  }
+  
+  .hero-image img {
+    border-radius: 10px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .hero-image:hover img {
+    transform: scale(1.03);
+  }
+  
+  /* Features Section */
+  .features-section {
+    background-color: white;
+  }
+  
+  .feature-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    font-size: 2.5rem;
+    color: #6e8efb;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .hero-section {
+      padding: 3rem 0;
+    }
+    
+    .hero-content {
+      text-align: center;
+      margin: 0 auto 2rem;
+    }
+    
+    .d-flex {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2.5rem;
+    }
+  }
