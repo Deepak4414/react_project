@@ -25,8 +25,8 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
-       
-          <img 
+       <Link className="navbar-brand" to="/facultyindex">          
+       <img 
             src="/image/logo.svg" 
             alt="College Logo" 
             width="120px"
@@ -35,7 +35,8 @@ const Navbar = () => {
           />
           Faculty Portal
        
-        
+        </Link>
+
         <button
           className="navbar-toggler"
           type="button"

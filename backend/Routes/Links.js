@@ -38,39 +38,5 @@ router.get("/links/:subTopicId", async (req, res) => {
   }
 });
 
-router.put("/update-links/:subTopicId", async (req, res) => {
-  const { levels } = req.body;
-  const subTopicId = req.params.subTopicId;
-
-  try {
-    // Iterate through each level category
-    for (const level in levels) {
-      if (Array.isArray(levels[level])) {
-        for (const item of levels[level]) {
-          const { id, title, link, description } = item;
-
-          // Update existing record in the database
-          const query = `
-            UPDATE links 
-            SET title = ?, link = ?, description = ? 
-            WHERE id = ? AND subTopicId = ?;
-          `;
-
-          db.query(query, [title, link, description, id, subTopicId], (err, results) => {
-            if (err) {
-              console.error("Error updating links:", err);
-              return res.status(500).json({ error: "Database update failed" });
-            }
-          });
-        }
-      }
-    }
-
-    res.status(200).json({ message: "Links updated successfully!" });
-  } catch (error) {
-    console.error("Error updating links:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 module.exports = router;

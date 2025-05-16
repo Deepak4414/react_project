@@ -60,7 +60,7 @@ const Home = () => {
     { path: "/facultyindex/addfacultydetails", label: "Add Faculty Details", icon: "👨‍🏫" },
     { path: "/facultyindex/livechannel", label: "Live Channel", icon: "📡" },
     { path: "/facultyindex/explore-material", label: "Preview Content", icon: "👀" },
-    { path: "/facultyindex/update-topic", label: "Update Topic", icon: "🔄" },
+    { path: "/facultyindex/live-channel-program-guide", label: "Program Guide", icon: "🔄" },
     { path : "/facultyindex/fetch-subject-for-question", label: "Add Question", icon: "❓" },
   ];
 

@@ -18,6 +18,7 @@ import ErrorMessage from "../SubComponent/ErrorMessage";
 import "../../Css/Faculty.css";
 import QuestionInsertion from "../../../Assessment/UploadQuestion/QuestionInsertion";
 import FetchSubject from "../../../Assessment/UploadQuestion/FetchSubject";
+import LiveChannelProgramGuide from "./LiveChannelProgramGuide";
 
 function Faculty({ isLoggedIn }) {
   const [userState, setUserState] = useState(null);
@@ -70,6 +71,7 @@ function Faculty({ isLoggedIn }) {
           <Route path="/addfacultydetails" element={<AddFacultyDetalis />} />
           <Route path="/addQuestion" element={<QuestionInsertion />}/>
           <Route path="/fetch-subject-for-question" element={<FetchSubject />} />
+          <Route path="/live-channel-program-guide" element={<LiveChannelProgramGuide />} />
           <Route 
             path="/explore-material" 
             element={<ExploreMaterial username={userState?.username} />} 

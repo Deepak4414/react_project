@@ -5,6 +5,7 @@
     "@langchain/google-genai": "^0.2.4",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "cosine-similarity": "^1.0.1",
     "dotenv": "^16.5.0",

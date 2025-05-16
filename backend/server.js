@@ -25,6 +25,10 @@ app.use(cors());
 app.use(bodyParser.json());
 dotenv.config();
 
+const updatelink= require("./Routes/update"); // Import the update router
+const live = require("./Routes/ViewLiveChannelSchedule"); // Import the LiveChannelTime router
+app.use("/api/", live); // Mount the live router
+
 
 app.use("/api/mannKiBaat", mannKiBaatRouter);
 //=================================================
@@ -66,7 +70,8 @@ app.use('/api/',nptelvideofetch);
 app.use('/api/',Question);
 
 // =================================================
-
+// update the links and data like link
+app.use("/api/", updatelink); // Register the links API
 
 //================================================
 // Define API endpoint to fetch data
