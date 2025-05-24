@@ -102,9 +102,11 @@ router.get("/nptelvideos/:subject", (req, res) => {
       console.error("Error fetching subject name:", err);
       return res.status(500).send("Failed to fetch videos.");
     }
+    console.log("Subject name:", results[0].subjectName);
     if(results[0].subjectName.length){
     // fetch video files from the subject folder
     const VIDEO_FOLDER = `D:/Videos/${results[0].subjectName}`;
+    
     fs.readdir(VIDEO_FOLDER, (err, files) => {
       if (err) {
         console.error("Error reading folder:", err);

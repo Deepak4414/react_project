@@ -90,7 +90,7 @@ function MannKiBaat() {
                 </div>
             </div>
 
-            <h2 className="text-center mb-4">Man Ki Baat</h2>
+            <h2 className="text-center mb-4">Mann Ki Baat</h2>
 
             {error ? (
                 <div className="text-center text-danger">Something went wrong while loading data.</div>

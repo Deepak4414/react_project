@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const NptelContent = ({ subject, onVideoDataChange, onFolderNameChange }) => {
+  console.log("subject",subject);
   const [videoForms, setVideoForms] = useState([]);
   const [videoNames, setVideoNames] = useState([]);
   const [folderName, setFolderName] = useState("");

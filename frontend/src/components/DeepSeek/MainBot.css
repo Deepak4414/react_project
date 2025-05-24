@@ -14,58 +14,6 @@
   overflow: hidden;
 }
 
-/* Resize handles */
-.chatbot-container .resize-handle {
-  position: absolute;
-  background: transparent;
-  z-index: 10;
-}
-
-/* Right edge */
-.chatbot-container .resize-handle.right {
-  width: 10px;
-  height: 100%;
-  right: 0;
-  top: 0;
-  cursor: e-resize;
-}
-
-/* Bottom edge */
-.chatbot-container .resize-handle.bottom {
-  width: 100%;
-  height: 10px;
-  bottom: 0;
-  left: 0;
-  cursor: s-resize;
-}
-
-/* Bottom-right corner */
-.chatbot-container .resize-handle.bottom-right {
-  width: 15px;
-  height: 15px;
-  right: 0;
-  bottom: 0;
-  cursor: se-resize;
-}
-
-/* Left edge */
-.chatbot-container .resize-handle.left {
-  width: 10px;
-  height: 100%;
-  left: 0;
-  top: 0;
-  cursor: w-resize;
-}
-
-/* Top-left corner */
-.chatbot-container .resize-handle.top-left {
-  width: 15px;
-  height: 15px;
-  left: 0;
-  top: 0;
-  cursor: nw-resize;
-}
-
 /* Rest of your existing styles remain the same */
 .chatbot-icon {
   position: static;
@@ -107,4 +55,20 @@
 
 .close-btn:hover {
   opacity: 0.8;
+}
+
+
+
+/* Minimized window */
+.chatbot-container.minimized {
+  width: 350px;
+  height: 500px;
+}
+
+/* Maximized window */
+.chatbot-container.maximized {
+  width: 90vw;
+  height: 90vh;
+  bottom: 5vh;
+  right: 5vw;
 }

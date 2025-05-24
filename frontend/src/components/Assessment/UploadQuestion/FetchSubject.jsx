@@ -83,14 +83,14 @@ function FetchSubject() {
         <h2 className="text-center mb-4 text-primary">Add Course Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="course" className="form-label">Course</label>
+            <label htmlFor="course" className="form-label">Program</label>
             <select
               id="course"
               className="form-select"
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
             >
-              <option value="">Select Course</option>
+              <option value="">Select the Program</option>
               {courses.map((course) => (
                 <option key={course.courseId} value={course.courseId}>
                   {course.courseName}
@@ -100,7 +100,7 @@ function FetchSubject() {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="branch" className="form-label">Branch</label>
+            <label htmlFor="branch" className="form-label">Discipline</label>
             <select
               id="branch"
               className="form-select"
@@ -108,7 +108,7 @@ function FetchSubject() {
               onChange={(e) => setSelectedBranch(e.target.value)}
               disabled={!selectedCourse}
             >
-              <option value="">Select Branch</option>
+              <option value="">Select Discipline</option>
               {branches.map((branch) => (
                 <option key={branch.branchId} value={branch.branchId}>
                   {branch.branchName}
@@ -136,7 +136,7 @@ function FetchSubject() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="subject" className="form-label">Subject</label>
+            <label htmlFor="subject" className="form-label">Courses</label>
             <select
               id="subject"
               className="form-select"
@@ -144,7 +144,7 @@ function FetchSubject() {
               onChange={(e) => setSelectedSubject(e.target.value)}
               disabled={!selectedSemester}
             >
-              <option value="">Select Subject</option>
+              <option value="">Select Courses</option>
               {subjects.map((subject) => (
                 <option key={subject.subjectId} value={subject.subjectId}>
                   {subject.subjectName}

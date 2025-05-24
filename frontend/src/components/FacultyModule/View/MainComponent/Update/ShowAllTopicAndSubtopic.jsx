@@ -51,21 +51,36 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
     fetchData();
   }, [selectedSubject]);
 
-  
+  const handleSubtopicClick = async (subtopicId) => {
+    try {
+      setLoading(true);
+      setSelectedSubtopicId(subtopicId);
+      const contentRes = await axios.get(
+        `http://localhost:5000/api/content/${subtopicId}`
+      );
+      setContent(contentRes.data.content); // assuming backend sends { content: [...] }
+    } catch (error) {
+      console.error("Failed to load subtopic content:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const groupContentBySubTopicAndLevel = (content) => {
-    const grouped = {};
-    content.forEach((item) => {
-      if (!grouped[item.subTopicId]) {
-        grouped[item.subTopicId] = {
-          title: `SubTopic: ${item.subTopicId}`,
-          levels: { basic: [], medium: [], advanced: [] },
-        };
-      }
-      grouped[item.subTopicId].levels[item.level]?.push(item);
-    });
-    return grouped;
-  };
+  if (!Array.isArray(content)) return {};
+
+  const grouped = {};
+  content.forEach((item) => {
+    if (!grouped[item.subTopicId]) {
+      grouped[item.subTopicId] = {
+        title: `SubTopic: ${item.subTopicId}`,
+        levels: { basic: [], medium: [], advanced: [] },
+      };
+    }
+    grouped[item.subTopicId].levels[item.level]?.push(item);
+  });
+  return grouped;
+};
 
   const findTopicIdForSubtopic = (subtopicId) => {
     for (const topicId in subtopics) {
@@ -100,14 +115,25 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
                     {(subtopics[topic.id] || []).map(
                       (subtopic, subtopicIndex) => (
                         <li key={subtopic.id}>
-                          <div style={{
-                                padding: "6px 10px",
-                                margin: "4px 0",
-                                backgroundColor: "#f0f0f0",
-                                borderRadius: "4px",
-                                fontSize: "14px",
-                                color: "#333",
-                            }}>
+                          <div
+                            onClick={() => handleSubtopicClick(subtopic.id)}
+                            style={{
+                              padding: "6px 10px",
+                              margin: "4px 0",
+                              backgroundColor: "#f0f0f0",
+                              borderRadius: "4px",
+                              fontSize: "14px",
+                              color: "#333",
+                              cursor: "pointer",
+                              transition: "background-color 0.2s",
+                            }}
+                            onMouseOver={(e) =>
+                              (e.target.style.backgroundColor = "#e0e0e0")
+                            }
+                            onMouseOut={(e) =>
+                              (e.target.style.backgroundColor = "#f0f0f0")
+                            }
+                          >
                             {chapterIndex + 1}.{topicIndex + 1}.
                             {subtopicIndex + 1} {subtopic.subTopic}
                           </div>
@@ -124,21 +150,33 @@ const SelectTopicSubTopic = ({ selectedSubject }) => {
     );
   };
 
-  const renderContentView = () => {
-    const groupedContent = groupContentBySubTopicAndLevel(content);
-    const topicId = findTopicIdForSubtopic(selectedSubtopicId);
+ const renderContentView = () => {
+  const groupedContent = groupContentBySubTopicAndLevel(content || []);
+  const topicId = findTopicIdForSubtopic(selectedSubtopicId);
 
-    return (
-      <div className="content-view">
-        <button
-          className="back-button"
-          onClick={() => setSelectedSubtopicId(null)}
-        >
-          ← Back to Chapters
-        </button>
+  return (
+    <div className="content-view">
+      <button className="back-button" onClick={() => setSelectedSubtopicId(null)}>
+        ← Back to Chapters
+      </button>
+
+      <div className="content-list">
+        {content?.map((item, index) => (
+          <div key={item.id} className="content-item">
+            <label>Level: {item.level}</label>
+            <textarea
+              defaultValue={item.text}
+              rows={3}
+              style={{ width: "100%", marginTop: "5px", marginBottom: "10px" }}
+            />
+            <button className="save-button">Save</button>
+          </div>
+        ))}
       </div>
-    );
-  };
+    </div>
+  );
+};
+
 
   return (
     <div className="explore-container">

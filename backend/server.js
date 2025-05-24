@@ -15,6 +15,19 @@ const facultydetails = require('./Routes/FacultyDetails');
 const mannKiBaatRouter = require( './Routes/MannKiBaatRouter'); // Import the Mann Ki Baat router
 const nptelvideofetch = require('./Routes/NptelVideo'); // Import the NptelVideoFetch router
 const Question = require('./Routes/Questions'); // Import the Questions router
+
+
+const addsubjectRouter = require('./storeTopic/addNewSubject'); // Import the AddSubject router
+const addChapterRouter = require('./storeTopic/addChapter'); // Import the AddChapter router
+const addNewTopic = require('./storeTopic/addnewTopic'); // Import the AddTopic router
+const addSubTopicRouter = require('./storeTopic/addSubtopic'); // Import the AddSubTopic router
+const deleteSubTopicRouter = require('./Routes/delete'); // Import the DeleteSubTopic router
+
+
+
+
+
+
 // Initialize Express app
 const apiRoutes = require("./Routes/api");
 const dotenv = require("dotenv");
@@ -30,6 +43,28 @@ const live = require("./Routes/ViewLiveChannelSchedule"); // Import the LiveChan
 app.use("/api/", live); // Mount the live router
 
 
+//===========================================
+// add new chapter
+app.use("/api/add-chapter/", addChapterRouter); // Mount the add chapter router
+//=========================================
+// add new topic
+app.use("/api/add-topic/", addNewTopic); // Mount the add topic router
+//=========================================
+// add new subtopic
+app.use("/api/add-subtopic/", addSubTopicRouter); // Mount the add subtopic router
+//===========================================
+// delete subtopic
+app.use("/api/delete/", deleteSubTopicRouter); // Mount the delete subtopic router
+//=========================================
+//=========================================
+//=========================================
+//=========================================
+//=========================================
+
+// add new subject
+app.use("/api/subjects/", addsubjectRouter); // Mount the add subject router
+
+//==========================================
 app.use("/api/mannKiBaat", mannKiBaatRouter);
 //=================================================
 
@@ -139,6 +174,25 @@ app.get("/api/subjects/:semesterId", (req, res) => {
   const query = "SELECT * FROM subjects WHERE semesterId = ?";
 
   db.query(query, [semesterId], (err, results) => {
+    if (err) return res.status(500).send(err);
+
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .send({ message: "No subjects found for this semester" });
+    }
+
+    res.json(results);
+  });
+});
+
+// API to fetch subjects-name by subjectId
+app.get("/api/subject-name/:subjectId", (req, res) => {
+  const { subjectId } = req.params; // Destructure semesterId from the route parameter
+  console.log("Subject ID:", subjectId);
+  const query = "SELECT subjectName FROM subjects WHERE subjectId = ?";
+
+  db.query(query, [subjectId], (err, results) => {
     if (err) return res.status(500).send(err);
 
     if (results.length === 0) {
