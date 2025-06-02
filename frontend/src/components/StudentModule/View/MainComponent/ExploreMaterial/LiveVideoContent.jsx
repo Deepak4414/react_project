@@ -42,7 +42,9 @@ const LiveVideoContent = ({ subtopic, topicId }) => {
   }
 
   if (!liveData) {
-    return <div><img src="/image/cdot_logo.png" alt="Live Logo" style={{ width: "80px", height: "80px" }} /></div>;
+    return <div><img src="/image/cdot_logo.png" alt="Live Logo" style={{ width: "80px", height: "80px" }} />
+    <p>No Suggested Session available.</p>
+    </div>;
   }
 
   return (

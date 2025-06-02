@@ -37,7 +37,7 @@ const Footer = () => {
         </ul>
 
         {/* Copyright */}
-        <p className="mb-3">&copy; 2024 Vignan University. All rights reserved.</p>
+        <p className="mb-3">&copy; 2025 Vignan University. All rights reserved.</p>
 
         {/* Social Media Icons */}
         <div>

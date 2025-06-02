@@ -60,5 +60,25 @@ router.delete("/delete-chapter/:chapter_id", async (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
+router.delete("/delete-nptel/:subtopic_id", async (req, res) => {
+  const { subtopic_id } = req.params;
+  try {
+    const existingSubtopic = await db.query(
+      "SELECT * FROM nptel_videos WHERE id = ?",
+      [subtopic_id]
+    );
+
+    if (existingSubtopic.length === 0) {
+      return res.status(404).json({ message: "chapter not found." });
+    }
+
+    await db.query("DELETE FROM nptel_videos WHERE id = ?", [subtopic_id]);
+
+    res.status(200).json({ message: "chapter deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting chapter:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 module.exports = router;

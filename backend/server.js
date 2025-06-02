@@ -189,7 +189,6 @@ app.get("/api/subjects/:semesterId", (req, res) => {
 // API to fetch subjects-name by subjectId
 app.get("/api/subject-name/:subjectId", (req, res) => {
   const { subjectId } = req.params; // Destructure semesterId from the route parameter
-  console.log("Subject ID:", subjectId);
   const query = "SELECT subjectName FROM subjects WHERE subjectId = ?";
 
   db.query(query, [subjectId], (err, results) => {

@@ -37,7 +37,7 @@ const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
-
+          <Route path='/login-model' element={<LoginModal onLogin={handleLogin} />} />
           {/* Protected Routes - Student */}
           <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} role="student" />}>
             <Route path="/studentindex/*" element={<StudentIndex />}>

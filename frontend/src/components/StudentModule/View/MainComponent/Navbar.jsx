@@ -45,7 +45,7 @@ function Navbar() {
             height="40"
           />
 
-        <h1 className="navbar-title">E-Content from Internet and Local Sources</h1>
+        <h1 className="navbar-title">E-Content from Local server of the Institute</h1>
       </div>
 
       <div className="navbar-menu">
@@ -54,7 +54,7 @@ function Navbar() {
             <Link to="/studentindex">Home</Link>
           </li>
           <li className={location.pathname.includes('explore-material') ? 'active' : ''}>
-            <Link to="/studentindex/explore-material">Explore Material</Link>
+            <Link to="/studentindex/explore-material">Explore the Content</Link>
           </li>
           
           {loggedIn && userData && (

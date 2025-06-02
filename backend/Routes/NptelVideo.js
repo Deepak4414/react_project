@@ -14,7 +14,7 @@ router.get("/videos", async (req, res) => {
     // Query database for video details
     const videos = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT videoName, folder_path,title,description,video_level FROM nptel_videos WHERE subTopicId = ?",
+        "SELECT id, videoName, folder_path,title,description,video_level FROM nptel_videos WHERE subTopicId = ?",
         [subTopic],
         (err, results) => {
           if (err) reject(err);
@@ -24,8 +24,9 @@ router.get("/videos", async (req, res) => {
     });
 
     if (videos.length === 0) {
-      return res.status(404).json({ error: "No videos found for the given subtopic." });
+      return res.status(200).json([[], [], [], [], [], []]);
     }
+    const id = videos.map(({ id }) => id);
     const videoNames = videos.map(({ videoName }) => videoName);
     const title = videos.map(({title})=>title);
     const description = videos.map(({description})=>description);
@@ -39,10 +40,10 @@ router.get("/videos", async (req, res) => {
       .filter((video) => video !== null);
 
     if (verifiedVideos.length === 0) {
-      return res.status(404).json({ error: "No valid videos found." });
+      return res.status(200).json([[], [], [], [], [], []]);
     }
 
-    res.json([verifiedVideos,videoNames,title,description,video_level]); // Send verified video paths
+    res.json([id, verifiedVideos,videoNames,title,description,video_level]); // Send verified video paths
   } catch (error) {
     console.error("Error fetching videos:", error);
     res.status(500).json({ error: "Failed to fetch videos." });
@@ -94,24 +95,41 @@ router.get("/video", (req, res) => {
 
 // Video folder
 router.get("/nptelvideos/:subject", (req, res) => {
-  const subject = req.params.subject;
-  // fetch subject name from subject id
-  const subjectName = "select * from subjects where subjectId = ?";
-  db.query(subjectName, subject, (err, results) => {
+  const subjectId = req.params.subject;
+  // Get subject name from DB
+  const subjectQuery = "SELECT * FROM subjects WHERE subjectId = ?";
+
+  db.query(subjectQuery, [subjectId], (err, results) => {
     if (err) {
       console.error("Error fetching subject name:", err);
       return res.status(500).send("Failed to fetch videos.");
     }
-    console.log("Subject name:", results[0].subjectName);
-    if(results[0].subjectName.length){
-    // fetch video files from the subject folder
-    const VIDEO_FOLDER = `D:/Videos/${results[0].subjectName}`;
-    
-    fs.readdir(VIDEO_FOLDER, (err, files) => {
-      if (err) {
-        console.error("Error reading folder:", err);
+
+    if (results.length === 0 || !results[0].subjectName) {
+      return res.status(404).send("Subject not found.");
+    }
+
+    const subjectName = results[0].subjectName;
+    const VIDEO_FOLDER = path.join("D:/Videos", subjectName);
+
+    // ✅ Check if folder exists, create if not
+    if (!fs.existsSync(VIDEO_FOLDER)) {
+      try {
+        fs.mkdirSync(VIDEO_FOLDER, { recursive: true });
+        console.log(`Created folder: ${VIDEO_FOLDER}`);
+      } catch (mkdirErr) {
+        console.error("Error creating folder:", mkdirErr);
+        return res.status(500).send("Failed to create video folder.");
+      }
+    }
+
+    // ✅ Read files if folder exists (or just created)
+    fs.readdir(VIDEO_FOLDER, (readErr, files) => {
+      if (readErr) {
+        console.error("Error reading folder:", readErr);
         return res.status(500).send("Failed to fetch videos.");
       }
+
       const videoFiles = files.filter(
         (file) =>
           file.endsWith(".mp4") ||
@@ -119,13 +137,55 @@ router.get("/nptelvideos/:subject", (req, res) => {
           file.endsWith(".mkv")
       );
 
-      res.json([videoFiles,VIDEO_FOLDER]);
+      res.json([videoFiles, VIDEO_FOLDER]);
     });
-  }
-  else{
-    res.json({message:"No videos available for this subject"})
-  }
   });
+});
+
+
+
+//update nptel video [if new than insert into nptel_videos table else update the existing video]
+router.put("/update-nptel/:subTopicId", async (req, res) => {
+  const { subTopicId } = req.params;
+  const {
+    ids,
+    videos,
+    titles,
+    descriptions,
+    levels,
+    folder_path,
+  } = req.body;
+  try {
+    for (let i = 0; i < videos.length; i++) {
+      const id = ids[i];
+      const title = titles[i];
+      const description = descriptions[i];
+      const videoLevel = levels[i];
+      const video = videos[i];
+      const videoFolder = folder_path;
+
+      const isNew = !id || id.toString().startsWith("new-");
+
+      if (isNew) {
+        // INSERT
+        await db.query(
+          "INSERT INTO nptel_videos (title, description, video_level, videoName, subTopicId, folder_path) VALUES (?, ?, ?, ?, ?, ?)",
+          [title, description, videoLevel, video, subTopicId, videoFolder]
+        );
+      } else {
+        // UPDATE
+        await db.query(
+          "UPDATE nptel_videos SET title = ?, description = ?, video_level = ?, videoName = ?, subTopicId = ?, folder_path = ? WHERE id = ?",
+          [title, description, videoLevel, video, subTopicId, videoFolder, id]
+        );
+      }
+    }
+
+    res.status(200).json({ success: true, message: "NPTEL videos processed successfully." });
+  } catch (error) {
+    console.error("Error updating/inserting NPTEL videos:", error);
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
 });
 
 

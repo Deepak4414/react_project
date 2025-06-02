@@ -6,16 +6,13 @@ import "../../../Css/ShowAllTopicAndSubtopic.css";
 const UpdateTopic = () => {
   const location = useLocation();
   const { course, branch, semester, subject } = location.state || {};
-
-  const navigate = useNavigate();
-
+  
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState({});
   const [subtopics, setSubtopics] = useState({});
   const [selectedSubtopicId, setSelectedSubtopicId] = useState(null);
   const [loading, setLoading] = useState(false);
-  
-  
+
   // For editing links
   const [levels, setLevels] = useState({
     basic: [],
@@ -28,22 +25,23 @@ const UpdateTopic = () => {
   const [newSubtopicName, setNewSubtopicName] = useState("");
   const [editingTopic, setEditingTopic] = useState(null);
   const [editingSubtopic, setEditingSubtopic] = useState(null);
-
+  const [videoForms, setVideoForms] = useState([]); // For NPTEL video forms
+  const [videoNames, setVideoNames] = useState([]);
   // Local state for each chapter/topic's input fields
   const [chapterInputs, setChapterInputs] = useState({});
   const [topicInputs, setTopicInputs] = useState({});
   const [subtopicInputs, setSubtopicInputs] = useState({});
 
   const [subjectName, setSubjectName] = useState("");
- useEffect(() => {
-      axios
-        .get(`http://localhost:5000/api/subject-name/${subject}`)
-        .then((response) => {
-          setSubjectName(response.data[0].subjectName);
-        });
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/subject-name/${subject}`)
+      .then((response) => {
+        setSubjectName(response.data[0].subjectName);
+      });
   }, [subject]);
 
-   // Fetch initial data
+  // Fetch initial data
   useEffect(() => {
     const fetchData = async () => {
       if (!subject) return;
@@ -61,9 +59,9 @@ const UpdateTopic = () => {
             `http://localhost:5000/api/topics/${chapter.id}`
           );
           topicsData[chapter.id] = topicsRes.data.topics;
-          
+
           // Initialize input states
-          setTopicInputs(prev => ({ ...prev, [chapter.id]: "" }));
+          setTopicInputs((prev) => ({ ...prev, [chapter.id]: "" }));
         }
         setTopics(topicsData);
 
@@ -74,9 +72,9 @@ const UpdateTopic = () => {
               `http://localhost:5000/api/subtopics/${topic.id}`
             );
             subtopicsData[topic.id] = subtopicsRes.data;
-            
+
             // Initialize input states
-            setSubtopicInputs(prev => ({ ...prev, [topic.id]: "" }));
+            setSubtopicInputs((prev) => ({ ...prev, [topic.id]: "" }));
           }
         }
         setSubtopics(subtopicsData);
@@ -88,6 +86,24 @@ const UpdateTopic = () => {
     };
 
     fetchData();
+  }, [subject]);
+
+  // fetch nptel video names
+  useEffect(() => {
+    const fetchVideoNames = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/nptelvideos/${subject}`
+        );
+        setVideoNames(response.data[0]); // Assuming response.data[0] contains video names
+      } catch (error) {
+        console.error("Error fetching video names:", error);
+      }
+    };
+
+    if (subject) {
+      fetchVideoNames();
+    }
   }, [subject]);
 
   // Fetch links when subtopic is selected
@@ -122,31 +138,36 @@ const UpdateTopic = () => {
         .get(`http://localhost:5000/api/videos?subTopic=${selectedSubtopicId}`)
         .then((response) => {
           const data = response.data;
+
           if (
             Array.isArray(data) &&
-            data.length === 5 &&
+            data.length === 6 &&
             data.every((arr) => Array.isArray(arr)) &&
-            data[0].length > 0
+            data[1].length > 0
           ) {
-            setNptelVideos(data);
+            // Convert to object array for pre-filling
+            const prefilledForms = data[0].map((_, i) => ({
+              id: data[0][i],
+              video: data[2][i],
+              title: data[3][i],
+              description: data[4][i],
+              videoLevel: data[5][i],
+            }));
+            setVideoForms(prefilledForms);
+            setNptelVideos(data); // optional, if needed for another section
           } else {
+            setVideoForms([]);
             setNptelVideos([]);
           }
-        })
-        .catch((error) => {
-          console.error("Error fetching NPTEL videos:", error);
-          setNptelVideos([]);
         });
     }
   }, [selectedSubtopicId]);
 
-
-  
   // Handle topic name change
   const handleTopicNameChange = (chapterId, topicId, newName) => {
-    setTopics(prev => {
+    setTopics((prev) => {
       const newTopics = { ...prev };
-      newTopics[chapterId] = newTopics[chapterId].map(topic => 
+      newTopics[chapterId] = newTopics[chapterId].map((topic) =>
         topic.id === topicId ? { ...topic, topic: newName } : topic
       );
       return newTopics;
@@ -155,10 +176,12 @@ const UpdateTopic = () => {
 
   // Handle subtopic name change
   const handleSubtopicNameChange = (topicId, subtopicId, newName) => {
-    setSubtopics(prev => {
+    setSubtopics((prev) => {
       const newSubtopics = { ...prev };
-      newSubtopics[topicId] = newSubtopics[topicId].map(subtopic => 
-        subtopic.id === subtopicId ? { ...subtopic, subTopic: newName } : subtopic
+      newSubtopics[topicId] = newSubtopics[topicId].map((subtopic) =>
+        subtopic.id === subtopicId
+          ? { ...subtopic, subTopic: newName }
+          : subtopic
       );
       return newSubtopics;
     });
@@ -167,9 +190,9 @@ const UpdateTopic = () => {
   // Save topic name to backend
   const saveTopicName = async (chapterId, topicId) => {
     try {
-      const topic = topics[chapterId].find(t => t.id === topicId);
+      const topic = topics[chapterId].find((t) => t.id === topicId);
       await axios.put(`http://localhost:5000/api/update-topic/${topicId}`, {
-        topicName: topic.topic
+        topicName: topic.topic,
       });
       setEditingTopic(null);
     } catch (error) {
@@ -180,49 +203,56 @@ const UpdateTopic = () => {
   // Save subtopic name to backend
   const saveSubtopicName = async (topicId, subtopicId) => {
     try {
-      const subtopic = subtopics[topicId].find(s => s.id === subtopicId);
-      await axios.put(`http://localhost:5000/api/update-subtopic/${subtopicId}`, {
-        subtopicName: subtopic.subTopic
-      });
+      const subtopic = subtopics[topicId].find((s) => s.id === subtopicId);
+      await axios.put(
+        `http://localhost:5000/api/update-subtopic/${subtopicId}`,
+        {
+          subtopicName: subtopic.subTopic,
+        }
+      );
       setEditingSubtopic(null);
     } catch (error) {
       console.error("Error updating subtopic:", error);
     }
   };
 
-const handleAddChapter = async () => {
-  const newChapterName = chapterInputs['new'];
-  if (!newChapterName?.trim()) return;
-  
-  try {
-    const response = await axios.post("http://localhost:5000/api/add-chapter/add-chapter", {
-      subjectId: subject,
-      courseId: course,
-      branchId: branch,
-      semesterId: semester,
-      chapterName: newChapterName
-    });
+  const handleAddChapter = async () => {
+    const newChapterName = chapterInputs["new"];
+    if (!newChapterName?.trim()) return;
 
-    const newChapter = {
-      id: response.data.chapter.id,
-      chapter: response.data.chapter.chapterName, // Normalize for frontend
-    };
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/add-chapter/add-chapter",
+        {
+          subjectId: subject,
+          courseId: course,
+          branchId: branch,
+          semesterId: semester,
+          chapterName: newChapterName,
+        }
+      );
 
-    setChapters([...chapters, newChapter]);
-    setTopics({ ...topics, [newChapter.id]: [] });
-    setChapterInputs({ ...chapterInputs, 'new': "" });
-  } catch (error) {
-    console.error("Error adding chapter:", error);
-  }
-};
+      const newChapter = {
+        id: response.data.chapter.id,
+        chapter: response.data.chapter.chapterName, // Normalize for frontend
+      };
 
+      setChapters([...chapters, newChapter]);
+      setTopics({ ...topics, [newChapter.id]: [] });
+      setChapterInputs({ ...chapterInputs, new: "" });
+    } catch (error) {
+      console.error("Error adding chapter:", error);
+    }
+  };
 
   // Delete chapter
   const handleDeleteChapter = async (chapterId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/delete/delete-chapter/${chapterId}`);
-      setChapters(chapters.filter(chapter => chapter.id !== chapterId));
-      
+      await axios.delete(
+        `http://localhost:5000/api/delete/delete-chapter/${chapterId}`
+      );
+      setChapters(chapters.filter((chapter) => chapter.id !== chapterId));
+
       const newTopics = { ...topics };
       delete newTopics[chapterId];
       setTopics(newTopics);
@@ -235,22 +265,25 @@ const handleAddChapter = async () => {
   const handleAddTopic = async (chapterId) => {
     const topicName = topicInputs[chapterId];
     if (!topicName?.trim()) return;
-    
+
     try {
-      const response = await axios.post("http://localhost:5000/api/add-topic/add-topic", {
-       topicName,
-       chapterId,
-        subjectId: subject,
-        courseId: course,
-        branchId: branch,
-        semesterId: semester  
-      });
-      
-      setTopics(prev => ({
+      const response = await axios.post(
+        "http://localhost:5000/api/add-topic/add-topic",
+        {
+          topicName,
+          chapterId,
+          subjectId: subject,
+          courseId: course,
+          branchId: branch,
+          semesterId: semester,
+        }
+      );
+
+      setTopics((prev) => ({
         ...prev,
-        [chapterId]: [...(prev[chapterId] || []), response.data.topic]
+        [chapterId]: [...(prev[chapterId] || []), response.data.topic],
       }));
-      
+
       setTopicInputs({ ...topicInputs, [chapterId]: "" });
     } catch (error) {
       console.error("Error adding topic:", error);
@@ -260,13 +293,15 @@ const handleAddChapter = async () => {
   // Delete topic
   const handleDeleteTopic = async (chapterId, topicId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/delete/delete-topic/${topicId}`);
-      
-      setTopics(prev => ({
+      await axios.delete(
+        `http://localhost:5000/api/delete/delete-topic/${topicId}`
+      );
+
+      setTopics((prev) => ({
         ...prev,
-        [chapterId]: prev[chapterId].filter(topic => topic.id !== topicId)
+        [chapterId]: prev[chapterId].filter((topic) => topic.id !== topicId),
       }));
-      
+
       const newSubtopics = { ...subtopics };
       delete newSubtopics[topicId];
       setSubtopics(newSubtopics);
@@ -275,22 +310,25 @@ const handleAddChapter = async () => {
     }
   };
 
-    // Add new subtopic to a specific topic
+  // Add new subtopic to a specific topic
   const handleAddSubtopic = async (topicId) => {
     const subtopicName = subtopicInputs[topicId];
     if (!subtopicName?.trim()) return;
-    
+
     try {
-      const response = await axios.post("http://localhost:5000/api/add-subtopic/add-subtopic", {
-        topicId,
-        subtopicName
-      });
-      
-      setSubtopics(prev => ({
+      const response = await axios.post(
+        "http://localhost:5000/api/add-subtopic/add-subtopic",
+        {
+          topicId,
+          subtopicName,
+        }
+      );
+
+      setSubtopics((prev) => ({
         ...prev,
-        [topicId]: [...(prev[topicId] || []), response.data.subtopic]
+        [topicId]: [...(prev[topicId] || []), response.data.subtopic],
       }));
-      
+
       setSubtopicInputs({ ...subtopicInputs, [topicId]: "" });
     } catch (error) {
       console.error("Error adding subtopic:", error);
@@ -298,23 +336,26 @@ const handleAddChapter = async () => {
   };
 
   const handleDeleteSubtopic = async (topicId, subtopicId) => {
-  try {
-    await axios.delete(`http://localhost:5000/api/delete/delete-subtopic/${subtopicId}`);
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/delete/delete-subtopic/${subtopicId}`
+      );
 
-    setSubtopics(prev => {
-      const updatedSubtopics = prev[topicId]?.filter(subtopic => subtopic.id !== subtopicId) || [];
-      
-      return {
-        ...prev,
-        [topicId]: updatedSubtopics
-      };
-    });
-  } catch (error) {
-    console.error("Error deleting subtopic:", error);
-  }
-};
+      setSubtopics((prev) => {
+        const updatedSubtopics =
+          prev[topicId]?.filter((subtopic) => subtopic.id !== subtopicId) || [];
 
-const handleDeleteLink = async (level, id) => {
+        return {
+          ...prev,
+          [topicId]: updatedSubtopics,
+        };
+      });
+    } catch (error) {
+      console.error("Error deleting subtopic:", error);
+    }
+  };
+
+  const handleDeleteLink = async (level, id) => {
     try {
       const newLevels = { ...levels };
 
@@ -323,7 +364,9 @@ const handleDeleteLink = async (level, id) => {
         alert("Link deleted successfully!");
       }
 
-      newLevels[level] = newLevels[level].filter(link => String(link.id) !== String(id));
+      newLevels[level] = newLevels[level].filter(
+        (link) => String(link.id) !== String(id)
+      );
       setLevels(newLevels);
     } catch (error) {
       console.error("Error deleting link:", error);
@@ -337,42 +380,50 @@ const handleDeleteLink = async (level, id) => {
       title: "",
       link: "",
       description: "",
-      rating: 0
+      rating: 0,
     });
     setLevels(newLevels);
   };
 
   const handleDeleteNptelLink = async (index) => {
     try {
-      const videoId = nptelVideos[1][index];
-      if (videoId) {
-        await axios.delete(`http://localhost:5000/api/delete-nptel/${videoId}`);
+      const videoId = nptelVideos[0]?.[index];
+
+      // Skip API call if it's a new (unsaved) item
+      if (videoId && !String(videoId).startsWith("new-")) {
+        await axios.delete(
+          `http://localhost:5000/api/delete/delete-nptel/${videoId}`
+        );
+        alert("NPTEL Videos deleted successfully!");
       }
-      
-      const newNptelVideos = nptelVideos.map(arr => 
+
+      // Remove the item from all arrays
+      const newNptelVideos = nptelVideos.map((arr) =>
         arr.filter((_, i) => i !== index)
       );
       setNptelVideos(newNptelVideos);
-      alert("NPTEL link deleted successfully!");
+      // alert("NPTEL link deleted successfully!");
     } catch (error) {
       console.error("Error deleting NPTEL link:", error);
     }
   };
 
   const handleAddNptelLink = () => {
-    const newNptelVideos = nptelVideos.length > 0 
-      ? nptelVideos.map(arr => [...arr, ""])
-      : [[], [], [], [], []].map(arr => [...arr, ""]);
-    
+    const newNptelVideos =
+      nptelVideos.length > 0
+        ? nptelVideos.map((arr) => [...arr, ""])
+        : [[], [], [], [], [], []].map((arr) => [...arr, ""]);
+
     if (newNptelVideos[0].length > 0) {
       const lastIndex = newNptelVideos[0].length - 1;
-      newNptelVideos[0][lastIndex] = "";
-      newNptelVideos[1][lastIndex] = `new-${Date.now()}`;
+      newNptelVideos[0][lastIndex] = `new-${Date.now()}`;
+      newNptelVideos[1][lastIndex] = "";
       newNptelVideos[2][lastIndex] = "";
       newNptelVideos[3][lastIndex] = "";
       newNptelVideos[4][lastIndex] = "";
+      newNptelVideos[5][lastIndex] = ""; 
     }
-    
+
     setNptelVideos(newNptelVideos);
   };
 
@@ -388,6 +439,7 @@ const handleDeleteLink = async (level, id) => {
     setNptelVideos(newNptelVideos);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -396,24 +448,27 @@ const handleDeleteLink = async (level, id) => {
         `http://localhost:5000/api/update-links/${selectedSubtopicId}`,
         { levels }
       );
-      
       // Update NPTEL videos
       if (nptelVideos.length > 0 && nptelVideos[0].length > 0) {
+        // console.log("NPTEL Videos to update:", nptelVideos);
         const nptelData = {
-          links: nptelVideos[0],
-          ids: nptelVideos[1],
-          titles: nptelVideos[2],
-          descriptions: nptelVideos[3],
-          durations: nptelVideos[4],
-          subTopic: selectedSubtopicId
+          ids: nptelVideos[0], // Array of IDs
+          
+          videos: nptelVideos[2], // Array of video filenames (previously links)
+          titles: nptelVideos[3], // Array of video titles
+          descriptions: nptelVideos[4], // Array of descriptions
+          levels: nptelVideos[5], // Array of video levels (Basic/Intermediate/Advanced)
+          subTopic: selectedSubtopicId,
+          folder_path: `D:/Videos/${subjectName}`, // Assuming the folder path is based on subject
         };
-        
+
+
         await axios.put(
           `http://localhost:5000/api/update-nptel/${selectedSubtopicId}`,
           nptelData
         );
       }
-      
+
       alert("Updated successfully!");
       setSelectedSubtopicId(null);
     } catch (error) {
@@ -423,7 +478,7 @@ const handleDeleteLink = async (level, id) => {
 
   // Update input states
   const handleChapterInputChange = (value) => {
-    setChapterInputs({ ...chapterInputs, 'new': value });
+    setChapterInputs({ ...chapterInputs, new: value });
   };
 
   const handleTopicInputChange = (chapterId, value) => {
@@ -434,8 +489,7 @@ const handleDeleteLink = async (level, id) => {
     setSubtopicInputs({ ...subtopicInputs, [topicId]: value });
   };
 
-  
-const renderChapterColumns = () => {
+  const renderChapterColumns = () => {
     if (loading) return <div className="loading">Loading chapters...</div>;
 
     return (
@@ -446,7 +500,7 @@ const renderChapterColumns = () => {
               <h5 className="chapter-title">
                 {chapterIndex + 1}. {chapter.chapter}
               </h5>
-              <button 
+              <button
                 className="delete-btn"
                 onClick={() => handleDeleteChapter(chapter.id)}
               >
@@ -459,11 +513,13 @@ const renderChapterColumns = () => {
               <input
                 type="text"
                 value={topicInputs[chapter.id] || ""}
-                onChange={(e) => handleTopicInputChange(chapter.id, e.target.value)}
+                onChange={(e) =>
+                  handleTopicInputChange(chapter.id, e.target.value)
+                }
                 placeholder="New Topic Name"
                 className="add-input"
               />
-              <button 
+              <button
                 className="add-btn"
                 onClick={() => handleAddTopic(chapter.id)}
               >
@@ -479,7 +535,7 @@ const renderChapterColumns = () => {
                     <div className="topic-name">
                       {chapterIndex + 1}.{topicIndex + 1} {topic.topic}
                     </div>
-                    <button 
+                    <button
                       className="delete-btn"
                       onClick={() => handleDeleteTopic(chapter.id, topic.id)}
                     >
@@ -492,11 +548,13 @@ const renderChapterColumns = () => {
                     <input
                       type="text"
                       value={subtopicInputs[topic.id] || ""}
-                      onChange={(e) => handleSubtopicInputChange(topic.id, e.target.value)}
+                      onChange={(e) =>
+                        handleSubtopicInputChange(topic.id, e.target.value)
+                      }
                       placeholder="New Subtopic Name"
                       className="add-input"
                     />
-                    <button 
+                    <button
                       className="add-btn"
                       onClick={() => handleAddSubtopic(topic.id)}
                     >
@@ -506,26 +564,28 @@ const renderChapterColumns = () => {
 
                   {/* Subtopics for this topic */}
                   <ul className="subtopics-list">
-                    {(subtopics[topic.id] || []).map((subtopic, subtopicIndex) => (
-                      <li key={subtopic.id} className="subtopic-item">
-                        <div
-                          onClick={() => setSelectedSubtopicId(subtopic.id)}
-                          className="subtopic-name"
-                        >
-                          {chapterIndex + 1}.{topicIndex + 1}.
-                          {subtopicIndex + 1} {subtopic.subTopic}
-                        </div>
-                        <button 
-                          className="delete-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteSubtopic(topic.id, subtopic.id);
-                          }}
-                        >
-                          ×
-                        </button>
-                      </li>
-                    ))}
+                    {(subtopics[topic.id] || []).map(
+                      (subtopic, subtopicIndex) => (
+                        <li key={subtopic.id} className="subtopic-item">
+                          <div
+                            onClick={() => setSelectedSubtopicId(subtopic.id)}
+                            className="subtopic-name"
+                          >
+                            {chapterIndex + 1}.{topicIndex + 1}.
+                            {subtopicIndex + 1} {subtopic.subTopic}
+                          </div>
+                          <button
+                            className="delete-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteSubtopic(topic.id, subtopic.id);
+                            }}
+                          >
+                            ×
+                          </button>
+                        </li>
+                      )
+                    )}
                   </ul>
                 </li>
               ))}
@@ -537,15 +597,12 @@ const renderChapterColumns = () => {
         <div className="add-chapter-section">
           <input
             type="text"
-            value={chapterInputs['new'] || ""}
+            value={chapterInputs["new"] || ""}
             onChange={(e) => handleChapterInputChange(e.target.value)}
             placeholder="New Chapter Name"
             className="add-input"
           />
-          <button 
-            className="add-btn"
-            onClick={handleAddChapter}
-          >
+          <button className="add-btn" onClick={handleAddChapter}>
             +
           </button>
         </div>
@@ -554,11 +611,11 @@ const renderChapterColumns = () => {
   };
 
   // ... (keep the existing renderLinkEditor function)
-const renderLinkEditor = () => {
+  const renderLinkEditor = () => {
     return (
       <div className="link-editor">
-        <button 
-          className="back-button" 
+        <button
+          className="back-button"
           onClick={() => setSelectedSubtopicId(null)}
         >
           ← Back to Chapters
@@ -570,15 +627,15 @@ const renderLinkEditor = () => {
               <div key={level} className="link-section">
                 <div className="section-header">
                   <h5 className="text-capitalize">{level} Level</h5>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="add-link-btn"
                     onClick={() => handleAddLink(level)}
                   >
                     + Add Link
                   </button>
                 </div>
-                
+
                 {levels[level].map((link, index) => (
                   <div key={link.id || index} className="link-item">
                     <button
@@ -607,7 +664,9 @@ const renderLinkEditor = () => {
                       placeholder="Description"
                       rows="2"
                       value={link.description}
-                      onChange={(e) => handleChange(e, level, index, "description")}
+                      onChange={(e) =>
+                        handleChange(e, level, index, "description")
+                      }
                     />
                   </div>
                 ))}
@@ -617,21 +676,24 @@ const renderLinkEditor = () => {
             <div className="link-section">
               <div className="section-header">
                 <h5>NPTEL Videos</h5>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="add-link-btn"
                   onClick={handleAddNptelLink}
                 >
                   + Add Video
                 </button>
               </div>
-              
-             {Array.isArray(nptelVideos[0]) && nptelVideos[0].length === 0 ? (
-                <p className="no-content">No NPTEL videos added</p>
+
+              {Array.isArray(nptelVideos[1]) && nptelVideos[1].length === 0 ? (
+                <p className="no-content">No NPTEL content available.</p>
               ) : (
-                Array.isArray(nptelVideos[0]) &&
-                nptelVideos[0].map((_, index) => (
-                  <div key={index} className="link-item">
+                Array.isArray(nptelVideos[1]) &&
+                nptelVideos[1].map((_, index) => (
+                  <div
+                    key={nptelVideos[0]?.[index] || index}
+                    className="link-item"
+                  >
                     <button
                       type="button"
                       className="delete-link-btn"
@@ -639,34 +701,48 @@ const renderLinkEditor = () => {
                     >
                       ×
                     </button>
+
                     <input
                       type="text"
-                      className="form-control mb-2"
-                      value={nptelVideos[2]?.[index] || ""}
-                      onChange={(e) => handleNptelChange(e, index, 2)}
-                      placeholder="Title"
-                    />
-                    <input
-                      type="text"
-                      className="form-control mb-2"
-                      value={nptelVideos[0]?.[index] || ""}
-                      onChange={(e) => handleNptelChange(e, index, 0)}
-                      placeholder="Link"
-                    />
-                    <textarea
                       className="form-control mb-2"
                       value={nptelVideos[3]?.[index] || ""}
                       onChange={(e) => handleNptelChange(e, index, 3)}
-                      placeholder="Description"
+                      placeholder="Video Title"
+                    />
+
+                    {/* Replace the Link input with a video selection dropdown */}
+                    <select
+                      className="form-control mb-2"
+                      value={nptelVideos[2]?.[index] || ""}
+                      onChange={(e) => handleNptelChange(e, index, 2)}
+                    >
+                      <option value="">-- Select a Video --</option>
+                      {videoNames.map((video, idx) => (
+                        <option key={idx} value={video}>
+                          {video}
+                        </option>
+                      ))}
+                    </select>
+
+                    <textarea
+                      className="form-control mb-2"
+                      value={nptelVideos[4]?.[index] || ""}
+                      onChange={(e) => handleNptelChange(e, index, 4)}
+                      placeholder="Video Description"
                       rows="2"
                     />
-                    <input
-                      type="text"
+
+                    {/* Replace the text input with a dropdown for video level */}
+                    <select
                       className="form-control"
-                       value={nptelVideos[4]?.[index] || ""}
-                      onChange={(e) => handleNptelChange(e, index, 4)}
-                      placeholder="Duration"
-                    />
+                      value={nptelVideos[5]?.[index] || ""}
+                      onChange={(e) => handleNptelChange(e, index, 5)}
+                    >
+                      <option value="">-- Select Level --</option>
+                      <option value="Basic">Basic</option>
+                      <option value="Intermediate">Intermediate</option>
+                      <option value="Advanced">Advanced</option>
+                    </select>
                   </div>
                 ))
               )}
@@ -684,8 +760,7 @@ const renderLinkEditor = () => {
   return (
     <div className="update-topic-container">
       <h3 className="page-title">Update Course Content for "{subjectName}"</h3>
-      
-      
+
       {selectedSubtopicId ? renderLinkEditor() : renderChapterColumns()}
     </div>
   );

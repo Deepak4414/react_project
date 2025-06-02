@@ -20,11 +20,12 @@ const NptelContent = ({ subtopic }) => {
         const response = await axios.get("http://localhost:5000/api/videos", {
           params: { subTopic: subtopic },
         });
-        setVideos(response.data[0]);
-        setVideoNames(response.data[1]);
-        setTitle(response.data[2]);
-        setDescription(response.data[3]);
-        setVideoLevel(response.data[4]);
+        console.log(response.data);
+        setVideos(response.data[1]);
+        setVideoNames(response.data[2]);
+        setTitle(response.data[3]);
+        setDescription(response.data[4]);
+        setVideoLevel(response.data[5]);
         setError("");
       } catch (err) {
         setVideos([]);

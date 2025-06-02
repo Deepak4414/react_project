@@ -43,7 +43,7 @@ const Privacy = () => {
           <h2 style={{ fontSize: '1.5rem', color: '#004080' }}>Contact Us</h2>
           <p style={{ fontSize: '1.1rem' }}>
             If you have any questions about this Privacy Policy, please contact us at 
-            <a href="mailto:support@example.com" style={{ color: '#007bff', marginLeft: '5px' }}>support@example.com</a>.
+            <a href="mailto:info@vignan.ac.in" style={{ color: '#007bff', marginLeft: '5px' }}>info@vignan.ac.in</a>.
           </p>
         </section>
       </div>

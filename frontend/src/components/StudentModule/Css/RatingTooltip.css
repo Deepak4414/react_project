@@ -1,7 +1,7 @@
 .rating-tooltip {
     position: relative;
     display: inline-block;
-    cursor: pointer;
+    cursor:default;
   }
   
   .rating-tooltip .tooltip-text {

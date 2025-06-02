@@ -102,7 +102,8 @@ const ChapterContent = ({ subTopicData, username, id, topicId, subject,subTopicN
         const timestamp = next.replace(/[\[\]]/g, '').trim();
   
         listItems.push(
-          <li key={i} className="tooltip-container" >
+          <li 
+          key={i} className="tooltip-container" >
             <span className="tooltip-trigger">{current}</span>
             <span className="tooltip-box">{timestamp} min.</span>
           </li>
@@ -166,6 +167,8 @@ const ChapterContent = ({ subTopicData, username, id, topicId, subject,subTopicN
         {/* Pass title and level here */}
         <MainBot subject={subjectName} subTopicName={subTopicName} level={level} /> 
 
+
+          {/* rating graph component */}
         <p>
           Rating:{" "}
           <RatingTooltip
@@ -174,7 +177,9 @@ const ChapterContent = ({ subTopicData, username, id, topicId, subject,subTopicN
             rating={item.rating || 0}
           />
         </p>
-      
+    
+
+          {/* give user rating component */}
         <Rating item={item.id} username={username.username} />
         
       </div>
@@ -188,9 +193,7 @@ const ChapterContent = ({ subTopicData, username, id, topicId, subject,subTopicN
         <thead className="table-dark">
           <tr >
             <th colSpan={3} style={{ textAlign: 'center', width: '48%', fontSize: '20px'}}> E-Content from Internet</th>
-            <th rowSpan={2} style={{ textAlign: 'center', width: '16%',lineHeight: '3' }}>Content from local server
-            NPTEL and VFSTR Content
-            </th>
+            <th rowSpan={2} style={{ textAlign: 'center', width: '16%',lineHeight: '3' }}>NPTEL and VFSTR content from Local Server</th>
             <th rowSpan={2} style={{ textAlign: 'center', width: '16%', fontSize: '14px'}}>Live Video from local C-DoT BBG</th>
           </tr>
 
