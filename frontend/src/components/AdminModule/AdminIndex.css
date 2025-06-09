@@ -1,0 +1,27 @@
+.admin-index {
+  padding: 2rem;
+  background-color: #f3f3f3;
+  min-height: 100vh;
+}
+
+.admin-index h1 {
+  color: #333;
+}
+
+.admin-index ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-index li {
+  margin: 0.5rem 0;
+}
+
+.admin-index a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.admin-index a:hover {
+  text-decoration: underline;
+}

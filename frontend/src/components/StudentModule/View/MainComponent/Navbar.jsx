@@ -1,10 +1,9 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../../Css/Navbar.css";
 
 function Navbar() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   // Check if user is logged in by verifying token and userState in localStorage
   const isLoggedIn = () => {

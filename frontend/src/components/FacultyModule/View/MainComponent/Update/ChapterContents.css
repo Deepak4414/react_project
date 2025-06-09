@@ -1,0 +1,147 @@
+/* Horizontal Chapters Layout */
+.horizontal-chapters-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.horizontal-chapters-list {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  min-height: 100px;
+}
+
+.chapter-card {
+  min-width: 300px;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.chapter-card.dragging {
+  background: #e6f7ff;
+  border: 2px dashed #1890ff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chapter-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Add Chapter Button in Horizontal Layout */
+.add-chapter-horizontal {
+  min-width: 250px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ccc;
+}
+
+/* Topics and Subtopics styling */
+.topics-list {
+  margin-top: 10px;
+  /* max-height: 400px; */
+  overflow-y: auto;
+}
+
+.topic-item {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.subtopics-lists {
+  margin-top: 8px;
+  padding-left: 15px;
+}
+
+.subtopic-item {
+  background: #f0f0f0;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+/* Drag Handle */
+.drag-handle {
+  cursor: move;
+  padding: 0 5px;
+  margin-right: 5px;
+  color: #666;
+  user-select: none;
+}
+
+/* Add Section Styling */
+.add-section {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.add-input {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* Action Buttons */
+.chapter-actions, .topic-actions, .subtopic-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.delete-btn {
+  background: #f44336;
+  color: white;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.cancel-btn {
+  background: #ff9800;
+  color: white;
+}

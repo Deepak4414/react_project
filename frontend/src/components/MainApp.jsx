@@ -14,6 +14,7 @@ import ProtectedRoute from './ProtectedRoute/ProtectedRoute';
 import Header from './OtherComponent/Header'; // ✅ Import header here
 import LoginModal from './LoginModal'; // ✅ Import LoginModal here
 import MannKiBaat from './Mann-Ki-Baat/MannKiBaat'; // ✅ Import MannKiBaat here
+import AdminIndex from './AdminModule/AdminIndex'; // ✅ Import AdminIndex here
 // 🧠 Custom wrapper to use location inside MainApp
 const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
   const location = useLocation();
@@ -56,6 +57,15 @@ const AppContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
               <Route path="terms" element={<Terms />} />
             </Route>
           </Route>
+            {/* Protected Routes - Admin */}
+          <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} role="admin" />}>
+            <Route path="/adminindex/*" element={<AdminIndex />}>
+              <Route path="contact" element={<Contact />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="terms" element={<Terms />} />
+            </Route>
+        </Route>
+
         </Routes>
       </div>
         {/* ✅ Make Login Modal globally available */}

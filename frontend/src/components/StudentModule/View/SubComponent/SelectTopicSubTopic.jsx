@@ -5,6 +5,7 @@ import '../../Css/TwoColumnPage.css';
 import './SelectTopicSubTopic.css';
 
 const SelectTopicSubTopic = ({ selectedSubject, username, onSubtopicSelect }) => {
+  console.log("Selected Subject:", selectedSubject, "Username:", username, "onSubtopicSelect:", onSubtopicSelect);
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState({});
   const [subtopics, setSubtopics] = useState({});
@@ -164,7 +165,9 @@ const SelectTopicSubTopic = ({ selectedSubject, username, onSubtopicSelect }) =>
               username={username}
               id={subTopicId}
               topicId={topicId}
+              
             />
+            
           ))
         ) : (
           <div className="no-content">No content available for this subtopic</div>

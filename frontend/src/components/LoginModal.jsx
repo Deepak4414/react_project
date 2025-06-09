@@ -25,6 +25,7 @@ const LoginModal = ({ onLogin }) => {
         onLogin();
 
         if (loginType === 'student') navigate('/studentindex');
+        else if (loginType === 'admin') navigate('/adminindex');
         else navigate('/facultyindex');
       }
     } catch (error) {
@@ -49,6 +50,7 @@ const LoginModal = ({ onLogin }) => {
             <div className="btn-group w-100 mb-3">
               <button type="button" className={`btn btn-outline-primary ${loginType === 'student' ? 'active' : ''}`} onClick={() => setLoginType('student')}>Student</button>
               <button type="button" className={`btn btn-outline-primary ${loginType === 'faculty' ? 'active' : ''}`} onClick={() => setLoginType('faculty')}>Faculty</button>
+              <button type="button" className={`btn btn-outline-primary ${loginType === 'admin' ? 'active' : ''}`} onClick={() => setLoginType('admin')}>Admin</button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">

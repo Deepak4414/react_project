@@ -23,9 +23,11 @@ const addNewTopic = require('./storeTopic/addnewTopic'); // Import the AddTopic 
 const addSubTopicRouter = require('./storeTopic/addSubtopic'); // Import the AddSubTopic router
 const deleteSubTopicRouter = require('./Routes/delete'); // Import the DeleteSubTopic router
 
+//admin routes
+const adminRouter = require('./Routes/admin'); // Import the Admin router
 
-
-
+// drag and drop routes
+const dragAndDropRouter = require('./Routes/drag-and-drop'); // Import the DragAndDrop
 
 
 // Initialize Express app
@@ -56,7 +58,11 @@ app.use("/api/add-subtopic/", addSubTopicRouter); // Mount the add subtopic rout
 // delete subtopic
 app.use("/api/delete/", deleteSubTopicRouter); // Mount the delete subtopic router
 //=========================================
+// add new admin
+app.use("/api/admin/", adminRouter); // Mount the admin router
 //=========================================
+// add drag and drop functionality
+app.use("/api/drag-and-drop/", dragAndDropRouter); // Mount the drag and drop
 //=========================================
 //=========================================
 //=========================================
@@ -205,14 +211,11 @@ app.get("/api/subject-name/:subjectId", (req, res) => {
 });
 
 // =================================================
-
-
-
 app.get('/api/chapter/:subjectId', (req, res) => {
   const { subjectId } = req.params; 
   // Fetch topics from the database
   // db.query('SELECT id,topic FROM topics WHERE subjectId = ?', [subjectId], (err, results) => {
-  db.query('SELECT id,chapter FROM chapter WHERE subjectId = ?', [subjectId], (err, results) => {
+  db.query('SELECT id,chapter FROM chapter WHERE subjectId = ? ORDER BY `order`', [subjectId], (err, results) => {
     if (err) {
       console.error('Error fetching topics:', err); // Log the error
       return res.status(500).send('Error fetching topics');
@@ -224,7 +227,7 @@ app.get('/api/chapter/:subjectId', (req, res) => {
 app.get('/api/topics/:chapterId', (req, res) => {
   const { chapterId } = req.params;  
   // Fetch topics from the database
-  db.query('SELECT id,topic FROM topics WHERE chapterId = ?', [chapterId], (err, results) => {
+  db.query('SELECT id,topic FROM topics WHERE chapterId = ? ORDER BY `order`', [chapterId], (err, results) => {
     if (err) {
       console.error('Error fetching topics:', err); // Log the error
       return res.status(500).send('Error fetching topics');
@@ -240,7 +243,7 @@ app.get('/api/subtopics/:topicId', async (req, res) => {
 
   try {
     const results = await new Promise((resolve, reject) => {
-      db.query('SELECT id,subTopic FROM subtopics WHERE topicId = ?', [topicId], (err, results) => {
+      db.query('SELECT id,subTopic FROM subtopics WHERE topicId = ? ORDER BY `order`', [topicId], (err, results) => {
         // console.log('Fetched Subtopics:', results);
         if (err) {
           console.error('Error fetching subtopics:', err);

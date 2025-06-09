@@ -98,76 +98,47 @@ router.put("/update-links/:subTopicId", (req, res) => {
   });
 });
 
-// // Update or add NPTEL videos for a subtopic
-// router.put("/update-nptel/:subTopicId", (req, res) => {
-//   const { subTopicId } = req.params;
-//   const { links, ids, titles, descriptions, durations } = req.body;
 
-//   db.query("START TRANSACTION", (err) => {
-//     if (err) return res.status(500).json({ message: "Transaction start error" });
+// update chapter 
+// PUT /update-chapter/chapters/:id
+router.put('/update-chapter-name/chapters/:id', async (req, res) => {
+  const chapterId = req.params.id;
+  const { chapter } = req.body;
+  try {
+    await db.query('UPDATE chapter SET chapter = ? WHERE id = ?', [chapter, chapterId]);
+    res.status(200).json({ message: 'Chapter updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update chapter' });
+  }
+});
 
-//     db.query("DELETE FROM nptel_videos WHERE sub_topic_id = ?", [subTopicId], (deleteErr) => {
-//       if (deleteErr) {
-//         db.query("ROLLBACK", () => {});
-//         return res.status(500).json({ message: "Delete error" });
-//       }
+//edit topic 
+// PUT /api/topics/:id
+router.put('/update-topic-name/topics/:id', async (req, res) => {
+  const topicId = req.params.id;
+  const { topic } = req.body;
 
-//       const queries = [];
+  try {
+    await db.query('UPDATE topics SET topic = ? WHERE id = ?', [topic, topicId]);
+    res.status(200).json({ message: 'Topic updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update topic' });
+  }
+});
 
-//       for (let i = 0; i < links.length; i++) {
-//         if (!links[i] || !titles[i]) continue;
+//edit subtopic
+// PUT /api/subtopics/:id
+router.put('/update-subtopic-name/subtopics/:id', async (req, res) => {
+  const subtopicId = req.params.id;
+  const { subTopic } = req.body;
 
-//         if (ids[i] && !ids[i].startsWith("new-")) {
-//           queries.push([
-//             "UPDATE nptel_videos SET link = ?, title = ?, description = ?, duration = ? WHERE id = ?",
-//             [
-//               links[i],
-//               titles[i],
-//               descriptions[i] || "",
-//               durations[i] || "",
-//               ids[i],
-//             ],
-//           ]);
-//         } else {
-//           queries.push([
-//             "INSERT INTO nptel_videos (sub_topic_id, link, title, description, duration) VALUES (?, ?, ?, ?, ?)",
-//             [
-//               subTopicId,
-//               links[i],
-//               titles[i],
-//               descriptions[i] || "",
-//               durations[i] || "",
-//             ],
-//           ]);
-//         }
-//       }
+  try {
+    await db.query('UPDATE subtopics SET subTopic = ? WHERE id = ?', [subTopic, subtopicId]);
+    res.status(200).json({ message: 'Subtopic updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update subtopic' });
+  }
+});
 
-//       const runQueries = (index = 0) => {
-//         if (index >= queries.length) {
-//           db.query("COMMIT", (commitErr) => {
-//             if (commitErr) {
-//               console.error("Commit error:", commitErr);
-//               return res.status(500).json({ message: "Commit error" });
-//             }
-//             res.json({ message: "NPTEL videos updated successfully" });
-//           });
-//           return;
-//         }
-
-//         const [sql, params] = queries[index];
-//         db.query(sql, params, (queryErr) => {
-//           if (queryErr) {
-//             db.query("ROLLBACK", () => {});
-//             console.error("Error updating NPTEL video:", queryErr);
-//             return res.status(500).json({ message: "Server error during update" });
-//           }
-//           runQueries(index + 1);
-//         });
-//       };
-
-//       runQueries();
-//     });
-//   });
-// });
 
 module.exports = router;
