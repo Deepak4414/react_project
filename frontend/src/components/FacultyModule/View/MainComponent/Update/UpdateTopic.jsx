@@ -1,12 +1,15 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../../Css/ShowAllTopicAndSubtopic.css";
 import LinkEditor from "./LinkEditor"; // Adjust path as needed
 import ChapterContents from "./ChapterContents"; // Adjust the path if needed
 import ChapterContent from "../../../../StudentModule/View/MainComponent/ExploreMaterial/ChapterContent"; // Adjust the path if needed
+import TwoColumnPage from "../../../../StudentModule/View/MainComponent/ExploreMaterial/TwoColumnPage"; // Adjust the path if needed
+import ChapterTopicTree from "./ChapterTopicTree"; // Adjust the path if needed
 const UpdateTopic = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { course, branch, semester, subject } = location.state || {};
   const [username, setUsername] = useState("");
   const [subTopicData, setSubTopicData] = useState(null);
@@ -23,7 +26,7 @@ const UpdateTopic = () => {
   const [editedSubtopicTitle, setEditedSubtopicTitle] = useState("");
 
   const [previewMode, setPreviewMode] = useState(false);
-  
+  const [globalPreview, setGlobalPreview] = useState(false);
 
   // For editing links
   const [levels, setLevels] = useState({
@@ -33,18 +36,17 @@ const UpdateTopic = () => {
   });
   const [nptelVideos, setNptelVideos] = useState([]);
   const [videoNames, setVideoNames] = useState([]);
-  
+
   // Input states
   const [chapterInputs, setChapterInputs] = useState({});
   const [topicInputs, setTopicInputs] = useState({});
   const [subtopicInputs, setSubtopicInputs] = useState({});
   const [subjectName, setSubjectName] = useState("");
 
-
-useEffect(() => {
+  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("userState"));
     setUsername(storedUser?.username || "");
-  }, []); 
+  }, []);
   // Fetch subject name
   useEffect(() => {
     axios
@@ -56,69 +58,70 @@ useEffect(() => {
 
   // Fetch initial data
   useEffect(() => {
-  const fetchData = async () => {
-    if (!subject) return;
+    const fetchData = async () => {
+      if (!subject) return;
 
-    try {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      // Fetch chapters
-      const chaptersRes = await axios.get(
-        `http://localhost:5000/api/chapter/${subject}`
-      );
-      const chaptersList = chaptersRes.data.chapter || [];
-      setChapters(chaptersList);
-
-      // Fetch topics
-      const topicsData = {};
-      const topicInputsData = {};
-      for (const chapter of chaptersList) {
-        const topicsRes = await axios.get(
-          `http://localhost:5000/api/topics/${chapter.id}`
+        // Fetch chapters
+        const chaptersRes = await axios.get(
+          `http://localhost:5000/api/chapter/${subject}`
         );
-        topicsData[chapter.id] = topicsRes.data.topics || [];
-        topicInputsData[chapter.id] = "";
-      }
-      setTopics(topicsData);
-      setTopicInputs(topicInputsData);
+        const chaptersList = chaptersRes.data.chapter || [];
+        setChapters(chaptersList);
 
-      // Fetch subtopics
-      const subtopicsData = {};
-      const subtopicInputsData = {};
-      const subtopicFetchPromises = [];
-
-      for (const chapter of chaptersList) {
-        for (const topic of topicsData[chapter.id] || []) {
-          const fetch = axios
-            .get(`http://localhost:5000/api/subtopics/${topic.id}`)
-            .then((res) => {
-              subtopicsData[topic.id] = res.data || [];
-              subtopicInputsData[topic.id] = "";
-            })
-            .catch((err) => {
-              console.error(`Error fetching subtopics for topic ${topic.id}:`, err);
-              subtopicsData[topic.id] = [];
-              subtopicInputsData[topic.id] = "";
-            });
-
-          subtopicFetchPromises.push(fetch);
+        // Fetch topics
+        const topicsData = {};
+        const topicInputsData = {};
+        for (const chapter of chaptersList) {
+          const topicsRes = await axios.get(
+            `http://localhost:5000/api/topics/${chapter.id}`
+          );
+          topicsData[chapter.id] = topicsRes.data.topics || [];
+          topicInputsData[chapter.id] = "";
         }
+        setTopics(topicsData);
+        setTopicInputs(topicInputsData);
+
+        // Fetch subtopics
+        const subtopicsData = {};
+        const subtopicInputsData = {};
+        const subtopicFetchPromises = [];
+
+        for (const chapter of chaptersList) {
+          for (const topic of topicsData[chapter.id] || []) {
+            const fetch = axios
+              .get(`http://localhost:5000/api/subtopics/${topic.id}`)
+              .then((res) => {
+                subtopicsData[topic.id] = res.data || [];
+                subtopicInputsData[topic.id] = "";
+              })
+              .catch((err) => {
+                console.error(
+                  `Error fetching subtopics for topic ${topic.id}:`,
+                  err
+                );
+                subtopicsData[topic.id] = [];
+                subtopicInputsData[topic.id] = "";
+              });
+
+            subtopicFetchPromises.push(fetch);
+          }
+        }
+
+        await Promise.all(subtopicFetchPromises);
+        setSubtopics(subtopicsData);
+        setSubtopicInputs(subtopicInputsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      await Promise.all(subtopicFetchPromises);
-      setSubtopics(subtopicsData);
-      setSubtopicInputs(subtopicInputsData);
-
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
-}, [subject]);
-
+    fetchData();
+  }, [subject]);
 
   // Fetch NPTEL video names
   useEffect(() => {
@@ -138,19 +141,21 @@ useEffect(() => {
     }
   }, [subject]);
 
-   // Fetch links when subtopic is selected
+  // Fetch links when subtopic is selected
   useEffect(() => {
     if (selectedSubtopicId) {
       // Fetch links for preview mode
-      axios.get(`http://localhost:5000/api/content/${selectedSubtopicId}`)
-        .then(response => {
+      axios
+        .get(`http://localhost:5000/api/content/${selectedSubtopicId}`)
+        .then((response) => {
           const grouped = groupContentBySubTopicAndLevel(response.data);
           setSubTopicData(grouped[selectedSubtopicId]);
         })
-        .catch(error => console.error('Error fetching content:', error));
+        .catch((error) => console.error("Error fetching content:", error));
 
       // Fetch links for editor
-      axios.get(`http://localhost:5000/api/links/${selectedSubtopicId}`)
+      axios
+        .get(`http://localhost:5000/api/links/${selectedSubtopicId}`)
         .then((response) => {
           const data = response.data || [];
           const categorizedLinks = { basic: [], medium: [], advanced: [] };
@@ -171,7 +176,6 @@ useEffect(() => {
         })
         .catch((error) => console.error("Error fetching links:", error));
 
-
       // Fetch NPTEL videos
       axios
         .get(`http://localhost:5000/api/videos?subTopic=${selectedSubtopicId}`)
@@ -183,25 +187,24 @@ useEffect(() => {
     }
   }, [selectedSubtopicId]);
 
-
-   // Helper function to group content for ChapterContent component
+  // Helper function to group content for ChapterContent component
   const groupContentBySubTopicAndLevel = (content) => {
     const grouped = {};
-    content.forEach(item => {
+    content.forEach((item) => {
       if (!grouped[item.subTopicId]) {
         grouped[item.subTopicId] = {
           title: `SubTopic: ${item.subTopicId}`,
-          levels: { basic: [], medium: [], advanced: [] }
+          levels: { basic: [], medium: [], advanced: [] },
         };
       }
       grouped[item.subTopicId].levels[item.level]?.push(item);
     });
     return grouped;
   };
-// Find topic ID for the selected subtopic
+  // Find topic ID for the selected subtopic
   const findTopicIdForSubtopic = (subtopicId) => {
     for (const topicId in subtopics) {
-      if (subtopics[topicId].some(st => st.id === subtopicId)) {
+      if (subtopics[topicId].some((st) => st.id === subtopicId)) {
         return topicId;
       }
     }
@@ -267,9 +270,13 @@ useEffect(() => {
         { chapter: editedChapterTitle }
       );
 
-      setChapters(chapters.map(chapter => 
-        chapter.id === chapterId ? { ...chapter, chapter: editedChapterTitle } : chapter
-      ));
+      setChapters(
+        chapters.map((chapter) =>
+          chapter.id === chapterId
+            ? { ...chapter, chapter: editedChapterTitle }
+            : chapter
+        )
+      );
       setEditingChapterId(null);
     } catch (error) {
       console.error("Error updating chapter:", error);
@@ -294,9 +301,9 @@ useEffect(() => {
         }
       );
 
-      setTopics(prev => ({
+      setTopics((prev) => ({
         ...prev,
-        [chapterId]: [...(prev[chapterId] || []), response.data.topic]
+        [chapterId]: [...(prev[chapterId] || []), response.data.topic],
       }));
       setTopicInputs({ ...topicInputs, [chapterId]: "" });
     } catch (error) {
@@ -310,9 +317,9 @@ useEffect(() => {
         `http://localhost:5000/api/delete/delete-topic/${topicId}`
       );
 
-      setTopics(prev => ({
+      setTopics((prev) => ({
         ...prev,
-        [chapterId]: prev[chapterId].filter(topic => topic.id !== topicId)
+        [chapterId]: prev[chapterId].filter((topic) => topic.id !== topicId),
       }));
 
       const newSubtopics = { ...subtopics };
@@ -337,11 +344,11 @@ useEffect(() => {
         { topic: editedTopicTitle }
       );
 
-      setTopics(prev => ({
+      setTopics((prev) => ({
         ...prev,
-        [chapterId]: prev[chapterId].map(topic =>
+        [chapterId]: prev[chapterId].map((topic) =>
           topic.id === topicId ? { ...topic, topic: editedTopicTitle } : topic
-        )
+        ),
       }));
       setEditingTopicId(null);
     } catch (error) {
@@ -360,9 +367,9 @@ useEffect(() => {
         { topicId, subtopicName }
       );
 
-      setSubtopics(prev => ({
+      setSubtopics((prev) => ({
         ...prev,
-        [topicId]: [...(prev[topicId] || []), response.data.subtopic]
+        [topicId]: [...(prev[topicId] || []), response.data.subtopic],
       }));
       setSubtopicInputs({ ...subtopicInputs, [topicId]: "" });
     } catch (error) {
@@ -376,9 +383,11 @@ useEffect(() => {
         `http://localhost:5000/api/delete/delete-subtopic/${subtopicId}`
       );
 
-      setSubtopics(prev => ({
+      setSubtopics((prev) => ({
         ...prev,
-        [topicId]: (prev[topicId] || []).filter(subtopic => subtopic.id !== subtopicId)
+        [topicId]: (prev[topicId] || []).filter(
+          (subtopic) => subtopic.id !== subtopicId
+        ),
       }));
     } catch (error) {
       console.error("Error deleting subtopic:", error);
@@ -399,11 +408,13 @@ useEffect(() => {
         { subTopic: editedSubtopicTitle }
       );
 
-      setSubtopics(prev => ({
+      setSubtopics((prev) => ({
         ...prev,
-        [topicId]: (prev[topicId] || []).map(subtopic =>
-          subtopic.id === subtopicId ? { ...subtopic, subTopic: editedSubtopicTitle } : subtopic
-        )
+        [topicId]: (prev[topicId] || []).map((subtopic) =>
+          subtopic.id === subtopicId
+            ? { ...subtopic, subTopic: editedSubtopicTitle }
+            : subtopic
+        ),
       }));
       setEditingSubtopicId(null);
     } catch (error) {
@@ -418,9 +429,9 @@ useEffect(() => {
         await axios.delete(`http://localhost:5000/api/delete-link/${id}`);
       }
 
-      setLevels(prev => ({
+      setLevels((prev) => ({
         ...prev,
-        [level]: prev[level].filter(link => String(link.id) !== String(id))
+        [level]: prev[level].filter((link) => String(link.id) !== String(id)),
       }));
     } catch (error) {
       console.error("Error deleting link:", error);
@@ -428,7 +439,7 @@ useEffect(() => {
   };
 
   const handleAddLink = (level) => {
-    setLevels(prev => ({
+    setLevels((prev) => ({
       ...prev,
       [level]: [
         ...prev[level],
@@ -438,8 +449,8 @@ useEffect(() => {
           link: "",
           description: "",
           rating: 0,
-        }
-      ]
+        },
+      ],
     }));
   };
 
@@ -452,14 +463,16 @@ useEffect(() => {
         );
       }
 
-      setNptelVideos(prev => prev.map(arr => arr.filter((_, i) => i !== index)));
+      setNptelVideos((prev) =>
+        prev.map((arr) => arr.filter((_, i) => i !== index))
+      );
     } catch (error) {
       console.error("Error deleting NPTEL link:", error);
     }
   };
 
   const handleAddNptelLink = () => {
-    setNptelVideos(prev => {
+    setNptelVideos((prev) => {
       const newVideos = prev.length > 0 ? [...prev] : [[], [], [], [], [], []];
       const newId = `new-${Date.now()}`;
       return [
@@ -468,13 +481,13 @@ useEffect(() => {
         [...newVideos[2], ""],
         [...newVideos[3], ""],
         [...newVideos[4], ""],
-        [...newVideos[5], ""]
+        [...newVideos[5], ""],
       ];
     });
   };
 
   const handleChange = (e, level, index, field) => {
-    setLevels(prev => {
+    setLevels((prev) => {
       const newLevels = { ...prev };
       newLevels[level][index][field] = e.target.value;
       return newLevels;
@@ -482,7 +495,7 @@ useEffect(() => {
   };
 
   const handleNptelChange = (e, index, fieldIndex) => {
-    setNptelVideos(prev => {
+    setNptelVideos((prev) => {
       const newVideos = [...prev];
       newVideos[fieldIndex][index] = e.target.value;
       return newVideos;
@@ -497,7 +510,7 @@ useEffect(() => {
         `http://localhost:5000/api/update-links/${selectedSubtopicId}`,
         { levels }
       );
-      
+
       // Update NPTEL videos
       if (nptelVideos.length > 0 && nptelVideos[0].length > 0) {
         await axios.put(
@@ -534,92 +547,132 @@ useEffect(() => {
     setSubtopicInputs({ ...subtopicInputs, [topicId]: value });
   };
 
- 
+  const handlePreview = () => {
+    setGlobalPreview(true);
+  };
+
   return (
     <div className="update-topic-container">
       <h3 className="page-title">Update Course Content for "{subjectName}"</h3>
-        {selectedSubtopicId ? (
-           previewMode ?  (
+
+      {/* Global Preview Mode when no subtopic is selected */}
+      {!selectedSubtopicId && globalPreview && (
+        <div className="preview-mode-container">
+          <button
+            className="back-button"
+            onClick={() => setGlobalPreview(false)}
+          >
+            ← Back to Editor
+          </button>
+          <TwoColumnPage selectedSubject={subject} username={username} />
+        </div>
+      )}
+
+      {/* Preview button when no subtopic is selected and not in global preview mode */}
+      {!selectedSubtopicId && !globalPreview && (
+        <button className="btn btn-primary" onClick={handlePreview}>
+          Preview
+        </button>
+      )}
+
+      {/* When a subtopic is selected */}
+      {selectedSubtopicId ? (
+        previewMode ? (
           <div className="preview-mode-container">
-            <button 
+            <button
               className="back-button"
               onClick={() => setPreviewMode(false)}
             >
               ← Back to Editor
             </button>
             {subTopicData ? (
-              <ChapterContent
-                subTopicData={subTopicData}
-                username={username}
-                id={selectedSubtopicId}
-                topicId={findTopicIdForSubtopic(selectedSubtopicId)}
-              />
+              <>
+                {/* <ChapterTopicTree
+                  selectedSubject={subject}
+                  onSubtopicClick={(chapterId, topicId, subtopicId) => {
+                    console.log("Selected:", {
+                      chapterId,
+                      topicId,
+                      subtopicId,
+                    });
+                    onSelect(chapterId, topicId, subtopicId); // callback to parent
+                  }}
+                /> */}
+                <ChapterContent
+                  subTopicData={subTopicData}
+                  username={username}
+                  id={selectedSubtopicId}
+                  topicId={findTopicIdForSubtopic(selectedSubtopicId)}
+                />
+              </>
             ) : (
               <div className="no-content">No content available for preview</div>
             )}
           </div>
-        ) :(
-      <LinkEditor
-        selectedSubtopicId={selectedSubtopicId}
-        setSelectedSubtopicId={setSelectedSubtopicId}
-        levels={levels}
-        setLevels={setLevels}
-        nptelVideos={nptelVideos}
-        setNptelVideos={setNptelVideos}
-        videoNames={videoNames}
-        subjectName={subjectName}
-        handleChange={handleChange}
-        handleNptelChange={handleNptelChange}
-        handleSubmit={handleSubmit}
-        handleDeleteLink={handleDeleteLink}
-        handleDeleteNptelLink={handleDeleteNptelLink}
-        handleAddLink={handleAddLink}
-        handleAddNptelLink={handleAddNptelLink}
-        setPreviewMode={setPreviewMode}
-      />
-    )
-    ) : (
-      <ChapterContents
-    chapters={chapters}
-    chapterInputs={chapterInputs}
-    topicInputs={topicInputs}
-    subtopicInputs={subtopicInputs}
-    topics={topics}
-    subtopics={subtopics}
-    editingChapterId={editingChapterId}
-     setEditedChapterTitle={setEditedChapterTitle} 
-    editingTopicId={editingTopicId}
-    editingSubtopicId={editingSubtopicId}
-    editedChapterTitle={editedChapterTitle}
-    editedTopicTitle={editedTopicTitle}
-    editedSubtopicTitle={editedSubtopicTitle}
-    selectedSubtopicId={selectedSubtopicId}
-    loading={loading}
-    handleEditChapter={handleEditChapter}
-    handleDeleteChapter={handleDeleteChapter}
-    handleSaveChapterEdit={handleSaveChapterEdit}
-    setEditingChapterId={setEditingChapterId}
-    handleChapterInputChange={handleChapterInputChange}
-    handleAddChapter={handleAddChapter}
-    handleTopicInputChange={handleTopicInputChange}
-    handleAddTopic={handleAddTopic}
-    handleEditTopic={handleEditTopic}
-    handleDeleteTopic={handleDeleteTopic}
-    handleSaveTopicEdit={handleSaveTopicEdit}
-    setEditingTopicId={setEditingTopicId}
-    handleSubtopicInputChange={handleSubtopicInputChange}
-    handleAddSubtopic={handleAddSubtopic}
-    handleEditSubtopic={handleEditSubtopic}
-    handleDeleteSubtopic={handleDeleteSubtopic}
-    handleSaveSubtopicEdit={handleSaveSubtopicEdit}
-    setEditingSubtopicId={setEditingSubtopicId}
-    setSelectedSubtopicId={setSelectedSubtopicId}
-    setEditedTopicTitle={setEditedTopicTitle}
-    setEditedSubtopicTitle={setEditedSubtopicTitle}
-  />
-    )}
-  </div>
-);
+        ) : (
+          <LinkEditor
+            selectedSubtopicId={selectedSubtopicId}
+            setSelectedSubtopicId={setSelectedSubtopicId}
+            levels={levels}
+            setLevels={setLevels}
+            nptelVideos={nptelVideos}
+            setNptelVideos={setNptelVideos}
+            videoNames={videoNames}
+            subjectName={subjectName}
+            handleChange={handleChange}
+            handleNptelChange={handleNptelChange}
+            handleSubmit={handleSubmit}
+            handleDeleteLink={handleDeleteLink}
+            handleDeleteNptelLink={handleDeleteNptelLink}
+            handleAddLink={handleAddLink}
+            handleAddNptelLink={handleAddNptelLink}
+            setPreviewMode={setPreviewMode}
+          />
+        )
+      ) : (
+        !globalPreview && (
+          <ChapterContents
+            chapters={chapters}
+            chapterInputs={chapterInputs}
+            topicInputs={topicInputs}
+            subtopicInputs={subtopicInputs}
+            topics={topics}
+            subtopics={subtopics}
+            editingChapterId={editingChapterId}
+            setEditedChapterTitle={setEditedChapterTitle}
+            editingTopicId={editingTopicId}
+            editingSubtopicId={editingSubtopicId}
+            editedChapterTitle={editedChapterTitle}
+            editedTopicTitle={editedTopicTitle}
+            editedSubtopicTitle={editedSubtopicTitle}
+            selectedSubtopicId={selectedSubtopicId}
+            loading={loading}
+            handleEditChapter={handleEditChapter}
+            handleDeleteChapter={handleDeleteChapter}
+            handleSaveChapterEdit={handleSaveChapterEdit}
+            setEditingChapterId={setEditingChapterId}
+            handleChapterInputChange={handleChapterInputChange}
+            handleAddChapter={handleAddChapter}
+            handleTopicInputChange={handleTopicInputChange}
+            handleAddTopic={handleAddTopic}
+            handleEditTopic={handleEditTopic}
+            handleDeleteTopic={handleDeleteTopic}
+            handleSaveTopicEdit={handleSaveTopicEdit}
+            setEditingTopicId={setEditingTopicId}
+            handleSubtopicInputChange={handleSubtopicInputChange}
+            handleAddSubtopic={handleAddSubtopic}
+            handleEditSubtopic={handleEditSubtopic}
+            handleDeleteSubtopic={handleDeleteSubtopic}
+            handleSaveSubtopicEdit={handleSaveSubtopicEdit}
+            setEditingSubtopicId={setEditingSubtopicId}
+            setSelectedSubtopicId={setSelectedSubtopicId}
+            setEditedTopicTitle={setEditedTopicTitle}
+            setEditedSubtopicTitle={setEditedSubtopicTitle}
+          />
+        )
+      )}
+    </div>
+  );
 };
 
 export default UpdateTopic;

@@ -54,7 +54,7 @@ const Home = () => {
   }, [username]);
 
   const facultyFeatures = [
-    { path: "/facultyindex/add", label: "Add Course", icon: "📚" },
+    // { path: "/facultyindex/add", label: "Add Course", icon: "📚" },
     { path: "/facultyindex/update", label: "Update Course", icon: "✏️" },
     { path: "/facultyindex/addvfstrvideo", label: "Add VFSTR Video", icon: "🎥" },
     { path: "/facultyindex/addfacultydetails", label: "Add Faculty Details", icon: "👨‍🏫" },

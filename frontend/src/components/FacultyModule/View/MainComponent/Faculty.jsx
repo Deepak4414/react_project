@@ -24,7 +24,6 @@ function Faculty({ isLoggedIn }) {
   const [userState, setUserState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const loadUserData = () => {
       try {
@@ -72,10 +71,7 @@ function Faculty({ isLoggedIn }) {
           <Route path="/addQuestion" element={<QuestionInsertion />}/>
           <Route path="/fetch-subject-for-question" element={<FetchSubject />} />
           <Route path="/live-channel-program-guide" element={<LiveChannelProgramGuide />} />
-          <Route 
-            path="/explore-material" 
-            element={<ExploreMaterial username={userState?.username} />} 
-          />
+          <Route path="/explore-material" element={<ExploreMaterial />} />
           <Route path="/logout" element={<Logout />} />
         </Routes>
       </div>
