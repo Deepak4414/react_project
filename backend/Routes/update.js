@@ -140,5 +140,39 @@ router.put('/update-subtopic-name/subtopics/:id', async (req, res) => {
   }
 });
 
+router.get('/subtopic-metadata/:subtopicId', async (req, res) => {
+  const subtopicId = req.params.subtopicId;
+  try {
+    const rows = await db.query(
+      `
+      SELECT 
+        subtopics.id AS subtopicId,
+        subtopics.topicId AS topicId,
+        topics.chapterId AS chapterId
+      FROM subtopics
+      INNER JOIN topics ON subtopics.topicId = topics.id
+      WHERE subtopics.id = ?
+      `,
+      [subtopicId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Subtopic not found' });
+    }
+
+    const result = rows[0];
+
+    res.json({
+      subtopicId: result.subtopicId,
+      topicId: result.topicId,
+      chapterId: result.chapterId
+    });
+
+  } catch (err) {
+    console.error('Error fetching subtopic metadata:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 module.exports = router;

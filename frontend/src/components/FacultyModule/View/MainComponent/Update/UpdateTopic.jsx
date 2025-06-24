@@ -4,12 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../../../Css/ShowAllTopicAndSubtopic.css";
 import LinkEditor from "./LinkEditor"; // Adjust path as needed
 import ChapterContents from "./ChapterContents"; // Adjust the path if needed
-import ChapterContent from "../../../../StudentModule/View/MainComponent/ExploreMaterial/ChapterContent"; // Adjust the path if needed
+import TwoColumnPageForFaculty from "./TwoColumnPageForFaculty"; // Adjust the path if needed
 import TwoColumnPage from "../../../../StudentModule/View/MainComponent/ExploreMaterial/TwoColumnPage"; // Adjust the path if needed
-import ChapterTopicTree from "./ChapterTopicTree"; // Adjust the path if needed
 const UpdateTopic = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { course, branch, semester, subject } = location.state || {};
   const [username, setUsername] = useState("");
   const [subTopicData, setSubTopicData] = useState(null);
@@ -24,6 +22,7 @@ const UpdateTopic = () => {
   const [editedTopicTitle, setEditedTopicTitle] = useState("");
   const [editingSubtopicId, setEditingSubtopicId] = useState(null);
   const [editedSubtopicTitle, setEditedSubtopicTitle] = useState("");
+  const [topicId, setTopicId] = useState(null);
 
   const [previewMode, setPreviewMode] = useState(false);
   const [globalPreview, setGlobalPreview] = useState(false);
@@ -201,16 +200,8 @@ const UpdateTopic = () => {
     });
     return grouped;
   };
-  // Find topic ID for the selected subtopic
-  const findTopicIdForSubtopic = (subtopicId) => {
-    for (const topicId in subtopics) {
-      if (subtopics[topicId].some((st) => st.id === subtopicId)) {
-        return topicId;
-      }
-    }
-    return null;
-  };
 
+  
   // Chapter CRUD operations
   const handleAddChapter = async () => {
     const newChapterName = chapterInputs["new"];
@@ -587,22 +578,10 @@ const UpdateTopic = () => {
             </button>
             {subTopicData ? (
               <>
-                {/* <ChapterTopicTree
+                <TwoColumnPageForFaculty
                   selectedSubject={subject}
-                  onSubtopicClick={(chapterId, topicId, subtopicId) => {
-                    console.log("Selected:", {
-                      chapterId,
-                      topicId,
-                      subtopicId,
-                    });
-                    onSelect(chapterId, topicId, subtopicId); // callback to parent
-                  }}
-                /> */}
-                <ChapterContent
-                  subTopicData={subTopicData}
                   username={username}
-                  id={selectedSubtopicId}
-                  topicId={findTopicIdForSubtopic(selectedSubtopicId)}
+                  selectedSubtopicIds={selectedSubtopicId} 
                 />
               </>
             ) : (

@@ -5,7 +5,7 @@ import '../../Css/TwoColumnPage.css';
 import './SelectTopicSubTopic.css';
 
 const SelectTopicSubTopic = ({ selectedSubject, username, onSubtopicSelect }) => {
-  console.log("Selected Subject:", selectedSubject, "Username:", username, "onSubtopicSelect:", onSubtopicSelect);
+  // console.log("Selected Subject:", selectedSubject, "Username:", username, "onSubtopicSelect:", onSubtopicSelect);
   const [chapters, setChapters] = useState([]);
   const [topics, setTopics] = useState({});
   const [subtopics, setSubtopics] = useState({});
