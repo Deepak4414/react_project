@@ -39,6 +39,9 @@ const ChapterContents = ({
   setSelectedSubtopicId,
   setEditedTopicTitle,
   setEditedSubtopicTitle,
+  setDeleteSubtopicModalInfo,
+  setDeleteTopicModalInfo,
+  setDeleteChapterModalInfo,
 }) => {
   // State for reordering
   const [localChapters, setLocalChapters] = useState(chapters);
@@ -195,7 +198,13 @@ const ChapterContents = ({
                               </button>
                               <button
                                 className="delete-btn"
-                                onClick={() => handleDeleteChapter(chapter.id)}
+                                onClick={() => 
+                                  // handleDeleteChapter(chapter.id)
+                                  setDeleteChapterModalInfo({
+                                    open: true,
+                                    chapterId: chapter.id,
+                                  })
+                                }
                               >
                                 ×
                               </button>
@@ -288,7 +297,13 @@ const ChapterContents = ({
                                             <button
                                               className="delete-btn"
                                               onClick={() =>
-                                                handleDeleteTopic(chapter.id, topic.id)
+                                                // handleDeleteTopic(chapter.id, topic.id)
+                                                setDeleteTopicModalInfo({
+                                                  open: true,
+                                                  chapterId: chapter.id,
+                                                  topicId: topic.id,
+
+                                                })
                                               }
                                             >
                                               ×
@@ -397,7 +412,12 @@ const ChapterContents = ({
                                                               className="delete-btn"
                                                               onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                handleDeleteSubtopic(topic.id, subtopic.id);
+                                                                // handleDeleteSubtopic(topic.id, subtopic.id);
+                                                                setDeleteSubtopicModalInfo({
+                                                                      open: true,
+                                                                      topicId: topic.id,
+                                                                      subtopicId: subtopic.id,
+                                                                  });
                                                               }}
                                                             >
                                                               ×

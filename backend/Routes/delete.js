@@ -81,4 +81,26 @@ router.delete("/delete-nptel/:subtopic_id", async (req, res) => {
   }
 });
 
+// DELETE VFSTR video by ID
+router.delete("/delete-vfstr/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if the VFSTR video exists
+    const [existing] = await db.query("SELECT * FROM vfstr_videos WHERE id = ?", [id]);
+
+    if (!existing || existing.length === 0) {
+      return res.status(404).json({ message: "VFSTR video not found." });
+    }
+
+    // Delete the VFSTR video
+    await db.query("DELETE FROM vfstr_videos WHERE id = ?", [id]);
+
+    res.status(200).json({ message: "VFSTR video deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting VFSTR video:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 module.exports = router;

@@ -28,13 +28,14 @@ const processUpload = (req, res, next) => {
         }
     
     const subject = results[0].subjectName || "default"; // Use "default" if missing
-    req.uploadPath = `D:/videos/VFSTR/${subject}/FILES`;
+    req.uploadPath = `/home/vignan/videos/VFSTR/${subject}/FILES`;
     ensureUploadFolderExists(req.uploadPath);
     next();
   });
 });
 };
 
+// 2️⃣ Upload video route (Moves file after parsing body)
 router.post("/upload-vfstr-video", processUpload, (req, res) => {
   try {
     const { id, title, description, video, videoLevel, subject, topicId, subTopicId, facultyName } = req.body;
@@ -98,7 +99,6 @@ router.post("/upload-vfstr-video", processUpload, (req, res) => {
 
 
 
-
 // Video folder
 router.get("/vfstrvideos/:subject", (req, res) => {
   const subject = req.params.subject;
@@ -111,7 +111,7 @@ router.get("/vfstrvideos/:subject", (req, res) => {
     }
     if(results[0].subjectName.length){
     // fetch video files from the subject folder
-    const VIDEO_FOLDER = `D:/Videos/VFSTR/${results[0].subjectName}`;
+    const VIDEO_FOLDER = `/home/vignan/Videos/VFSTR/${results[0].subjectName}`;
     fs.readdir(VIDEO_FOLDER, (err, files) => {
       if (err) {
         console.error("Error reading folder:", err);
@@ -132,20 +132,4 @@ router.get("/vfstrvideos/:subject", (req, res) => {
   }
   });
 });
-
-router.get("/get-vfstr/:subtopicId", (req, res) => {
-  const { subtopicId } = req.params;
-  db.query(
-    "SELECT * FROM vfstr_videos WHERE subTopicId = ?",
-    [subtopicId],
-    (err, results) => {
-      if (err) return res.status(500).json({ error: err });
-      res.json(results);
-    }
-  );
-});
-
-
-
-
 module.exports = router;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const SaveVfstrVideo = () => {
+const SaveVfstrVideo = (selectedSubTopicId) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { subject } = location.state || {};
@@ -120,9 +120,9 @@ const SaveVfstrVideo = () => {
       <div className="row">
         {/* Left Column: Form */}
         <div className="col-md-6">
-          <h4 className="mb-3">Upload VFSTR Video</h4>
+          {/* <h4 className="mb-3">Upload VFSTR Video</h4> */}
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="form-label">Select Chapter</label>
             <select className="form-select" value={selectedChapter} onChange={(e) => setSelectedChapter(e.target.value)}>
               <option value="">-- Select Chapter --</option>
@@ -156,9 +156,8 @@ const SaveVfstrVideo = () => {
                 </div>
               )}
             </>
-          )}
-
-          {selectedSubTopic && (
+          )} */}
+          {selectedSubTopicId && (
             <div>
               {videoForms.map(form => (
                 <div key={form.id} className="border p-3 rounded mb-4 shadow-sm bg-light">
@@ -219,7 +218,7 @@ const SaveVfstrVideo = () => {
           )}
         </div>
 
-        {/* Right Column: Preview */}
+        {/* Right Column: Preview
         <div className="col-md-6">
           <h5 className="mb-3">Live Preview</h5>
           {videoForms.map(form => (
@@ -233,7 +232,7 @@ const SaveVfstrVideo = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

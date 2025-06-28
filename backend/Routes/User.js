@@ -23,4 +23,40 @@ router.get("/user", (req, res) => {
   );
 });
 
+const bcrypt = require("bcrypt");
+
+router.post("/verify-password", (req, res) => {
+  const { username, password } = req.body;
+
+  const query = "SELECT password FROM users WHERE username = ? LIMIT 1";
+
+  db.query(query, [username], async (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ success: false });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+
+    const user = results[0];
+
+    try {
+      const match = await bcrypt.compare(password, user.password); 
+
+      if (match) {
+        return res.json({ success: true });
+      } else {
+        return res.status(401).json({ success: false, message: "Incorrect password" });
+      }
+    } catch (error) {
+      console.error("Bcrypt error:", error);
+      return res.status(500).json({ success: false });
+    }
+  });
+});
+
+
+
 module.exports = router;

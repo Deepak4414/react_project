@@ -6,6 +6,8 @@ import LinkEditor from "./LinkEditor"; // Adjust path as needed
 import ChapterContents from "./ChapterContents"; // Adjust the path if needed
 import TwoColumnPageForFaculty from "./TwoColumnPageForFaculty"; // Adjust the path if needed
 import TwoColumnPage from "../../../../StudentModule/View/MainComponent/ExploreMaterial/TwoColumnPage"; // Adjust the path if needed
+import DeleteConfirmModal from "./ConfirmDeleteModal"; // Adjust the path if needed
+
 const UpdateTopic = () => {
   const location = useLocation();
   const { course, branch, semester, subject } = location.state || {};
@@ -23,6 +25,23 @@ const UpdateTopic = () => {
   const [editingSubtopicId, setEditingSubtopicId] = useState(null);
   const [editedSubtopicTitle, setEditedSubtopicTitle] = useState("");
   const [topicId, setTopicId] = useState(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteSubtopicModalInfo, setDeleteSubtopicModalInfo] = useState({
+    open: false,
+    topicId: null,
+    subtopicId: null,
+  });
+
+  const [deleteTopicModalInfo, setDeleteTopicModalInfo] = useState({
+    open: false,
+    topicId: null,
+  });
+
+  const [deleteChapterModalInfo, setDeleteChapterModalInfo] = useState({
+    open: false,
+    chapterId: null,
+  });
 
   const [previewMode, setPreviewMode] = useState(false);
   const [globalPreview, setGlobalPreview] = useState(false);
@@ -201,7 +220,6 @@ const UpdateTopic = () => {
     return grouped;
   };
 
-  
   // Chapter CRUD operations
   const handleAddChapter = async () => {
     const newChapterName = chapterInputs["new"];
@@ -232,12 +250,41 @@ const UpdateTopic = () => {
     }
   };
 
-  const handleDeleteChapter = async (chapterId) => {
+  const handleDeleteChapter = async (chapterId, password) => {
     try {
-      await axios.delete(
+      if (!username) {
+        alert("Username not available. Please login again.");
+        return;
+      }
+
+      if (!password) {
+        alert("Password is required.");
+        return;
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/verify-password",
+        {
+          username,
+          password,
+        }
+      );
+
+      if (!res.data.success) {
+        alert(res.data.message || "Password is incorrect.");
+        return;
+      }
+
+      const deleteRes = await axios.delete(
         `http://localhost:5000/api/delete/delete-chapter/${chapterId}`
       );
-      setChapters(chapters.filter((chapter) => chapter.id !== chapterId));
+      if (deleteRes.status === 200 || deleteRes.status === 204) {
+        setChapters(chapters.filter((chapter) => chapter.id !== chapterId));
+        alert("Chapter deleted successfully.");
+      } else {
+        alert("Failed to delete Chapter. Try again later.");
+      }
+      setDeleteChapterModalInfo({ open: false, chapterId: null });
 
       const newTopics = { ...topics };
       delete newTopics[chapterId];
@@ -302,17 +349,43 @@ const UpdateTopic = () => {
     }
   };
 
-  const handleDeleteTopic = async (chapterId, topicId) => {
+  const handleDeleteTopic = async (chapterId, topicId, password) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/delete/delete-topic/${topicId}`
+      if (!username) {
+        alert("Username not available. Please login again.");
+        return;
+      }
+
+      if (!password) {
+        alert("Password is required.");
+        return;
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/verify-password",
+        {
+          username,
+          password,
+        }
       );
 
-      setTopics((prev) => ({
-        ...prev,
-        [chapterId]: prev[chapterId].filter((topic) => topic.id !== topicId),
-      }));
-
+      if (!res.data.success) {
+        alert(res.data.message || "Password is incorrect.");
+        return;
+      }
+      const deleteRes = await axios.delete(
+        `http://localhost:5000/api/delete/delete-topic/${topicId}`
+      );
+      if (deleteRes.status === 200 || deleteRes.status === 204) {
+        setTopics((prev) => ({
+          ...prev,
+          [chapterId]: prev[chapterId].filter((topic) => topic.id !== topicId),
+        }));
+        alert("Topic deleted successfully.");
+      } else {
+        alert("Failed to delete Topic. Try again later.");
+      }
+      setDeleteTopicModalInfo({ open: false, topicId: null });
       const newSubtopics = { ...subtopics };
       delete newSubtopics[topicId];
       setSubtopics(newSubtopics);
@@ -368,19 +441,81 @@ const UpdateTopic = () => {
     }
   };
 
-  const handleDeleteSubtopic = async (topicId, subtopicId) => {
+  // const handleDeleteSubtopic = async (topicId, subtopicId) => {
+  //   try {
+  //     await axios.delete(
+  //       `http://localhost:5000/api/delete/delete-subtopic/${subtopicId}`
+  //     );
+
+  //     setSubtopics((prev) => ({
+  //       ...prev,
+  //       [topicId]: (prev[topicId] || []).filter(
+  //         (subtopic) => subtopic.id !== subtopicId
+  //       ),
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error deleting subtopic:", error);
+  //   }
+  // };
+
+  const handleDeleteSubtopic = async (topicId, subtopicId, password) => {
     try {
-      await axios.delete(
+      if (!username) {
+        alert("Username not available. Please login again.");
+        return;
+      }
+
+      if (!password) {
+        alert("Password is required.");
+        return;
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/verify-password",
+        {
+          username,
+          password,
+        }
+      );
+
+      if (!res.data.success) {
+        alert(res.data.message || "Password is incorrect.");
+        return;
+      }
+
+      const deleteRes = await axios.delete(
         `http://localhost:5000/api/delete/delete-subtopic/${subtopicId}`
       );
 
-      setSubtopics((prev) => ({
-        ...prev,
-        [topicId]: (prev[topicId] || []).filter(
-          (subtopic) => subtopic.id !== subtopicId
-        ),
-      }));
+      if (deleteRes.status === 200 || deleteRes.status === 204) {
+        setSubtopics((prev) => ({
+          ...prev,
+          [topicId]: (prev[topicId] || []).filter(
+            (subtopic) => subtopic.id !== subtopicId
+          ),
+        }));
+
+        alert("Subtopic deleted successfully.");
+      } else {
+        alert("Failed to delete subtopic. Try again later.");
+      }
+
+      setDeleteSubtopicModalInfo({
+        open: false,
+        topicId: null,
+        subtopicId: null,
+      });
     } catch (error) {
+      if (error.response) {
+        alert(
+          `Error: ${error.response.data?.message || "Server error occurred."}`
+        );
+      } else if (error.request) {
+        alert("No response from server. Check your connection.");
+      } else {
+        alert("Unexpected error: " + error.message);
+      }
+
       console.error("Error deleting subtopic:", error);
     }
   };
@@ -518,8 +653,32 @@ const UpdateTopic = () => {
         );
       }
 
+      for (const video of vfstrVideos) {
+        const formData = new FormData();
+        formData.append("id", video.id); // ✅ SEND ID (needed for update)
+        formData.append("title", video.title);
+        formData.append("description", video.description);
+        formData.append("video", video.video);
+        formData.append("videoLevel", video.videoLevel);
+        formData.append("videoFile", video.textFile); // file may be null
+        formData.append("level", video.videoLevel);
+        formData.append("subject", subject);
+        formData.append("topicId", topicId);
+        formData.append("subTopicId", selectedSubtopicId);
+        formData.append("facultyName", video.facultyName || ""); // Optional
+
+
+        await axios.post(
+          "http://localhost:5000/api/upload-vfstr-video",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      }
+
       alert("Updated successfully!");
-      setSelectedSubtopicId(null);
+      // setSelectedSubtopicId(null);
     } catch (error) {
       console.error("Error updating links:", error);
     }
@@ -542,9 +701,144 @@ const UpdateTopic = () => {
     setGlobalPreview(true);
   };
 
+  // handle vfstr video upload
+  const [vfstrVideos, setVfstrVideos] = useState([]);
+  const [vfstrVideoNames, setVfstrVideoNames] = useState([]);
+  const [faculties, setFaculties] = useState([]);
+  const [selectedFaculty, setSelectedFaculty] = useState("");
+
+  useEffect(() => {
+    const fetchVFSTRVideos = async () => {
+      if (!selectedSubtopicId || !subject) return;
+
+      setVfstrVideos([]);
+      setVfstrVideoNames([]);
+
+      try {
+        const res = await axios.get("http://localhost:5000/api/vfstr-videos", {
+          params: { subTopic: selectedSubtopicId },
+        });
+
+        const data = res.data || {};
+        // Set video records to UI (even if empty)
+        setVfstrVideos(
+          (data.videofiles || []).map((v) => ({
+            id: v.id,
+            isNew: false,
+            title: v.title,
+            description: v.description,
+            video: v.video_name,
+            videoLevel: v.video_level,
+            facultyName: v.faculty_name,
+            textFile: null,
+          }))
+        );
+
+        // If video files were returned, use them
+        if (Array.isArray(data.videos) && data.videos.length > 0) {
+          setVfstrVideoNames(data.videos);
+        } else {
+          // 🔁 Fallback: fetch video names using subjectId
+          const fallbackRes = await axios.get(
+            `http://localhost:5000/api/vfstrvideos/${subject}`
+          );
+          setVfstrVideoNames(fallbackRes.data[0] || []);
+        }
+      } catch (error) {
+        console.error("Error fetching VFSTR videos:", error);
+
+        // 🔁 If /vfstr-videos failed, still try to load filenames
+        try {
+          const fallbackRes = await axios.get(
+            `http://localhost:5000/api/vfstrvideos/${subject}`
+          );
+          setVfstrVideoNames(fallbackRes.data[0] || []);
+        } catch (err2) {
+          console.error("Fallback video name fetch error:", err2);
+        }
+      }
+    };
+
+    fetchVFSTRVideos();
+  }, [selectedSubtopicId, subject]);
+
+  const handleDeleteVfstrLink = async (index) => {
+    const video = vfstrVideos[index];
+    const videoId = video.id;
+
+    console.log("Deleting VFSTR video with ID:", videoId);
+
+    try {
+      // 🧠 Only call backend if it's not a newly created entry
+      if (videoId && !String(videoId).startsWith("new-")) {
+        await axios.delete(
+          `http://localhost:5000/api/delete/delete-vfstr/${videoId}`
+        );
+      }
+
+      // 🧹 Always remove from UI
+      setVfstrVideos((prev) => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting VFSTR video:", error);
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/fetch-faculties")
+      .then((res) => setFaculties(res.data))
+      .catch((err) => console.error("Faculty fetch error:", err));
+  }, []);
+
   return (
     <div className="update-topic-container">
       <h3 className="page-title">Update Course Content for "{subjectName}"</h3>
+      <DeleteConfirmModal
+        isOpen={deleteSubtopicModalInfo.open}
+        itemName="subtopic"
+        onClose={() =>
+          setDeleteSubtopicModalInfo({
+            open: false,
+            topicId: null,
+            subtopicId: null,
+          })
+        }
+        onConfirm={(password) =>
+          handleDeleteSubtopic(
+            deleteSubtopicModalInfo.topicId,
+            deleteSubtopicModalInfo.subtopicId,
+            password
+          )
+        }
+      />
+      <DeleteConfirmModal
+        isOpen={deleteTopicModalInfo.open}
+        itemName="Topic"
+        onClose={() =>
+          setDeleteTopicModalInfo({
+            open: false,
+            chapterId: null,
+            topicId: null,
+          })
+        }
+        onConfirm={(password) =>
+          handleDeleteTopic(
+            deleteTopicModalInfo.chapterId,
+            deleteTopicModalInfo.topicId,
+            password
+          )
+        }
+      />
+      <DeleteConfirmModal
+        isOpen={deleteChapterModalInfo.open}
+        itemName="Chapter"
+        onClose={() =>
+          setDeleteChapterModalInfo({ open: false, chapterId: null })
+        }
+        onConfirm={(password) =>
+          handleDeleteChapter(deleteChapterModalInfo.chapterId, password)
+        }
+      />
 
       {/* Global Preview Mode when no subtopic is selected */}
       {!selectedSubtopicId && globalPreview && (
@@ -581,7 +875,7 @@ const UpdateTopic = () => {
                 <TwoColumnPageForFaculty
                   selectedSubject={subject}
                   username={username}
-                  selectedSubtopicIds={selectedSubtopicId} 
+                  selectedSubtopicIds={selectedSubtopicId}
                 />
               </>
             ) : (
@@ -606,6 +900,13 @@ const UpdateTopic = () => {
             handleAddLink={handleAddLink}
             handleAddNptelLink={handleAddNptelLink}
             setPreviewMode={setPreviewMode}
+            vfstrVideos={vfstrVideos}
+            setVfstrVideos={setVfstrVideos}
+            vfstrVideoNames={vfstrVideoNames}
+            faculties={faculties}
+            selectedFaculty={selectedFaculty}
+            setSelectedFaculty={setSelectedFaculty}
+            handleDeleteVfstrLink={handleDeleteVfstrLink}
           />
         )
       ) : (
@@ -647,6 +948,9 @@ const UpdateTopic = () => {
             setSelectedSubtopicId={setSelectedSubtopicId}
             setEditedTopicTitle={setEditedTopicTitle}
             setEditedSubtopicTitle={setEditedSubtopicTitle}
+            setDeleteSubtopicModalInfo={setDeleteSubtopicModalInfo}
+            setDeleteTopicModalInfo={setDeleteTopicModalInfo}
+            setDeleteChapterModalInfo={setDeleteChapterModalInfo}
           />
         )
       )}

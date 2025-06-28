@@ -1,3 +1,5 @@
+import SaveVfstrVideo from "../AddVfstrVideo/SaveVfstrVideo";
+
 // LinkEditor.js
 const LinkEditor = ({
   selectedSubtopicId,
@@ -16,6 +18,13 @@ const LinkEditor = ({
   handleAddLink,
   handleAddNptelLink,
   setPreviewMode,
+  vfstrVideos,
+  setVfstrVideos,
+  vfstrVideoNames,
+  faculties,
+  selectedFaculty,
+  setSelectedFaculty,
+  handleDeleteVfstrLink,
 }) => {
   return (
     <div className="link-editor">
@@ -89,7 +98,6 @@ const LinkEditor = ({
                 + Add Video
               </button>
             </div>
-
             {Array.isArray(nptelVideos[1]) && nptelVideos[1].length === 0 ? (
               <p className="no-content">No NPTEL content available.</p>
             ) : (
@@ -149,9 +157,135 @@ const LinkEditor = ({
                 </div>
               ))
             )}
+
+            <div className="section-header">
+              <h5>VFSTR Videos</h5>
+              <button
+                type="button"
+                className="add-link-btn"
+                onClick={() =>
+                  setVfstrVideos([
+                    ...vfstrVideos,
+                    {
+                      id: `new-${Date.now()}`, // Consistent ID with NPTEL format
+                      isNew: true, 
+                      title: "",
+                      description: "",
+                      video: "",
+                      videoLevel: "",
+                      facultyName: "",
+                      textFile: null,
+                    },
+                  ])
+                }
+              >
+                + Add Video
+              </button>
+            </div>
+            {vfstrVideos.length === 0 ? (
+              <p className="no-content">No VFSTR content available.</p>
+            ) : (
+              vfstrVideos.map((form, index) => (
+                <div key={form.id || index} className="link-item">
+                  <button
+                    type="button"
+                    className="delete-link-btn"
+                    onClick={() => handleDeleteVfstrLink(index)}
+                  >
+                    ×
+                  </button>
+
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Video Title"
+                    value={form.title}
+                    onChange={(e) => {
+                      const updated = [...vfstrVideos];
+                      updated[index].title = e.target.value;
+                      setVfstrVideos(updated);
+                    }}
+                  />
+
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Video Description"
+                    rows="2"
+                    value={form.description}
+                    onChange={(e) => {
+                      const updated = [...vfstrVideos];
+                      updated[index].description = e.target.value;
+                      setVfstrVideos(updated);
+                    }}
+                  />
+
+                  <select
+                    className="form-control mb-2"
+                    value={form.video}
+                    onChange={(e) => {
+                      const updated = [...vfstrVideos];
+                      updated[index].video = e.target.value;
+                      setVfstrVideos(updated);
+                    }}
+                  >
+                    <option value="">-- Select Video File --</option>
+                    {vfstrVideoNames.map((v, i) => (
+                      <option key={i} value={v}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className="form-control mb-2"
+                    value={form.videoLevel}
+                    onChange={(e) => {
+                      const updated = [...vfstrVideos];
+                      updated[index].videoLevel = e.target.value;
+                      setVfstrVideos(updated);
+                    }}
+                  >
+                    <option value="">-- Select Level --</option>
+                    <option value="Basic">Basic</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="form-control mb-2"
+                    onChange={(e) => {
+                      const updated = [...vfstrVideos];
+                      updated[index].textFile = e.target.files[0];
+                      setVfstrVideos(updated);
+                    }}
+                  />
+
+                  <div className="form-group mt-3">
+                    <label>Faculty Name</label>
+                    <select
+                      className="form-control"
+                      value={form.facultyName}
+                      onChange={(e) => {
+                        const updated = [...vfstrVideos];
+                        updated[index].facultyName = e.target.value;
+                        setVfstrVideos(updated);
+                      }}
+                    >
+                      <option value="">-- Select Faculty --</option>
+                      {faculties.map((f) => (
+                        <option key={f._id} value={f.name}>
+                          {f.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-
         <button type="submit" className="submit-btn">
           Save Changes
         </button>

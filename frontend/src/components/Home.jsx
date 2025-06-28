@@ -12,7 +12,13 @@ const Home = () => {
   if (userState) {
     try {
       const { role } = JSON.parse(userState);
-      rolePath = role === "student" ? "/studentindex" : "/facultyindex";
+      if (role === "student") {
+        rolePath = "/studentindex";
+      } else if (role === "faculty") {
+        rolePath = "/facultyindex";
+      } else if (role === "admin") {
+        rolePath = "/adminindex";
+      }
     } catch (e) {
       console.error("Invalid userState in localStorage");
     }
