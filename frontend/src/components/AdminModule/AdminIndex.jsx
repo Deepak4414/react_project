@@ -7,7 +7,7 @@ import ManageProgram from './ManageProgram';
 import Contact from '../OtherComponent/Contact';
 import Terms from '../OtherComponent/Terms';
 import Privacy from '../OtherComponent/Privacy';
-
+import FacultyRegistration from './FacultyRegistration'; 
 
 const AdminIndex = () => {
   const location = useLocation();
@@ -36,6 +36,7 @@ const AdminIndex = () => {
             <li><Link to={`${basePath}/branches`}>Disciplines</Link></li>
             <li><Link to={`${basePath}/semesters`}>Semesters</Link></li>
             <li><Link to={`${basePath}/subjects`}>Courses</Link></li>
+             <li><Link to={`${basePath}/faculty-registration`}>Faculty Registration</Link></li>
           </ul>
         </nav>
         <main style={{ flex: 1, padding: '1rem', textAlign: 'center' }}>
@@ -46,6 +47,8 @@ const AdminIndex = () => {
             <Route path="branches" element={<ManageDiscipline />} />
             <Route path="semesters" element={<ManageSemesters />} />
             <Route path="subjects" element={<ManageCourses />} />
+            <Route path="faculty-registration" element= {<FacultyRegistration/>}/>
+            {/* Add other routes as needed */}
             <Route path="contact" element={<Contact />} />
             <Route path="terms" element={<Terms />} />
             <Route path="privacy" element={<Privacy />} />
