@@ -5,6 +5,9 @@ const FacultyRegistration = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    role : "faculty", // Default role for faculty registration
+    name: "",
+    email: "",
   });
 
   const handleChange = (e) => {
@@ -14,7 +17,7 @@ const FacultyRegistration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/faculty/register", formData);
+      const res = await axios.post("http://localhost:5000/api/register", formData);
       alert(res.data.message);
       setFormData({ username: "", password: "" });
     } catch (error) {

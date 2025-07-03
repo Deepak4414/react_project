@@ -8,7 +8,8 @@ import Contact from '../OtherComponent/Contact';
 import Terms from '../OtherComponent/Terms';
 import Privacy from '../OtherComponent/Privacy';
 import FacultyRegistration from './FacultyRegistration'; 
-
+import AddFacultyDetalis from './AddFacultyDetalis/AddFacultyDetalis'; // Adjust the import path as necessary
+import './AdminIndex.css'; // Import the CSS file for styling
 const AdminIndex = () => {
   const location = useLocation();
   const currentPath = location.pathname.endsWith('/') 
@@ -31,12 +32,13 @@ const AdminIndex = () => {
       <div style={{ display: 'flex', minHeight: '100vh' }}>
         <nav style={{ width: '220px', background: '#eee', padding: '1rem' }}>
           <h3>Admin Panel</h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul style={{ listStyle: 'none', padding: 0 }} className='admin-nav-list'>
             <li><Link to={`${basePath}/courses`}>Programs</Link></li>
             <li><Link to={`${basePath}/branches`}>Disciplines</Link></li>
             <li><Link to={`${basePath}/semesters`}>Semesters</Link></li>
             <li><Link to={`${basePath}/subjects`}>Courses</Link></li>
              <li><Link to={`${basePath}/faculty-registration`}>Faculty Registration</Link></li>
+            <li><Link to={`${basePath}/addfacultydetails`}>Add Faculty Details</Link></li>
           </ul>
         </nav>
         <main style={{ flex: 1, padding: '1rem', textAlign: 'center' }}>
@@ -48,6 +50,7 @@ const AdminIndex = () => {
             <Route path="semesters" element={<ManageSemesters />} />
             <Route path="subjects" element={<ManageCourses />} />
             <Route path="faculty-registration" element= {<FacultyRegistration/>}/>
+            <Route path="/addfacultydetails" element={<AddFacultyDetalis />} />
             {/* Add other routes as needed */}
             <Route path="contact" element={<Contact />} />
             <Route path="terms" element={<Terms />} />

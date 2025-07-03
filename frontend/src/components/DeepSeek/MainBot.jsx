@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import './MainBot.css';
-import ChatBot from './ChatBot.jsx';
-import { FaTimes, FaExpand, FaCompress } from 'react-icons/fa';
+import React, { useState } from "react";
+import "./MainBot.css";
+import ChatBot from "./ChatBot.jsx";
+import { FaTimes, FaExpand, FaCompress } from "react-icons/fa";
 
 function MainBot({ subject, subTopicName, level }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -13,18 +13,40 @@ function MainBot({ subject, subTopicName, level }) {
   return (
     <>
       {!isChatOpen && (
-        <div className="chatbot-icon" onClick={toggleChat}>
-          <img src="/image/gemini-color.png" alt="Open Chat" style={{ width: "30px", height: "30px" }} />
+        <div
+          className="chatbot-icon-container"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span className="chatbot-icon-text" style={{color:"blue"}}>Go to AI-Generated content</span>
+          <div className="chatbot-icon" onClick={toggleChat}>
+            <img
+              src="/image/gemini-color.png"
+              alt="Open Chat"
+              style={{ width: "30px", height: "30px" }}
+            />
+          </div>
         </div>
       )}
 
       {isChatOpen && (
-        <div className={`chatbot-container ${isMaximized ? 'maximized' : 'minimized'}`}>
+        <div
+          className={`chatbot-container ${
+            isMaximized ? "maximized" : "minimized"
+          }`}
+        >
           <div className="chatbot-header">
             <span>ChatBot</span>
             <div className="chatbot-actions">
               <button className="toggle-btn" onClick={toggleMaximize}>
-                {isMaximized ? <FaCompress size={16} /> : <FaExpand size={16} />}
+                {isMaximized ? (
+                  <FaCompress size={16} />
+                ) : (
+                  <FaExpand size={16} />
+                )}
               </button>
               <button className="close-btn" onClick={toggleChat}>
                 <FaTimes size={20} />
@@ -32,7 +54,11 @@ function MainBot({ subject, subTopicName, level }) {
             </div>
           </div>
 
-          <ChatBot subject={subject} subTopicName={subTopicName} level={level} />
+          <ChatBot
+            subject={subject}
+            subTopicName={subTopicName}
+            level={level}
+          />
         </div>
       )}
     </>

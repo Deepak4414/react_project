@@ -5,6 +5,7 @@ import "./Table.css";
 import VfstrVideo from "./VfstrVideo/VfstrVideo";
 
 const NptelContent = ({ subtopic }) => {
+  console.log("NptelContent component rendered with subtopic:", subtopic);
   const [videos, setVideos] = useState([]);
   const [videoNames, setVideoNames] = useState([]);
   const [error, setError] = useState("");

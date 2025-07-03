@@ -25,3 +25,48 @@
 .admin-index a:hover {
   text-decoration: underline;
 }
+.admin-nav {
+  width: 220px;
+  background: #f8f9fa;
+  padding: 1.5rem 1rem;
+  border-right: 1px solid #ddd;
+  height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.admin-nav h3 {
+  margin-bottom: 1.5rem;
+  color: #343a40;
+  font-size: 20px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.5rem;
+}
+
+.admin-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-nav-list li {
+  margin-bottom: 1rem;
+}
+
+.admin-nav-list a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  display: block;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-nav-list a:hover {
+  background-color: #e2e6ea;
+}
+

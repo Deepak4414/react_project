@@ -65,7 +65,7 @@ const Home = () => {
               Minister, is available.
               </li>
               <li> By clicking on
-              <strong> TrueCon</strong>, you will be redirected to a server that
+              <strong> V-INSAT</strong>, you will be redirected to a server that
               connects to live conference sessions held on campus.
             </li>
             <li>
@@ -103,9 +103,9 @@ const Home = () => {
           <LinkItem to="/studentindex/mann-ki-baat" text="Mann ki Baat" />
            <LinkItem
             to="#"
-            imgSrc="/image/OIP.jpg"
+            imgSrc="/image/vinsat.png"
             imgAlt="Logo"
-            text="Main Portal"
+            text="V-INSAT"
           />
           <LinkItem to="#" text="Campus Radio" />
         </div>

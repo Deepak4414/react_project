@@ -59,11 +59,6 @@ const Navbar = () => {
             {isLoggedIn && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/facultyindex/add">
-                    <i className="bi bi-plus-circle me-1"></i> Add Course
-                  </Link>
-                </li>
-                <li className="nav-item">
                   <Link className="nav-link" to="/facultyindex/update">
                     <i className="bi bi-pencil-square me-1"></i> Update Course
                   </Link>
@@ -80,7 +75,7 @@ const Navbar = () => {
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li>
-                    <Link className="dropdown-item" to="/facultyindex">
+                    <Link className="dropdown-item" to="/facultyindex/updatefacultydetails">
                       <i className="bi bi-person me-2"></i> Profile
                     </Link>
                   </li>

@@ -54,12 +54,8 @@ const Home = () => {
   }, [username]);
 
   const facultyFeatures = [
-    // { path: "/facultyindex/add", label: "Add Course", icon: "📚" },
     { path: "/facultyindex/update", label: "Update Course", icon: "✏️" },
-    { path: "/facultyindex/addvfstrvideo", label: "Add VFSTR Video", icon: "🎥" },
-    { path: "/facultyindex/addfacultydetails", label: "Add Faculty Details", icon: "👨‍🏫" },
     { path: "/facultyindex/livechannel", label: "Live Channel", icon: "📡" },
-    { path: "/facultyindex/explore-material", label: "Preview Content", icon: "👀" },
     { path: "/facultyindex/live-channel-program-guide", label: "Program Guide", icon: "🔄" },
     { path : "/facultyindex/fetch-subject-for-question", label: "Add Question", icon: "❓" },
   ];
@@ -103,7 +99,7 @@ const Home = () => {
             <div className="profile-details">
               <p><span>Username:</span> {userData.username}</p>
               <p><span>Email:</span> {userData.email}</p>
-              <p><span>Department:</span> {userData.department || "Not specified"}</p>
+              {/* <p><span>Department:</span> {userData.department || "Not specified"}</p> */}
             </div>
           </div>
         </section>

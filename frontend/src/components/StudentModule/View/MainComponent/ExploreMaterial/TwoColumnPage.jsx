@@ -11,6 +11,7 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
   const [topicSubtopics, setTopicSubtopics] = useState({});
   const [selectedSubtopicId, setSelectedSubtopicId] = useState(null);
   const [content, setContent] = useState([]);
+  const [selectedSubjectName, setSelectedSubjectName] = useState("");
   const [forceExpandState, setForceExpandState] = useState({
     chapterId: null,
     topicId: null,
@@ -18,6 +19,25 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
   });
   const [expandedChapters, setExpandedChapters] = useState({});
   // Initialize all chapters as expanded when data loads
+
+  useEffect(() => {
+    if (selectedSubject) {
+      const fetchSubjectName = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/api/subject-name/${selectedSubject}`
+            );
+            console.log("Subject Name Response:", response.data[0].subjectName);
+          setSelectedSubjectName(response.data[0].subjectName);
+
+        } catch (error) {
+          console.error("Error fetching subject name:", error);
+        }
+      };
+      fetchSubjectName();
+    }
+  }, [selectedSubject]);
+
   useEffect(() => {
     if (chapters.length > 0 && Object.keys(expandedChapters).length === 0) {
       const initialExpanded = {};
@@ -167,7 +187,20 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
   const groupedContent = groupContentBySubTopicAndLevel(content);
 
   return (
+     <>
+    <div
+      style={{
+        textAlign: "center",
+        marginBottom: "2px",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <h2 style={{ color: "blue" }}>Course: {selectedSubjectName}</h2>
+
+    </div>
     <div className="two-column-page">
+   
       <div className="left-column">
         <h2>Contents</h2>
         {chapters.map((chapter, chapterIndex) => (
@@ -259,6 +292,7 @@ const TwoColumnPage = ({ selectedSubject, username }) => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

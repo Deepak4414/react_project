@@ -70,8 +70,8 @@ router.post("/upload-vfstr-video", processUpload, (req, res) => {
       videoData.file_name = fileName;
       videoData.file = filePath;
     }
-
-    if (id && !id.toString().startsWith("new-")) {
+const isNew = !id || id.toString().startsWith("new-");
+    if (!isNew) {
       // 🔁 UPDATE
       db.query("UPDATE vfstr_videos SET ? WHERE id = ?", [videoData, id], (err, result) => {
         if (err) {
