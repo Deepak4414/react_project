@@ -75,15 +75,41 @@ router.get("/faculty/:username", async (req, res) => {
 router.put("/faculty/update-profile/:username", async (req, res) => {
   const { username } = req.params;
   const { name, email } = req.body;
-  try {
-    await db.query("UPDATE users SET name = ?, email = ? WHERE username = ?", [name, email, username]);
-    res.json({ message: "Profile updated successfully" });
 
+  try {
+    // Check if the email is used by another user
+    const checkQuery = "SELECT * FROM users WHERE email = ? AND username != ?";
+    db.query(checkQuery, [email, username], (err, results) => {
+      if (err) {
+        console.error("Error checking email uniqueness:", err);
+        return res.status(500).json({ message: "Server error" });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ message: "Email already in use by another account" });
+      }
+
+      // Proceed with update if email is unique
+      const updateQuery = "UPDATE users SET name = ?, email = ? WHERE username = ?";
+      db.query(updateQuery, [name, email, username], (err, result) => {
+        if (err) {
+          console.error("Error updating profile:", err);
+          return res.status(500).json({ message: "Update failed" });
+        }
+
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({ message: "Profile updated successfully" });
+      });
+    });
   } catch (err) {
-    console.error("Error updating profile:", err);
-    res.status(500).json({ message: "Update failed" });
+    console.error("Unexpected error:", err);
+    res.status(500).json({ message: "Unexpected server error" });
   }
 });
+
 // Change password with old password check
 router.put("/faculty/change-password/:username", (req, res) => {
   const { oldPassword, newPassword } = req.body;

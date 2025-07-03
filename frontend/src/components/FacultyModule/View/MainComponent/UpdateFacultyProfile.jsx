@@ -40,15 +40,24 @@ const UpdateFacultyProfile = ({ username }) => {
   };
 
   const handleProfileUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.put(`http://localhost:5000/api/faculty/update-profile/${username}`, profile);
-      alert(res.data.message);
-    } catch (err) {
-      console.error("Profile update error:", err);
+  e.preventDefault();
+  try {
+    const res = await axios.put(
+      `http://localhost:5000/api/faculty/update-profile/${username}`,
+      profile
+    );
+    alert(res.data.message); // Show success message
+  } catch (err) {
+    console.error("Profile update error:", err);
+
+    // Show specific error message from backend if available
+    if (err.response && err.response.data && err.response.data.message) {
+      alert(err.response.data.message);
+    } else {
       alert("Failed to update profile.");
     }
-  };
+  }
+};
 
   const handleChangePassword = async (e) => {
     e.preventDefault();

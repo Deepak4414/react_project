@@ -223,33 +223,14 @@ router.delete("/subjects/:id", async (req, res) => {
   }
 });
 
-// ================= Faculty Registration =================
-router.post("/faculty/register", async (req, res) => {
-  const { username, password } = req.body;
 
-  // Optional: validate username/password
-  if (!username || !password) {
-    return res.status(400).json({ message: "Username and password required." });
-  }
-
-  // Optional: check if username exists
-  db.query("SELECT * FROM users WHERE username = ?", [username], (err, result) => {
-    if (err) return res.status(500).json({ message: "Database error." });
-
-    if (result.length > 0) {
-      return res.status(409).json({ message: "Username already exists." });
-    }
-
-    // Insert new faculty
-    db.query(
-      "INSERT INTO users (username, password) VALUES (?, ?)",
-      [username, password], // use bcrypt.hash(password, saltRounds) if hashing
-      (err, insertRes) => {
-        if (err) return res.status(500).json({ message: "Registration failed." });
-        return res.status(201).json({ message: "Faculty registered successfully." });
-      }
-    );
+router.get("/faculty", async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM users WHERE role = 'faculty'");
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  } 
   });
-});
 
 module.exports = router;

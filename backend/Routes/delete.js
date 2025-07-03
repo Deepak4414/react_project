@@ -103,4 +103,22 @@ router.delete("/delete-vfstr/:id", async (req, res) => {
   }
 });
 
+
+// DELETE a faculty
+router.delete("/faculty/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("Deleting faculty with ID:", id);
+  try {
+    const [result] = await db.query("DELETE FROM users WHERE id = ?", [id]);
+    if (result.affectedRows > 0) {
+      res.json({ message: "Faculty deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Faculty not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Error deleting faculty" });
+  }
+});
+
+
 module.exports = router;

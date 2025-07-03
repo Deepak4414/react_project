@@ -10,37 +10,53 @@ const JWT_SECRET = process.env.JWT_SECRET || "deepak";
 // User Registration
 router.post("/register", async (req, res) => {
   const { name, email, username, password, role } = req.body;
-
   try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert the user into the database
-    const query =
-      "INSERT INTO users (name, email, username, password, role) VALUES (?, ?, ?, ?, ?)";
-    db.query(query, [name, email, username, hashedPassword, role], (err) => {
+    // Step 1: Check if username already exists
+    const checkQuery = "SELECT * FROM users WHERE username = ?";
+    db.query(checkQuery, [username], async (err, results) => {
       if (err) {
-        console.error("Error inserting user into the database:", err);
-        return res.status(500).json({ message: "User already exist" });
+        console.error("Error checking existing user:", err);
+        return res.status(500).json({ message: "Server error" });
       }
-      res.json({ message: "User registered successfully!" });
+
+      if (results.length > 0) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+
+      // Step 2: Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Step 3: Insert the user
+      const insertQuery =
+        "INSERT INTO users (name, email, username, password, role) VALUES (?, ?, ?, ?, ?)";
+      db.query(
+        insertQuery,
+        [name, email, username, hashedPassword, role],
+        (err) => {
+          if (err) {
+            console.error("Error inserting user:", err);
+            return res.status(500).json({ message: "Registration failed" });
+          }
+          res.status(201).json({ message: "User registered successfully!" });
+        }
+      );
     });
   } catch (error) {
-    console.error("User already exist", error);
-    res.status(500).json({ message: "User already exist" });
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 // Login endpoint
 router.post('/login', async (req, res) => {
   const { username, password, role } = req.body;
 
-  const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
-  db.query(query, [username, role], async (err, results) => {
-      if (err) {
-          console.error('Error logging in:', err);
-          res.status(500).json({ message: 'Error logging in' });
-          return;
-      }
+    const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
+    db.query(query, [username, role], async (err, results) => {
+        if (err) {
+            console.error('Error logging in:', err);
+            res.status(500).json({ message: 'Error logging in' });
+            return;
+        }
 
       if (results.length > 0) {
           const user = results[0];
